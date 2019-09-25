@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\files">
+      <UniqueIdentifier>{debdffa9-3c47-4fe7-a9ed-a788094ea3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\files">
+      <UniqueIdentifier>{d6f1dbb2-18bb-4c5f-894d-b470a2ad4293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gameobjects">
+      <UniqueIdentifier>{981998b0-7271-45de-9abc-055b4661388c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameobjects">
+      <UniqueIdentifier>{48819ec0-913a-43b1-8224-4d85d0a406d1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\exportimportstruct.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimport.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportanimation.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportanimationframe.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportcontrolpoints.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportfaces.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportfile.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimporthitboxes.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportjoint.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportobject.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\mgrimportskeleton.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\gameobject.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\property.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\basicobject.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\basicobjectparts.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\hitbox.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\basicmodel.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\objecttransform.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportanimation.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportanimationframe.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportcontrolpoints.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportfaces.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportfile.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimporthitboxes.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportjoint.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportobject.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\mgrimportskeleton.cpp">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\basicmodel.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\basicobject.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\gameobject.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\hitbox.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\objecttransform.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
