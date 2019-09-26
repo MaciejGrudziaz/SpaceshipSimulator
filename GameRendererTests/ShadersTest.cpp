@@ -7,14 +7,13 @@ namespace GameRendererTests
 {		
 	TEST_CLASS(ShadersTest)
 	{
-	public:
-		
-		TEST_METHOD(CreatingShaders)
+		void createOpenGLContext()
 		{
 			GLFWwindow* window;
 
 			assert(glfwInit() != 0);
 
+			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 			window = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
 			if (!window)
 			{
@@ -26,9 +25,16 @@ namespace GameRendererTests
 			glfwMakeContextCurrent(window);
 
 			assert(glewInit() == 0);
+		}
 
-			std::string vertexShader("../../GameRendererTests/shaders/shader1_Dynamic.vert");
-			std::string fragmentShader("../../GameRendererTests/shaders/shader1_Dynamic.frag");
+	public:
+		
+		TEST_METHOD(CreatingShaders)
+		{
+			createOpenGLContext();
+
+			std::string vertexShader("../../GameRendererTests/shaders/testShader.vert");
+			std::string fragmentShader("../../GameRendererTests/shaders/testShader.frag");
 			
 			Shader shader("testShader", vertexShader, fragmentShader);
 

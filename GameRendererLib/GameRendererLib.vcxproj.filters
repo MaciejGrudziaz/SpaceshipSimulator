@@ -24,12 +24,21 @@
     <ClInclude Include="include\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uniformdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderobject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

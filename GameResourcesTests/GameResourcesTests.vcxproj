@@ -77,8 +77,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\GameResourcesLib\ext_include;$(SolutionDir)\GameResourcesLib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include;$(SolutionDir)\GameResourcesLib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\lib\GameResources\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,8 +88,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\GameResourcesLib\ext_include;$(SolutionDir)\GameResourcesLib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\x64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include;$(SolutionDir)\GameResourcesLib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\lib\GameResources\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

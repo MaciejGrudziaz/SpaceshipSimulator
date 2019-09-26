@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <files/mgrimportfile.h>
 #include <gameobjects/gameobject.h>
+#include <gameobjects/camera.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -11,11 +12,29 @@ namespace GameResourcesTests
 {
 	TEST_CLASS(GameObjectTest)
 	{
-		void testVec3(const glm::vec3& vec1, const glm::vec3& vec2)
+		bool areEqualVec3(const glm::vec3& vec1, const glm::vec3& vec2, float eps = 0.00001)
 		{
-			Assert::AreEqual(vec1.x, vec2.x);
-			Assert::AreEqual(vec1.y, vec2.y);
-			Assert::AreEqual(vec1.z, vec2.z);
+			for (int i = 0; i < 3; ++i)
+			{
+				if (std::abs(vec1[i] - vec2[i]) > eps)
+					return false;
+			}
+
+			return true;
+		}
+
+		bool areEqualMat4(const glm::mat4& mat1, const glm::mat4& mat2, float eps = 0.00001)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (std::abs(mat1[i][j] - mat2[i][j]) > eps)
+						return false;
+				}
+			}
+
+			return true;
 		}
 
 	public:
@@ -83,18 +102,39 @@ namespace GameResourcesTests
 
 			gameObject->init();
 
-			testVec3(gameObject->getTransform().getPosition(), glm::vec3(1.0f, 0.0f, 0.0f));
-			testVec3(gameObject->getTransform().getRotation(), glm::vec3(45.0f, 0.0f, 0.0f));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getPosition(), glm::vec3(1.0f, 0.0f, 0.0f)));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getRotation(), glm::vec3(45.0f, 0.0f, 0.0f)));
 
 			gameObject->process();
 
-			testVec3(gameObject->getTransform().getPosition(), glm::vec3(0.0f, 1.0f, 0.0f));
-			testVec3(gameObject->getTransform().getRotation(), glm::vec3(0.0f, 45.0f, 0.0f));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getPosition(), glm::vec3(0.0f, 1.0f, 0.0f)));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getRotation(), glm::vec3(0.0f, 45.0f, 0.0f)));
 
 			gameObject->invalidate();
 
-			testVec3(gameObject->getTransform().getPosition(), glm::vec3(0.0f, 0.0f, 1.0f));
-			testVec3(gameObject->getTransform().getRotation(), glm::vec3(0.0f, 0.0f, 45.0f));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getPosition(), glm::vec3(0.0f, 0.0f, 1.0f)));
+			Assert::IsTrue(areEqualVec3(gameObject->getTransform().getRotation(), glm::vec3(0.0f, 0.0f, 45.0f)));
+		}
+
+		TEST_METHOD(CameraTest)
+		{
+			Camera camera;
+
+			Assert::IsTrue(areEqualVec3(camera.getTransform().getOrientation(), glm::vec3(0.0f, 0.0f, -1.0f)));
+			Assert::IsTrue(areEqualVec3(camera.getUpVec(), glm::vec3(0.0f, 1.0f, 0.0f)));
+			Assert::IsTrue(areEqualMat4(camera.getView(), glm::mat4(1.0f)));
+
+			glm::mat4 view = camera.getView();
+			camera.getTransform().setRotation(glm::vec3(0.0f, 45.0f, 0.0f));
+			Assert::IsTrue(areEqualMat4(camera.getView(), view));
+			camera.update();
+			Assert::IsFalse(areEqualMat4(camera.getView(), view));
+
+			view = camera.getView();
+			camera.getTransform().setPosition(glm::vec3(10.0f, 0.0f, 0.0f));
+			Assert::IsTrue(areEqualMat4(camera.getView(), view));
+			camera.update();
+			Assert::IsFalse(areEqualMat4(camera.getView(), view));
 		}
 
 	};

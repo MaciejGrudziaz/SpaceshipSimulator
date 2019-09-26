@@ -33,7 +33,7 @@ std::string GameObject::getName()const
 	return name;
 }
 
-ObjectTransform& GameObject::getTransform()
+Transform& GameObject::getTransform()
 {
 	return transform;
 }

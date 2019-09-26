@@ -77,8 +77,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\GameRendererLib\ext_include;$(SolutionDir)\GameRendererLib\include;$(ProjectDir)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\lib;$(SolutionDir)\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include;$(SolutionDir)\GameRendererLib\include;$(ProjectDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\lib;$(SolutionDir)\lib\GameRenderer\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,8 +88,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\GameRendererLib\ext_include;$(SolutionDir)\GameRendererLib\include;$(ProjectDir)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\lib;$(SolutionDir)\x64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include;$(SolutionDir)\GameRendererLib\include;$(ProjectDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\lib;$(SolutionDir)\lib\GameRenderer\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -164,6 +164,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="RenderObjectTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -84,7 +84,10 @@
     <ClInclude Include="include\gameobjects\basicmodel.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
-    <ClInclude Include="include\gameobjects\objecttransform.h">
+    <ClInclude Include="include\gameobjects\transform.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects\camera.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,7 +134,10 @@
     <ClCompile Include="src\gameobjects\hitbox.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameobjects\objecttransform.cpp">
+    <ClCompile Include="src\gameobjects\transform.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobjects\camera.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
   </ItemGroup>

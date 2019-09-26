@@ -14,10 +14,10 @@ public:
 
 	Shader(const std::string& name, const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 
-	void LoadVertexShader(const std::string& vertexShaderFilename_);
-	void LoadFragmentShader(const std::string& fragmentShaderFilename_);
+	void loadVertexShader(const std::string& vertexShaderFilename_);
+	void loadFragmentShader(const std::string& fragmentShaderFilename_);
 
-	void LinkShaderProgram();
+	void linkShaderProgram();
 
 	int getProgram()const;
 

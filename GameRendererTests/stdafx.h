@@ -12,6 +12,8 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <shader.h>
 #include <GLFW/glfw3.h>
 #include <assert.h>
+
+#include <shader.h>
+#include <renderobject.h>

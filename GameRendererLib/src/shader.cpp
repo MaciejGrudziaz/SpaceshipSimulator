@@ -9,12 +9,12 @@ Shader::Shader(const std::string& name, const std::string& vertexShaderFilename,
 	, vertexShaderFilename(vertexShaderFilename)
 	, fragmentShaderFilename(fragmentShaderFilename)
 {
-	LoadVertexShader(vertexShaderFilename);
-	LoadFragmentShader(fragmentShaderFilename);
-	LinkShaderProgram();
+	loadVertexShader(vertexShaderFilename);
+	loadFragmentShader(fragmentShaderFilename);
+	linkShaderProgram();
 }
 
-void Shader::LoadVertexShader(const std::string& vertexShaderFilename)
+void Shader::loadVertexShader(const std::string& vertexShaderFilename)
 {
 	if (!errorCode)
 	{
@@ -102,7 +102,7 @@ void Shader::loadErrorToFile(const char* message)
 	}
 }
 
-void Shader::LoadFragmentShader(const std::string& fragmentShaderFilename)
+void Shader::loadFragmentShader(const std::string& fragmentShaderFilename)
 {
 	if (!errorCode)
 	{
@@ -130,7 +130,7 @@ void Shader::LoadFragmentShader(const std::string& fragmentShaderFilename)
 	}
 }
 
-void Shader::LinkShaderProgram()
+void Shader::linkShaderProgram()
 {
 	shaderProgram = glCreateProgram();
 

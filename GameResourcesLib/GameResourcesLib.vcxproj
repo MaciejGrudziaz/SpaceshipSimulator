@@ -72,8 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\ext_include;$(Projectdir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\include;$(Projectdir);$(IncludePath)</IncludePath>
     <TargetName>gameresources</TargetName>
+    <OutDir>$(SolutionDir)\lib\GameResources\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -83,8 +84,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\ext_include;$(Projectdir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\include;$(Projectdir);$(IncludePath)</IncludePath>
     <TargetName>gameresources</TargetName>
+    <OutDir>$(SolutionDir)\lib\GameResources\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -165,10 +167,11 @@
     <ClInclude Include="include\gameobjects\basicmodel.h" />
     <ClInclude Include="include\gameobjects\basicobject.h" />
     <ClInclude Include="include\gameobjects\basicobjectparts.h" />
+    <ClInclude Include="include\gameobjects\camera.h" />
     <ClInclude Include="include\gameobjects\gameobject.h" />
     <ClInclude Include="include\gameobjects\hitbox.h" />
     <ClInclude Include="include\gameobjects\property.h" />
-    <ClInclude Include="include\gameobjects\objecttransform.h" />
+    <ClInclude Include="include\gameobjects\transform.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -184,9 +187,10 @@
     <ClCompile Include="src\files\mgrimportskeleton.cpp" />
     <ClCompile Include="src\gameobjects\basicmodel.cpp" />
     <ClCompile Include="src\gameobjects\basicobject.cpp" />
+    <ClCompile Include="src\gameobjects\camera.cpp" />
     <ClCompile Include="src\gameobjects\gameobject.cpp" />
     <ClCompile Include="src\gameobjects\hitbox.cpp" />
-    <ClCompile Include="src\gameobjects\objecttransform.cpp" />
+    <ClCompile Include="src\gameobjects\transform.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

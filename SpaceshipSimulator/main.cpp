@@ -1,12 +1,9 @@
 #define GLEW_STATIC
 #include <gl/glew.h>
-#include <GL/GL.h>
 #include <iostream>
-#include <conio.h>
 #include <GLFW/glfw3.h>
-#include <Windows.h>
 
-#include <gameresources/files/mgrimportfile.h>
+#include <GameResources/files/mgrimportfile.h>
 
 #define DEBUG
 
