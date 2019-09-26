@@ -1,9 +1,11 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(const std::string& title, int width = 1280, int height = 720, float fov = 90.0f)
-	: width(width)
+MainWindow::MainWindow(const std::string& title, int width, int height, float fov)
+	: title(title)
+	, width(width)
 	, height(height)
 	, fov(fov)
+	, projection(std::make_shared<glm::mat4>(1.0f))
 {
 	updateProjection();
 }
@@ -15,29 +17,55 @@ void MainWindow::updateProjection()
 
 void MainWindow::create()
 {
-	GLFWwindow* window;
-
-	if (!glfwInit())
-		return -1;
-
-	window = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
-	if (!window)
+	if (glfwInit())
 	{
-		glfwTerminate();
-		return -1;
+		glfwWindowHint(GLFW_SAMPLES, 16);
+
+		window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+		if (!window)
+		{
+			glfwTerminate();
+		}
+
+		glfwMakeContextCurrent(window);
+
+		glewInit();
 	}
-
-	glfwMakeContextCurrent(window);
-
-	glewInit();
 }
 
 void MainWindow::refresh()
 {
+	while (!glfwWindowShouldClose(window))
+	{
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		std::for_each(renderers.begin(), renderers.end(), [](auto renderer) { 
+			renderer->process(); 
+		});
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 }
 
 void MainWindow::destory()
 {
+	glfwDestroyWindow(window);
+	glfwTerminate();
+}
 
+void MainWindow::addRenderer(RenderObjectPtr renderer)
+{
+	renderers.push_back(renderer);
+}
+
+glm::mat4 MainWindow::getProjection()const
+{
+	return *projection;
+}
+
+std::shared_ptr<const glm::mat4> MainWindow::getProjectionPtr()const
+{
+	return projection;
 }

@@ -14,6 +14,7 @@ public:
 
     glm::vec3 getPosition() const;
     glm::vec3 getScale() const;
+	glm::vec3 getDefaultOrientation()const;
     glm::vec3 getOrientation() const;
     glm::vec3 getRotation() const;      //euler angles in degrees
 
@@ -26,7 +27,7 @@ public:
     void setScale(const glm::mat4& scale);
     void setRotation(const glm::vec3& angles); //euler angles in degress
     void setRotation(const glm::quat& rot);
-    void setOrientation(const glm::vec3& vec);
+	void setDefaultOrientation(const glm::vec3& orientation);
 
     void reset();
     void resetWithoutScale();
@@ -34,6 +35,7 @@ public:
 private:
     glm::vec3 position;
     glm::vec3 scale;
+	glm::vec3 defaultOrientation;
     glm::vec3 orientation;
     glm::vec3 rotation;                 //euler angles in radians
 
@@ -43,6 +45,7 @@ private:
 
     void updateTransformMatrix();
     void updateRotationQuat();
+	void updateOrientation();
     void updateScaleMatrix();
     void getAnglesFromQuat();
     void getScaleValuesFromScaleMatrix();

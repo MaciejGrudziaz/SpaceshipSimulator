@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 #include <string>
+#include <GameRenderer/renderobject.h>
 
 class MainWindow
 {
@@ -17,11 +18,20 @@ public:
 	void refresh();
 	void destory();
 
+	void addRenderer(RenderObjectPtr renderer);
+
+	glm::mat4 getProjection()const;
+	std::shared_ptr<const glm::mat4> getProjectionPtr()const;
+
 private:
+	GLFWwindow* window;
+	std::string title;
 	int width, height;
 	float fov;
 
 	std::shared_ptr<glm::mat4> projection;
+
+	std::list<RenderObjectPtr> renderers;
 
 	void updateProjection();
 

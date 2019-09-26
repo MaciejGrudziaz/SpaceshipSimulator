@@ -19,6 +19,15 @@
     <Filter Include="Source Files\mainwindow">
       <UniqueIdentifier>{f0b287cd-89e3-41c6-a73a-ee6477d0a04f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gameobjects">
+      <UniqueIdentifier>{6f016f0c-4d0f-4807-b310-2527f43b6c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameobjects">
+      <UniqueIdentifier>{3e99024b-d6af-4c80-9207-908445b5796c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{9f969f54-1155-432c-b84c-9296b79b972c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,10 +36,36 @@
     <ClCompile Include="mainwindow\mainwindow.cpp">
       <Filter>Source Files\mainwindow</Filter>
     </ClCompile>
+    <ClCompile Include="gameobjects\spaceship.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
       <Filter>Header Files\mainwindow</Filter>
     </ClInclude>
+    <ClInclude Include="gameobjects\spaceship.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\shader1_Dynamic.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\shader1_Dynamic.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\spaceshipShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\spaceshipShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\spaceshipShaderTex.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\spaceshipShaderTex.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -46,7 +46,7 @@ void RenderObject::initBuffersAndArrays()
 
 void RenderObject::loadUniformsLoc()
 {
-	if (shader)
+	if (shader->getErrorCode() == Shader::NO_ERROR)
 	{
 		for(UniformMap::iterator it = uniforms.begin(); it != uniforms.end(); ++it)
 		{
@@ -62,7 +62,7 @@ void RenderObject::loadUniformsLoc()
 void RenderObject::addShaderAttribute(ShaderAttribute attribute)
 {
 	shaderAttributes.push_back(attribute);
-	shaderAttributesTotalSize += attribute.size * sizeof(float);
+	shaderAttributesTotalSize += attribute.size;
 }
 
 void RenderObject::loadBuffer(const std::vector<float>& verticesBuffer)
@@ -79,7 +79,7 @@ void RenderObject::loadBuffer(const std::vector<float>& verticesBuffer)
 
 	for (ShaderAttrList::value_type shaderAttrEntry : shaderAttributes)
 	{
-		glVertexAttribPointer(shaderAttrEntry.location, shaderAttrEntry.size, GL_FLOAT, GL_FALSE, shaderAttributesTotalSize, shaderAttrEntry.offset);
+		glVertexAttribPointer(shaderAttrEntry.location, shaderAttrEntry.size, GL_FLOAT, GL_FALSE, shaderAttributesTotalSize * sizeof(float), shaderAttrEntry.offset);
 		glEnableVertexAttribArray(shaderAttrEntry.location);
 
 		err = glGetError();
@@ -104,14 +104,29 @@ void RenderObject::process()
 {
 	if (shader)
 	{
-		glUseProgram(shader->getProgram());
-		glBindVertexArray(VAO);
+		bindVertexArray();
 
-		std::for_each(uniforms.begin(), uniforms.end(), [](auto uniformEntry) { uniformEntry.second->update(); });
+		updateUniforms();
 
-		glDrawArrays(GL_TRIANGLES, 0, bufferVerticesCount);
+		drawArrays();
 	}
 	else errorCode.push(NO_SHADER_AVAILABLE);
+}
+
+void RenderObject::bindVertexArray()
+{
+	glUseProgram(shader->getProgram());
+	glBindVertexArray(VAO);
+}
+
+void RenderObject::updateUniforms()
+{
+	std::for_each(uniforms.begin(), uniforms.end(), [](auto uniformEntry) { uniformEntry.second->update(); });
+}
+
+void RenderObject::drawArrays()
+{
+	glDrawArrays(GL_TRIANGLES, 0, bufferVerticesCount);
 }
 
 void RenderObject::invalidate()

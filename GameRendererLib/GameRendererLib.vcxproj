@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="include\renderobject.h" />
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\texturerenderobject.h" />
     <ClInclude Include="include\uniformdata.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -170,6 +171,7 @@
   <ItemGroup>
     <ClCompile Include="src\renderobject.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\texturerenderobject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

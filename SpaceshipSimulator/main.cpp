@@ -1,9 +1,6 @@
-#define GLEW_STATIC
-#include <gl/glew.h>
-#include <iostream>
-#include <GLFW/glfw3.h>
-
-#include <GameResources/files/mgrimportfile.h>
+#include <GameResources/gameobjects/camera.h>
+#include "mainwindow/mainwindow.h"
+#include "gameobjects/spaceship.h"
 
 #define DEBUG
 
@@ -18,33 +15,35 @@ int WinMain(
 )
 #endif
 {
-	MgrImportFile mgrImport;
-	mgrImport.import("models/spaceship.mgr");
+	Camera camera;
+	camera.getTransform().setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+	camera.update();
 
-	GLFWwindow* window;
+	Spaceship spaceship;
+	spaceship.load("models/spaceship_tex.mgr");
 
-	if (!glfwInit())
-		return -1;
+	MainWindow wnd("Main Window");
 
-	window = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
-	}
+	wnd.create();
 
-	glfwMakeContextCurrent(window);
+	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_DEPTH_TEST);
 
-	glewInit();
+	//spaceship.loadShaders("shaders/spaceshipShader.vert", "shaders/spaceshipShader.frag");
+	//spaceship.initRenderer(camera.getViewPtr(), wnd.getProjectionPtr());
+	//spaceship.loadBufferData();
 
-	while (!glfwWindowShouldClose(window))
-	{
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+	//wnd.addRenderer(spaceship.getRenderer());
 
-	glfwTerminate();
+	spaceship.loadTextureShaders("shaders/spaceshipShaderTex.vert", "shaders/spaceshipShaderTex.frag");
+	spaceship.initTextureRenderer(camera.getViewPtr(), wnd.getProjectionPtr());
+	spaceship.loadTextureBufferData();
+	spaceship.loadTexture("models/textures/texture.png");
+
+	wnd.addRenderer(spaceship.getTextureRenderer());
+
+	wnd.refresh();
+	wnd.destory();
+
 	return 0;
 }

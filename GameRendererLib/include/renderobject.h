@@ -20,7 +20,8 @@ struct ShaderAttribute
 class RenderObject
 {
 public:
-	enum error { NO_ERROR, BUFFER_CREATE_ERROR, SHADER_CREATE_ERROR, NO_SHADER_AVAILABLE, UNIFORM_NOT_FOUND, BUFFER_DATA_ERROR, VERTEX_ATTRIB_POINTER_NOT_VALID };
+	enum error { NO_ERROR, BUFFER_CREATE_ERROR, SHADER_CREATE_ERROR, NO_SHADER_AVAILABLE, UNIFORM_NOT_FOUND, BUFFER_DATA_ERROR, 
+		VERTEX_ATTRIB_POINTER_NOT_VALID, TEXTURE_FILE_ERROR };
 
 	RenderObject();
 	RenderObject(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
@@ -38,7 +39,7 @@ public:
 
 	error getErrorCode();
 
-private:
+protected:
 	std::shared_ptr<Shader> shader;
 	GLuint VAO;
 	GLuint VBO;
@@ -51,14 +52,20 @@ private:
 	ShaderAttrList shaderAttributes;
 	GLsizei shaderAttributesTotalSize;
 
-	static const GLuint maxGLuint = (1 << (sizeof(GLuint) * 8)) - 1;
+	//static const GLuint maxGLuint = (1 << (sizeof(GLuint) * 8)) - 1;
 
 	std::stack<error> errorCode;
 
-	std::shared_ptr<const glm::mat4> model;
-	std::shared_ptr<const glm::mat4> view;
-	std::shared_ptr<const glm::mat4> projection;
+	//std::shared_ptr<const glm::mat4> model;
+	//std::shared_ptr<const glm::mat4> view;
+	//std::shared_ptr<const glm::mat4> projection;
 
 	void initBuffersAndArrays();
 	void loadUniformsLoc();
+
+	void bindVertexArray();
+	void updateUniforms();
+	void drawArrays();
 };
+
+typedef std::shared_ptr<RenderObject> RenderObjectPtr;

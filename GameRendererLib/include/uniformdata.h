@@ -34,3 +34,6 @@ struct UniformDataMat4 : public UniformData
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(*mat));
 	}
 };
+
+typedef std::shared_ptr<UniformDataMat4> UniformDataMat4Ptr;
+typedef std::shared_ptr<const glm::mat4> ConstMat4Ptr;
