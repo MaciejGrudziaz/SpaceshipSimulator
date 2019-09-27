@@ -19,9 +19,6 @@ int WinMain(
 	camera.getTransform().setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	camera.update();
 
-	Spaceship spaceship;
-	spaceship.load("models/spaceship_tex.mgr");
-
 	MainWindow wnd("Main Window");
 
 	wnd.create();
@@ -29,18 +26,20 @@ int WinMain(
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 
-	//spaceship.loadShaders("shaders/spaceshipShader.vert", "shaders/spaceshipShader.frag");
-	//spaceship.initRenderer(camera.getViewPtr(), wnd.getProjectionPtr());
-	//spaceship.loadBufferData();
+	SpaceshipData filesData;
+	filesData.modelFilename = "models/spaceship_tex.mgr";
+	filesData.vertexShaderFilename = "shaders/spaceshipShader.vert";
+	filesData.fragmentShaderFilename = "shaders/spaceshipShader.frag";
+	filesData.textureFilename = "models/textures/texture.png";
 
-	//wnd.addRenderer(spaceship.getRenderer());
+	SpaceshipUniforms uniforms;
+	uniforms.view = camera.getViewPtr();
+	uniforms.projection = wnd.getProjectionPtr();
 
-	spaceship.loadTextureShaders("shaders/spaceshipShaderTex.vert", "shaders/spaceshipShaderTex.frag");
-	spaceship.initTextureRenderer(camera.getViewPtr(), wnd.getProjectionPtr());
-	spaceship.loadTextureBufferData();
-	spaceship.loadTexture("models/textures/texture.png");
+	Spaceship spaceship;
+	spaceship.load(filesData, uniforms);
 
-	wnd.addRenderer(spaceship.getTextureRenderer());
+	wnd.addRenderer(spaceship.getRenderer());
 
 	wnd.refresh();
 	wnd.destory();

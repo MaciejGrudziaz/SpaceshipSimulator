@@ -8,6 +8,10 @@
 #include <memory>
 #include <string>
 #include <GameRenderer/renderobject.h>
+#include <functional>
+#include <iostream>
+
+
 
 class MainWindow
 {
@@ -23,11 +27,15 @@ public:
 	glm::mat4 getProjection()const;
 	std::shared_ptr<const glm::mat4> getProjectionPtr()const;
 
+	void resize(int width, int height);
+
 private:
 	GLFWwindow* window;
 	std::string title;
 	int width, height;
 	float fov;
+
+	std::function<void(GLFWwindow*, int, int)> fun;
 
 	std::shared_ptr<glm::mat4> projection;
 
@@ -35,4 +43,13 @@ private:
 
 	void updateProjection();
 
+	struct Resize
+	{
+		static MainWindow* currMainWindow;
+		static void call(GLFWwindow* wnd, int width, int height)
+		{
+			if (currMainWindow)
+				currMainWindow->resize(width, height);
+		}
+	};
 };

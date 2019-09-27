@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gameobjects\spaceship.cpp" />
+    <ClCompile Include="gameobjects\spaceshiploaddata.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
   </ItemGroup>
