@@ -27,26 +27,12 @@ public:
 
 	void load(const SpaceshipData& data, const SpaceshipUniforms& uniforms);
 
-	void load(const std::string& filename);
-	void loadShaders(const std::string& vertexShader, const std::string& fragmentShader);
-	void loadTextureShaders(const std::string& vertexShader, const std::string& fragmentShader);
-
-	void initRenderer(ConstMat4Ptr view, ConstMat4Ptr projection);
-	void initTextureRenderer(ConstMat4Ptr view, ConstMat4Ptr projection);
-
-	void loadBufferData();
-	void loadTextureBufferData();
-
-	void loadTexture(const std::string& filename);
-
 	std::shared_ptr<RenderObject> getRenderer()const;
-	std::shared_ptr<TextureRenderObject> getTextureRenderer()const;
 
 	error getErrorCode();
 
 private:
 	std::shared_ptr<RenderObject> renderer;
-	std::shared_ptr<TextureRenderObject> texRenderer;
 	std::shared_ptr<Hitbox> mainHitbox;
 	std::shared_ptr<glm::mat4> modelTransform;
 

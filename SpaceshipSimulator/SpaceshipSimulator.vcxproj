@@ -133,10 +133,13 @@
     <ClCompile Include="gameobjects\spaceshiploaddata.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
+    <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
+    <ClInclude Include="utilities\time.h" />
+    <ClInclude Include="utilities\timeroptions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader1_Dynamic.frag" />
