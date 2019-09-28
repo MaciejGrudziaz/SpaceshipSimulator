@@ -48,10 +48,10 @@ void MainWindow::create()
 
 void MainWindow::refresh()
 {
-	//Time timer;
-	//std::function<void(int)> fun = [](int a) {std::cout << "Timer call: " << a << std::endl; };
+	Time timer;
+	std::function<void(int)> fun = [](int a) {std::cout << "Timer call: " << a << std::endl; };
 
-	//timer.setTimer(std::make_shared<TimerOptions<Sec> >(5.0f, BasicTimerOptions::single_shot), fun);
+	timer.setTimer(std::make_shared<TimerOptions<Sec> >(1.0f, BasicTimerOptions::single_shot), fun);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -59,7 +59,7 @@ void MainWindow::refresh()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//timer.refresh();
+		timer.refresh();
 
 		std::for_each(renderers.begin(), renderers.end(), [](auto renderer) { 
 			renderer->process(); 

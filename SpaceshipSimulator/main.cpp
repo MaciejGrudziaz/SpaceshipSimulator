@@ -1,6 +1,7 @@
 #include <GameResources/gameobjects/camera.h>
 #include "mainwindow/mainwindow.h"
 #include "gameobjects/spaceship.h"
+#include "gameengine.h"
 
 #define DEBUG
 

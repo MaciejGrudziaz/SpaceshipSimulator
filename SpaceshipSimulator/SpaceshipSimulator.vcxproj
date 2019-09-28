@@ -129,6 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gameengine.cpp" />
+    <ClCompile Include="gameinit.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
     <ClCompile Include="gameobjects\spaceshiploaddata.cpp" />
     <ClCompile Include="main.cpp" />
@@ -136,6 +138,8 @@
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameengine.h" />
+    <ClInclude Include="gameinit.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
     <ClInclude Include="utilities\time.h" />

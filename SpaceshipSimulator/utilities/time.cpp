@@ -1,5 +1,6 @@
 #include "time.h"
 
+Time::TimeVec Time::timers;
 const float Time::deltaTime = 1.0f / static_cast<float>(Time::logicRefreshRate);
 const float Time::timeDivider = 1000000.0f;
 
@@ -9,6 +10,12 @@ Time::Time()
 	, timeResidue(0.0f)
 	, timerCounter(0.0f)
 {}
+
+Time::~Time()
+{
+	if (timersVecItPtr)
+		timers.erase(*timersVecItPtr);
+}
 
 void Time::starMeasurment()
 {
@@ -38,6 +45,9 @@ int Time::getTimerCount()const
 
 void Time::setTimer(std::shared_ptr<BasicTimerOptions> options, const std::function<void(int)>& callback)
 {
+	timers.push_back(this);
+	timersVecItPtr = std::make_unique<TimeVec::iterator>(timers.end() - 1);
+
 	timer = options;
 	this->callback = callback;
 
@@ -75,4 +85,11 @@ void Time::refresh()
 			callback(lastTimerOverflowCount);
 		}
 	}
+}
+
+void Time::refreshTimers()
+{
+	std::for_each(timers.begin(), timers.end(), [](auto timer) {
+		timer->refresh();
+	});
 }
