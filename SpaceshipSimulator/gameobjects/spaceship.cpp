@@ -24,6 +24,13 @@ void Spaceship::load(const SpaceshipData& data, const SpaceshipUniforms& uniform
 	loadSpaceship->load();
 }
 
+void Spaceship::process() 
+{
+	GameObject::process();
+
+	*modelTransform = getTransform().getTransformMat();
+}
+
 std::shared_ptr<RenderObject> Spaceship::getRenderer()const
 {
 	return renderer;

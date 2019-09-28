@@ -52,13 +52,7 @@ protected:
 	ShaderAttrList shaderAttributes;
 	GLsizei shaderAttributesTotalSize;
 
-	//static const GLuint maxGLuint = (1 << (sizeof(GLuint) * 8)) - 1;
-
 	std::stack<error> errorCode;
-
-	//std::shared_ptr<const glm::mat4> model;
-	//std::shared_ptr<const glm::mat4> view;
-	//std::shared_ptr<const glm::mat4> projection;
 
 	void initBuffersAndArrays();
 	void loadUniformsLoc();

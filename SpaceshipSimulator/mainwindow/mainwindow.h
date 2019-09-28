@@ -19,10 +19,7 @@ public:
 	MainWindow(const std::string& title, int width = 1280, int height = 720, float fov = 90.0f);
 
 	void create();
-	void refresh();
 	void destory();
-
-	void addRenderer(RenderObjectPtr renderer);
 
 	glm::mat4 getProjection()const;
 	std::shared_ptr<const glm::mat4> getProjectionPtr()const;
@@ -30,6 +27,8 @@ public:
 	void resize(int width, int height);
 	int getWidth()const;
 	int getHeight()const;
+
+	void setFov(int fov);
 
 	GLFWwindow* getGLFWwindow() const;
 
@@ -39,11 +38,7 @@ private:
 	int width, height;
 	float fov;
 
-	std::function<void(GLFWwindow*, int, int)> fun;
-
 	std::shared_ptr<glm::mat4> projection;
-
-	std::list<RenderObjectPtr> renderers;
 
 	void updateProjection();
 

@@ -32,7 +32,8 @@ public:
 
 	virtual bool isAvailable() = 0;
 
-	//virtual ~BasicTimerOptions() = 0;
+	virtual ~BasicTimerOptions()
+	{}
 };
 
 template <class type>
@@ -49,9 +50,6 @@ struct TimerOptions<Sec>: public BasicTimerOptions
 	{
 		return true;
 	}
-
-	//~TimerOptions() override
-	//{}
 };
 
 template<>
@@ -65,9 +63,6 @@ struct TimerOptions<Hz>: public BasicTimerOptions
 	{
 		return true;
 	}
-
-	//~TimerOptions() override
-	//{}
 };
 
 template<>
@@ -81,8 +76,5 @@ struct TimerOptions<NoTimer> : public BasicTimerOptions
 	{
 		return false;
 	}
-
-	//~TimerOptions() override
-	//{}
 };
 

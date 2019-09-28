@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../gameengine.h"
+#include "../gameenginemacros.h"
 
-template<>
-class GameResources<GameEngine> {
+GAME_RESOURCES
+{
 public:
 	CameraPtr camera;
 	SpaceshipPtr spaceship;
@@ -13,5 +14,3 @@ public:
 		, spaceship(std::make_shared<Spaceship>())
 	{}
 };
-
-typedef std::shared_ptr<GameResources<GameEngine> > GameResourcesPtr;

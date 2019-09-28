@@ -26,6 +26,8 @@ public:
 
 	template<class T>
 	void addProperty(const std::string& name);
+	template<class T>
+	void addProperty(const std::string& name);
 	std::list<std::string> getPropertiesNames() const;
 	bool removeProperty(const std::string& name);
 

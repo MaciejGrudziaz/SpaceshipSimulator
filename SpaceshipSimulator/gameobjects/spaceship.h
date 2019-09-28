@@ -27,6 +27,8 @@ public:
 
 	void load(const SpaceshipData& data, const SpaceshipUniforms& uniforms);
 
+	void process() override;
+
 	std::shared_ptr<RenderObject> getRenderer()const;
 
 	error getErrorCode();

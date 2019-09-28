@@ -63,6 +63,12 @@
     <ClCompile Include="gamelogic\gamemain.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
+    <ClCompile Include="gamelogic\initialization.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -85,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="gameobjects\gameresources.h">
       <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameenginemacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\initialization.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\spaceshipinputcontrol.h">
+      <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

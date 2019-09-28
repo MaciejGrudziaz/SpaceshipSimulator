@@ -32,20 +32,23 @@ public:
 	void end();
 
 	void addRenderer(RenderObjectPtr renderer);
-	//void registerSpaceship(SpaceshipPtr spaceship);
-	void registerCamera(CameraPtr camera);
+	void setCamera(CameraPtr camera);
 
-	//SpaceshipPtr getSpaceship() const;
 	CameraPtr getCamera() const;
 	ConstMat4Ptr getProjectionMatPtr() const;
 
 	void registerResources(std::shared_ptr<GameResources<GameEngine> > resources);
 	std::shared_ptr<GameResources<GameEngine> > getResources();
 
+	static int getKey(int key);
+
+	struct CursorPos;
+	static CursorPos getCursorPos();
+
 private:
 	Time mainRefreshLogicTimer;
 
-	std::unique_ptr<MainWindow> mainWnd;
+	static std::unique_ptr<MainWindow> mainWnd;
 	std::function<void(GameEngine&)> gameResourcesInitFun;
 	std::function<void(GameEngine&)> initializeFun;
 	std::function<void(GameEngine&)> processFun;
@@ -54,7 +57,6 @@ private:
 	std::shared_ptr<GameResources<GameEngine> > gameResources;
 
 	CameraPtr camera;
-	//SpaceshipPtr spaceship;
 
 	std::list<RenderObjectPtr> renderers;
 
@@ -62,5 +64,30 @@ private:
 
 	void processLogic(int refreshCount);
 	void processGraphics();
+
+	void checkCloseEvent();
+	void setupMouseInputMode();
+};
+
+struct GameEngine::CursorPos
+{
+	double x, y;
+
+	CursorPos operator-(const CursorPos& pos)
+	{
+		CursorPos ret;
+		ret.x = this->x - pos.x;
+		ret.y = this->y - pos.y;
+		return ret;
+	}
+
+	CursorPos operator+(const CursorPos& pos)
+	{
+		CursorPos ret;
+		ret.x = this->x + pos.x;
+		ret.y = this->y + pos.y;
+		return ret;
+	}
+
 };
 
