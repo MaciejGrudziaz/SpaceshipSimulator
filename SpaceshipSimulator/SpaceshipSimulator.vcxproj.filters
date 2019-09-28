@@ -34,6 +34,12 @@
     <Filter Include="Source Files\utilities">
       <UniqueIdentifier>{bd523628-4ade-4db8-af33-ad88d02045d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gamelogic">
+      <UniqueIdentifier>{23288c52-5d4c-4a45-8858-9a83794e0ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamelogic">
+      <UniqueIdentifier>{ad8a8fc9-39c0-4265-b2a6-b1ec348d0a5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,8 +60,8 @@
     <ClCompile Include="gameengine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gameinit.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="gamelogic\gamemain.cpp">
+      <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +80,11 @@
     <ClInclude Include="gameengine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameinit.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gamelogic\gamemain.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\gameresources.h">
+      <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

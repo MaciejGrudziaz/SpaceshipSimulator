@@ -43,6 +43,8 @@ private:
 	friend class TextureSpaceshipLoadData;
 };
 
+typedef std::shared_ptr<Spaceship> SpaceshipPtr;
+
 class SpaceshipLoadData
 {
 public:

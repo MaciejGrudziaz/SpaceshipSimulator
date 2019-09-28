@@ -28,6 +28,10 @@ public:
 	std::shared_ptr<const glm::mat4> getProjectionPtr()const;
 
 	void resize(int width, int height);
+	int getWidth()const;
+	int getHeight()const;
+
+	GLFWwindow* getGLFWwindow() const;
 
 private:
 	GLFWwindow* window;

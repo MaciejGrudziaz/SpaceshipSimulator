@@ -16,34 +16,40 @@ int WinMain(
 )
 #endif
 {
-	Camera camera;
-	camera.getTransform().setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
-	camera.update();
+	GameEngine engine;
+	
+	engine.launch();
+	engine.process();
+	engine.end();
 
-	MainWindow wnd("Main Window");
+	//Camera camera;
+	//camera.getTransform().setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+	//camera.update();
 
-	wnd.create();
+	//MainWindow wnd("Main Window");
 
-	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_DEPTH_TEST);
+	//wnd.create();
 
-	SpaceshipData filesData;
-	filesData.modelFilename = "models/spaceship_tex.mgr";
-	filesData.vertexShaderFilename = "shaders/spaceshipShader.vert";
-	filesData.fragmentShaderFilename = "shaders/spaceshipShader.frag";
-	filesData.textureFilename = "models/textures/texture.png";
+	//glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_DEPTH_TEST);
 
-	SpaceshipUniforms uniforms;
-	uniforms.view = camera.getViewPtr();
-	uniforms.projection = wnd.getProjectionPtr();
+	//SpaceshipData filesData;
+	//filesData.modelFilename = "models/spaceship_tex.mgr";
+	//filesData.vertexShaderFilename = "shaders/spaceshipShader.vert";
+	//filesData.fragmentShaderFilename = "shaders/spaceshipShader.frag";
+	//filesData.textureFilename = "models/textures/texture.png";
 
-	Spaceship spaceship;
-	spaceship.load(filesData, uniforms);
+	//SpaceshipUniforms uniforms;
+	//uniforms.view = camera.getViewPtr();
+	//uniforms.projection = wnd.getProjectionPtr();
 
-	wnd.addRenderer(spaceship.getRenderer());
+	//Spaceship spaceship;
+	//spaceship.load(filesData, uniforms);
 
-	wnd.refresh();
-	wnd.destory();
+	//wnd.addRenderer(spaceship.getRenderer());
+
+	//wnd.refresh();
+	//wnd.destory();
 
 	return 0;
 }

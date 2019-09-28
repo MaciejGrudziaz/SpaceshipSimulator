@@ -130,7 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gameengine.cpp" />
-    <ClCompile Include="gameinit.cpp" />
+    <ClCompile Include="gamelogic\gamemain.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
     <ClCompile Include="gameobjects\spaceshiploaddata.cpp" />
     <ClCompile Include="main.cpp" />
@@ -139,7 +139,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameengine.h" />
-    <ClInclude Include="gameinit.h" />
+    <ClInclude Include="gamelogic\gamemain.h" />
+    <ClInclude Include="gameobjects\gameresources.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
     <ClInclude Include="utilities\time.h" />

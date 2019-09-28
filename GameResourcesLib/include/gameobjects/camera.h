@@ -28,3 +28,5 @@ protected:
 	glm::vec3 up;
 	std::shared_ptr<glm::mat4> view;
 };
+
+typedef std::shared_ptr<Camera> CameraPtr;
