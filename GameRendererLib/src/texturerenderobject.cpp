@@ -11,6 +11,12 @@ TextureRenderObject::TextureRenderObject(const std::string& vertexShaderFilename
 	, texture(0)
 {}
 
+void TextureRenderObject::deepCopy(const RenderObject& object)
+{
+	RenderObject::deepCopy(object);
+	this->texture = static_cast<const TextureRenderObject*>(&object)->texture;
+}
+
 void TextureRenderObject::loadTexture(const std::string& filename)
 {
 	if (checkTextureFile(filename))

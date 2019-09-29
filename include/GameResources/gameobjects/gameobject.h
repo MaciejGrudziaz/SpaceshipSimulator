@@ -24,6 +24,9 @@ public:
 	std::string getName()const;
 	Transform& getTransform();
 
+	glm::mat4 getParentTransform()const;
+	void setParentTransform(const glm::mat4& parentTransform);
+
 	template<class T>
 	void addProperty(const std::string& name);
 	std::list<std::string> getPropertiesNames() const;
@@ -47,6 +50,7 @@ public:
 
 protected:
 	Transform transform;
+	glm::mat4 parentTransform;
 	bool active;
 	std::string name;
 

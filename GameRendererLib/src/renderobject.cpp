@@ -16,6 +16,17 @@ RenderObject::RenderObject(const std::string& vertexShaderFilename, const std::s
 	loadShader(vertexShaderFilename, fragmentShaderFilename);
 }
 
+void RenderObject::deepCopy(const RenderObject& object)
+{
+	this->shader = object.shader;
+	this->VAO = object.VAO;
+	this->VBO = object.VBO;
+	this->bufferVerticesCount = object.bufferVerticesCount;
+	this->uniforms = object.uniforms;
+	this->shaderAttributes = object.shaderAttributes;
+	this->shaderAttributesTotalSize = object.shaderAttributesTotalSize;
+}
+
 void RenderObject::loadShader(std::shared_ptr<Shader> shader)
 {
 	this->shader = shader;
@@ -32,6 +43,19 @@ void RenderObject::loadShader(const std::string& vertexShaderFilename, const std
 void RenderObject::addUniform(std::shared_ptr<UniformData> uniform)
 {
 	uniforms.insert(UniformMap::value_type(uniform->name, uniform));
+}
+
+void RenderObject::deleteUniform(const std::string& name)
+{
+	uniforms.erase(name);
+}
+
+UniformDataPtr RenderObject::getUniform(const std::string& name)
+{
+	auto uniform = uniforms.find(name);
+	if (uniform != uniforms.end())
+		return uniform->second;
+	else return std::make_shared<NullUniformData>();
 }
 
 void RenderObject::initBuffersAndArrays()
@@ -121,7 +145,9 @@ void RenderObject::bindVertexArray()
 
 void RenderObject::updateUniforms()
 {
-	std::for_each(uniforms.begin(), uniforms.end(), [](auto uniformEntry) { uniformEntry.second->update(); });
+	std::for_each(uniforms.begin(), uniforms.end(), [](auto uniformEntry) { 
+		uniformEntry.second->update(); 
+	});
 }
 
 void RenderObject::drawArrays()

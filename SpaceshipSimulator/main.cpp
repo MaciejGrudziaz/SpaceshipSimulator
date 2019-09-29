@@ -1,3 +1,4 @@
+#include <conio.h>
 #include <GameResources/gameobjects/camera.h>
 #include "mainwindow/mainwindow.h"
 #include "gameobjects/spaceship.h"
@@ -51,5 +52,6 @@ int WinMain(
 	//wnd.refresh();
 	//wnd.destory();
 
+	_getch();
 	return 0;
 }

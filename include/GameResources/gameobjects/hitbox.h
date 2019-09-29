@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <algorithm>
 
 struct Hitbox {
 	struct Axis {
@@ -32,17 +33,6 @@ struct Hitbox {
 		IndexGroup(int baseIdx_) :baseIdx(baseIdx_), status(OPEN), idx(std::set<int>()) {}
 	};
 
-	Hitbox(const Hitbox& hitbox) {
-		name = hitbox.name;
-		for (int i = 0; i < hitbox.controlPointsIdx.size(); ++i)
-			controlPointsIdx.push_back(hitbox.controlPointsIdx[i]);
-		localAxis = hitbox.localAxis;
-		jointIdx = hitbox.jointIdx;
-		damageMultiplier = hitbox.damageMultiplier;
-
-		memcpy(basicVertices, hitbox.basicVertices, 8 * sizeof(glm::vec4));
-	}
-
 	std::string name;
 	std::vector<int> controlPointsIdx;
 
@@ -57,6 +47,9 @@ struct Hitbox {
 	double damageMultiplier;
 
 	Hitbox();
+
+	void deepCopy(const Hitbox& hitbox);
+
 };
 
 typedef std::shared_ptr<Hitbox> HitboxPtr;

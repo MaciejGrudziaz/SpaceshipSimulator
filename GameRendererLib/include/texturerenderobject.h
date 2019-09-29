@@ -8,6 +8,8 @@ public:
 	TextureRenderObject();
 	TextureRenderObject(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 
+	virtual void deepCopy(const RenderObject& object);
+
 	void loadTexture(const std::string& filename);
 
 	virtual void process() override;

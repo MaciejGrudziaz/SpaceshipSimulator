@@ -14,11 +14,32 @@ struct UniformData
 		, location(-1)
 	{}
 
+	virtual bool isUsable()const
+	{
+		return true;
+	}
+
 	virtual void loadLocation(GLuint shaderProgram)
 	{
 		location = glGetUniformLocation(shaderProgram, name.c_str());
 	}
+
 	virtual void update() = 0;
+};
+
+struct NullUniformData : public UniformData
+{
+	NullUniformData()
+		: UniformData("")
+	{}
+
+	bool isUsable()const override
+	{
+		return false;
+	}
+
+	void update()override
+	{}
 };
 
 struct UniformDataMat4 : public UniformData
@@ -35,5 +56,6 @@ struct UniformDataMat4 : public UniformData
 	}
 };
 
+typedef std::shared_ptr<UniformData> UniformDataPtr;
 typedef std::shared_ptr<UniformDataMat4> UniformDataMat4Ptr;
 typedef std::shared_ptr<const glm::mat4> ConstMat4Ptr;

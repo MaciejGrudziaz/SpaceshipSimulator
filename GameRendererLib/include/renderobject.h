@@ -26,10 +26,15 @@ public:
 	RenderObject();
 	RenderObject(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 
+	virtual void deepCopy(const RenderObject& object);
+
 	void loadShader(std::shared_ptr<Shader> shader);
 	void loadShader(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 
 	void addUniform(std::shared_ptr<UniformData> uniform);
+	void deleteUniform(const std::string& name);
+	UniformDataPtr getUniform(const std::string& name);
+
 	void addShaderAttribute(ShaderAttribute attribute);
 	void loadBuffer(const std::vector<float>& verticesBuffer);
 

@@ -3,7 +3,6 @@
 #include <GameResources/gameobjects/camera.h>
 #include "mainwindow/mainwindow.h"
 #include "utilities/time.h"
-#include "gameobjects/spaceship.h"
 
 namespace MG {
 	template<class T>

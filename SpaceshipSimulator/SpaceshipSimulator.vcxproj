@@ -130,11 +130,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gameengine.cpp" />
+    <ClCompile Include="gamelogic\asteroidbehaviour.cpp" />
     <ClCompile Include="gamelogic\gamemain.cpp" />
     <ClCompile Include="gamelogic\initialization.cpp" />
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp" />
+    <ClCompile Include="gameobjects\asteroid.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
-    <ClCompile Include="gameobjects\spaceshiploaddata.cpp" />
+    <ClCompile Include="gameobjects\standardgameobject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
     <ClCompile Include="utilities\time.cpp" />
@@ -142,11 +144,15 @@
   <ItemGroup>
     <ClInclude Include="gameengine.h" />
     <ClInclude Include="gameenginemacros.h" />
+    <ClInclude Include="gamelogic\asteroidbehaviour.h" />
     <ClInclude Include="gamelogic\gamemain.h" />
     <ClInclude Include="gamelogic\initialization.h" />
     <ClInclude Include="gamelogic\spaceshipinputcontrol.h" />
+    <ClInclude Include="gameobjects\asteroid.h" />
     <ClInclude Include="gameobjects\gameresources.h" />
+    <ClInclude Include="gameobjects\modelimportstruct.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
+    <ClInclude Include="gameobjects\standardgameobject.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
     <ClInclude Include="utilities\time.h" />
     <ClInclude Include="utilities\timeroptions.h" />

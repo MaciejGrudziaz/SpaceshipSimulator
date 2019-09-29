@@ -15,8 +15,6 @@ public:
 	void invalidate()override;
 
 private:
-	static GLFWwindow* mainWnd;
-
 	float speed;
 	float rotSpeed;
 

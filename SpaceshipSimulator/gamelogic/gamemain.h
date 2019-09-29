@@ -6,3 +6,4 @@
 
 #include "initialization.h"
 #include "spaceshipinputcontrol.h"
+#include "asteroidbehaviour.h"

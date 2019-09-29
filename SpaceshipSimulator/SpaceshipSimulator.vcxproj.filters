@@ -51,9 +51,6 @@
     <ClCompile Include="gameobjects\spaceship.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
-    <ClCompile Include="gameobjects\spaceshiploaddata.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
     <ClCompile Include="utilities\time.cpp">
       <Filter>Source Files\utilities</Filter>
     </ClCompile>
@@ -67,6 +64,15 @@
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\asteroid.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\standardgameobject.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\asteroidbehaviour.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -99,6 +105,18 @@
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
     <ClInclude Include="gamelogic\spaceshipinputcontrol.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\asteroid.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\modelimportstruct.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\standardgameobject.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\asteroidbehaviour.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>

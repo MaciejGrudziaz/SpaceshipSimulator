@@ -3,11 +3,13 @@
 GameObject::GameObject()
 	: active(true)
 	, name("")
+	, parentTransform(1.0f)
 {}
 
 GameObject::GameObject(const std::string& name)
 	: active(true)
 	, name(name)
+	, parentTransform(1.0f)
 {}
 
 GameObject::~GameObject()
@@ -36,6 +38,16 @@ std::string GameObject::getName()const
 Transform& GameObject::getTransform()
 {
 	return transform;
+}
+
+glm::mat4 GameObject::getParentTransform()const
+{
+	return parentTransform;
+}
+
+void GameObject::setParentTransform(const glm::mat4& parentTransform)
+{
+	this->parentTransform = parentTransform;
 }
 
 std::list<std::string> GameObject::getPropertiesNames() const
@@ -164,14 +176,20 @@ bool GameObject::isUsable()const
 void GameObject::init()
 {
 	std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->init(); });
+	std::for_each(children.begin(), children.end(), [](auto child) { child.second->init(); });
 }
 
 void GameObject::process()
 {
 	std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->process(); });
+	std::for_each(children.begin(), children.end(), [this](auto child) {
+		child.second->setParentTransform(this->parentTransform * this->getTransform().getTransformMat());
+		child.second->process(); 
+	});
 }
 
 void GameObject::invalidate()
 {
 	std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->invalidate(); });
+	std::for_each(children.begin(), children.end(), [](auto child) { child.second->invalidate(); });
 }
