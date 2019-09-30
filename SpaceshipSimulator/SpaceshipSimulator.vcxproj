@@ -129,41 +129,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dev\rotation.cpp" />
     <ClCompile Include="gameengine.cpp" />
     <ClCompile Include="gamelogic\asteroidbehaviour.cpp" />
+    <ClCompile Include="gamelogic\asteroidinitialization.cpp" />
+    <ClCompile Include="gamelogic\collisiondetectionalgorithm.cpp" />
+    <ClCompile Include="gamelogic\collisions.cpp" />
     <ClCompile Include="gamelogic\gamemain.cpp" />
     <ClCompile Include="gamelogic\initialization.cpp" />
+    <ClCompile Include="gamelogic\spaceshipinitialization.cpp" />
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp" />
     <ClCompile Include="gameobjects\asteroid.cpp" />
+    <ClCompile Include="gameobjects\hitboxobject.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
+    <ClCompile Include="gameobjects\spaceshipgun.cpp" />
     <ClCompile Include="gameobjects\standardgameobject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
+    <ClCompile Include="renderers\hitboxrenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dev\rotation.h" />
     <ClInclude Include="gameengine.h" />
     <ClInclude Include="gameenginemacros.h" />
     <ClInclude Include="gamelogic\asteroidbehaviour.h" />
+    <ClInclude Include="gamelogic\asteroidinitialization.h" />
+    <ClInclude Include="gamelogic\collisiondetectionalgorithm.h" />
+    <ClInclude Include="gamelogic\collisions.h" />
     <ClInclude Include="gamelogic\gamemain.h" />
     <ClInclude Include="gamelogic\initialization.h" />
+    <ClInclude Include="gamelogic\spaceshipinitialization.h" />
     <ClInclude Include="gamelogic\spaceshipinputcontrol.h" />
     <ClInclude Include="gameobjects\asteroid.h" />
     <ClInclude Include="gameobjects\gameresources.h" />
+    <ClInclude Include="gameobjects\hitboxobject.h" />
     <ClInclude Include="gameobjects\modelimportstruct.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
+    <ClInclude Include="gameobjects\spaceshipgun.h" />
     <ClInclude Include="gameobjects\standardgameobject.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
+    <ClInclude Include="renderers\hitboxrenderer.h" />
     <ClInclude Include="utilities\time.h" />
     <ClInclude Include="utilities\timeroptions.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader1_Dynamic.frag" />
-    <None Include="shaders\shader1_Dynamic.vert" />
+    <None Include="shaders\shader2_Static.frag" />
+    <None Include="shaders\shader2_Static.vert" />
     <None Include="shaders\spaceshipShader.frag" />
     <None Include="shaders\spaceshipShader.vert" />
     <None Include="shaders\spaceshipShaderTex.frag" />
     <None Include="shaders\spaceshipShaderTex.vert" />
+    <None Include="shaders\standardHitbox.frag" />
+    <None Include="shaders\standardHitbox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

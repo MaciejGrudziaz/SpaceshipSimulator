@@ -36,7 +36,8 @@ void MainWindow::create()
 		if (!Resize::currMainWindow)
 		{
 			Resize::currMainWindow = this;
-			glfwSetWindowSizeCallback(window, &Resize::call);
+			//glfwSetWindowSizeCallback(window, &Resize::call);
+			glfwSetFramebufferSizeCallback(window, &Resize::call);
 		}
 
 		glfwMakeContextCurrent(window);

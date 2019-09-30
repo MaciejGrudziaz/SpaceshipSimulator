@@ -42,7 +42,7 @@ struct Hitbox {
 	glm::vec3 basicNormals[6];
 	glm::vec3 transformNormals[6];
 	int jointIdx;
-	static unsigned indices[12 * 2];
+	std::vector<unsigned> indices;
 
 	double damageMultiplier;
 

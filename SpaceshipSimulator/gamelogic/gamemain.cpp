@@ -6,18 +6,21 @@ GAME_INIT(engine)
 
 	setCamera(engine);
 	loadSpaceship(engine);
+	loadPatternAsteroid(engine);
 	loadAsteroids(engine);
-	loadTestAsteroid(engine);
+
 	registerInput(engine);
+	loadObjectsCollisionProperty(engine);
+
 	registerAsteroidBehaviours(engine);
 
 	engine.getResources()->spaceship->init();
 	
+	//engine.getResources()->asteroidPattern->init();
+
 	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
 		asteroid->init();
 	});
-
-	engine.getResources()->testAsteroid->init();
 }
 
 GAME_PROCESS(engine)
@@ -29,7 +32,7 @@ GAME_PROCESS(engine)
 		asteroid->process();
 	});
 
-	engine.getResources()->testAsteroid->process();
+	//engine.getResources()->asteroidPattern->process();
 }
 
 GAME_END(engine)

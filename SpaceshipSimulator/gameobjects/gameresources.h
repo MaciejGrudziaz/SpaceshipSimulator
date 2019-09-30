@@ -3,14 +3,20 @@
 #include "spaceship.h"
 #include "../gameengine.h"
 #include "../gameenginemacros.h"
+#include "hitboxobject.h"
 
 GAME_RESOURCES
 {
 public:
 	CameraPtr camera;
-	StandardGameObjectPtr spaceship;
 
-	GameObjectPtr testAsteroid;
+	SpaceshipPtr spaceship;
+
+	//HitboxObjectPtr testHitbox;
+	StandardGameObjectPtr asteroidPattern;
+	HitboxObjectPtr asteroidHitboxPattern;
+	
+	//StandardGameObjectPtr testAsteroid;
 	std::vector<StandardGameObjectPtr> asteroids;
 
 	GameResources()

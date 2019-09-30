@@ -16,3 +16,11 @@ struct ModelExternalUniforms
 	ConstMat4Ptr view;
 	ConstMat4Ptr projection;
 };
+
+struct HitboxObjectData
+{
+	std::string hitboxFilename;
+	std::string vertexShaderFilename;
+	std::string fragmentShaderFilename;
+};
+

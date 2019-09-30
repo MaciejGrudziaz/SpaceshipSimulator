@@ -1,19 +1,31 @@
 #include <stdafx.h>
 
 RenderObject::RenderObject()
-	: VAO(-1)
+	: isActive(true)
+	, VAO(-1)
 	, VBO(-1)
 	, shaderAttributesTotalSize(0)
 	, bufferVerticesCount(0)
 {}
 
 RenderObject::RenderObject(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename)
-	: VAO(-1)
+	: isActive(true)
+	, VAO(-1)
 	, VBO(-1)
 	, shaderAttributesTotalSize(0)
 	, bufferVerticesCount(0)
 {
 	loadShader(vertexShaderFilename, fragmentShaderFilename);
+}
+
+void RenderObject::setActive(bool status)
+{
+	isActive = status;
+}
+
+bool RenderObject::getActiveStatus()const
+{
+	return isActive;
 }
 
 void RenderObject::deepCopy(const RenderObject& object)
@@ -126,7 +138,7 @@ void RenderObject::init()
 
 void RenderObject::process()
 {
-	if (shader)
+	if (shader->getErrorCode() == Shader::NO_ERROR && isActive)
 	{
 		bindVertexArray();
 

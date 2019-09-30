@@ -26,6 +26,9 @@ public:
 	RenderObject();
 	RenderObject(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 
+	void setActive(bool status);
+	bool getActiveStatus()const;
+
 	virtual void deepCopy(const RenderObject& object);
 
 	void loadShader(std::shared_ptr<Shader> shader);
@@ -45,6 +48,7 @@ public:
 	error getErrorCode();
 
 protected:
+	bool isActive;
 	std::shared_ptr<Shader> shader;
 	GLuint VAO;
 	GLuint VBO;

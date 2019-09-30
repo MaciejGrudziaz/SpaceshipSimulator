@@ -8,6 +8,8 @@ StandardGameObject::StandardGameObject()
 
 void StandardGameObject::deepCopy(const StandardGameObject& object)
 {
+	GameObject::deepCopy(object);
+
 	this->models = object.models;
 	this->textureAvailable = object.textureAvailable;
 
@@ -22,6 +24,18 @@ void StandardGameObject::deepCopy(const StandardGameObject& object)
 
 	this->modelTransform = std::make_shared<glm::mat4>(1.0f);
 
+	//UniformDataPtr sourceModelUniform = this->renderer->getUniform("model");
+	//int location = sourceModelUniform->location;
+	//this->renderer->deleteUniform("model");
+	//UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
+	//modelUniform->mat = this->modelTransform;
+	//modelUniform->location = location;
+	//this->renderer->addUniform(modelUniform);
+	copyModelUniform();
+}
+
+void StandardGameObject::copyModelUniform()
+{
 	UniformDataPtr sourceModelUniform = this->renderer->getUniform("model");
 	int location = sourceModelUniform->location;
 	this->renderer->deleteUniform("model");
@@ -222,6 +236,11 @@ std::shared_ptr<RenderObject> StandardGameObject::getRenderer()const
 	return renderer;
 }
 
+HitboxPtr StandardGameObject::getMainHitbox()const
+{
+	return mainHitbox;
+}
+
 StandardGameObject::error StandardGameObject::getErrorCode()
 {
 	error code;
@@ -233,4 +252,10 @@ StandardGameObject::error StandardGameObject::getErrorCode()
 	else code = NO_ERROR;
 
 	return code;
+}
+
+void StandardGameObject::setActive(bool val)
+{
+	GameObject::setActive(val);
+	renderer->setActive(val);
 }

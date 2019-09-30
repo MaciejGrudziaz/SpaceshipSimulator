@@ -4,6 +4,7 @@
 #include <GameResources/files/mgrimportfile.h>
 #include <GameRenderer/texturerenderobject.h>
 #include "modelimportstruct.h"
+#include "hitboxobject.h"
 
 class StandardGameObject: public GameObject
 {
@@ -21,8 +22,11 @@ public:
 	virtual void process() override;
 
 	std::shared_ptr<RenderObject> getRenderer()const;
+	HitboxPtr getMainHitbox()const;
 
 	error getErrorCode();
+
+	void setActive(bool val);
 
 protected:
 	std::shared_ptr<RenderObject> renderer;
@@ -53,6 +57,8 @@ protected:
 	virtual void loadTexture(const std::string& textureFilename);
 
 	void checkTextureFile(const std::string& texFilename);
+
+	void copyModelUniform();
 };
 
 typedef std::shared_ptr<StandardGameObject> StandardGameObjectPtr;

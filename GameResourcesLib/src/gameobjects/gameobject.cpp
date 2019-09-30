@@ -69,6 +69,17 @@ bool GameObject::removeProperty(const std::string& name)
 	else return false;
 }
 
+std::shared_ptr<Property<GameObject> > GameObject::getProperty(const std::string& name)
+{
+	PropertyMap::iterator it = properties.find(name);
+
+	if (it != properties.end())
+	{
+		return it->second;
+	}
+	else return std::make_shared<NullGameObjectProperty>(*this);
+}
+
 void GameObject::addChild(std::shared_ptr<GameObject> child)
 {
 	if (child->name != "" && isChildNameUnique(child->name))
@@ -192,4 +203,16 @@ void GameObject::invalidate()
 {
 	std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->invalidate(); });
 	std::for_each(children.begin(), children.end(), [](auto child) { child.second->invalidate(); });
+}
+
+void GameObject::deepCopy(const GameObject& object)
+{
+	transform.setDefaultOrientation(object.transform.getDefaultOrientation());
+	transform.setPosition(object.transform.getPosition());
+	transform.setRotation(object.transform.getRotation());
+	transform.setScale(object.transform.getScale());
+
+	parentTransform = object.parentTransform;
+	active = object.active;
+	models = object.models;
 }

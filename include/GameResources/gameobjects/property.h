@@ -22,6 +22,10 @@ public:
 	virtual void init() = 0;
 	virtual void process() = 0;
 	virtual void invalidate() = 0;
+	virtual bool isUsable()const
+	{
+		return true;
+	}
 };
 
 //template classes to help implementing Properties inside other classes

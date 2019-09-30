@@ -27,11 +27,29 @@ void RandomRotation::process()
 void RandomRotation::invalidate()
 {}
 
+void AsteroidMovement::init()
+{
+	speed = static_cast<float>((rand() % 1000)) / 100.0f;
+}
+
+void AsteroidMovement::process()
+{
+	glm::vec3 pos = object.getTransform().getPosition();
+
+	pos.y -= speed * Time::deltaTime;
+
+	object.getTransform().setPosition(pos);
+}
+
+void AsteroidMovement::invalidate()
+{}
+
 void registerAsteroidBehaviours(GameEngine& engine)
 {
 	//engine.getResources()->asteroid->addProperty<RandomRotation>("rotation");
 	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid)
 	{
 		asteroid->addProperty<RandomRotation>("rotation");
+		asteroid->addProperty<AsteroidMovement>("movement");
 	});
 }

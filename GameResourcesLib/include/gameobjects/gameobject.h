@@ -31,6 +31,7 @@ public:
 	void addProperty(const std::string& name);
 	std::list<std::string> getPropertiesNames() const;
 	bool removeProperty(const std::string& name);
+	std::shared_ptr<Property<GameObject> > getProperty(const std::string& name);
 
 	void addChild(std::shared_ptr<GameObject> child);
 	void removeChild(std::string name);
@@ -47,6 +48,8 @@ public:
 	virtual void init();
 	virtual void process();
 	virtual void invalidate();
+
+	void deepCopy(const GameObject& object);
 
 protected:
 	Transform transform;
@@ -73,6 +76,21 @@ void GameObject::addProperty(const std::string& name)
 
 struct NullGameObject : public GameObject
 {
+	bool isUsable()const override
+	{
+		return false;
+	}
+};
+
+struct NullGameObjectProperty : public Property<GameObject>
+{
+	NullGameObjectProperty(GameObject& obj)
+		: Property<GameObject>("", obj)
+	{}
+
+	void init()override {}
+	void process()override {}
+	void invalidate()override {}
 	bool isUsable()const override
 	{
 		return false;

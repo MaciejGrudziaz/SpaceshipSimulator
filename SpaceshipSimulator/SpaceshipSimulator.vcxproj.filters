@@ -40,6 +40,18 @@
     <Filter Include="Source Files\gamelogic">
       <UniqueIdentifier>{ad8a8fc9-39c0-4265-b2a6-b1ec348d0a5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\renderers">
+      <UniqueIdentifier>{adb4a422-d220-4d1a-b969-7ebe6597e17b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderers">
+      <UniqueIdentifier>{e84fed9e-1c16-4b99-8c10-4b139af96e95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\dev">
+      <UniqueIdentifier>{016f9886-e9ee-43d9-a66c-2d3ff14f3924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dev">
+      <UniqueIdentifier>{6ef4c3c7-2d49-4755-8d4d-2293067fef03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +86,30 @@
     </ClCompile>
     <ClCompile Include="gamelogic\asteroidbehaviour.cpp">
       <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\collisions.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\hitboxobject.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\hitboxrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\rotation.cpp">
+      <Filter>Source Files\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\spaceshipinitialization.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\asteroidinitialization.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\collisiondetectionalgorithm.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\spaceshipgun.cpp">
+      <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,14 +155,32 @@
     <ClInclude Include="gamelogic\asteroidbehaviour.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
+    <ClInclude Include="gamelogic\collisions.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\hitboxobject.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\hitboxrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\rotation.h">
+      <Filter>Header Files\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\spaceshipinitialization.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\asteroidinitialization.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\collisiondetectionalgorithm.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\spaceshipgun.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader1_Dynamic.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="shaders\shader1_Dynamic.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="shaders\spaceshipShader.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -137,6 +191,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\spaceshipShaderTex.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\standardHitbox.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\standardHitbox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\shader2_Static.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\shader2_Static.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

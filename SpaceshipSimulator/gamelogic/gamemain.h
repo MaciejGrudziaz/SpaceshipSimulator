@@ -5,5 +5,8 @@
 #include "../gameenginemacros.h"
 
 #include "initialization.h"
+
 #include "spaceshipinputcontrol.h"
 #include "asteroidbehaviour.h"
+#include "collisions.h"
+#include "../dev/rotation.h"
