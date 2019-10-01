@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../dev/particles.h"
 #include "spaceship.h"
 #include "../gameengine.h"
 #include "../gameenginemacros.h"
@@ -12,12 +13,12 @@ public:
 
 	SpaceshipPtr spaceship;
 
-	//HitboxObjectPtr testHitbox;
 	StandardGameObjectPtr asteroidPattern;
 	HitboxObjectPtr asteroidHitboxPattern;
 	
-	//StandardGameObjectPtr testAsteroid;
 	std::vector<StandardGameObjectPtr> asteroids;
+
+	ParticleSystemPtr particles;
 
 	GameResources()
 		: camera(std::make_shared<Camera>())

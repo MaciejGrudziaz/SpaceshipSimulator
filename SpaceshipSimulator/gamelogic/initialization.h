@@ -1,9 +1,25 @@
 #pragma once
 
-#include "spaceshipinitialization.h"
-#include "asteroidinitialization.h"
+#include <ctime>
 #include "../gameengine.h"
 #include "../gameobjects/gameresources.h"
-#include <ctime>
+
+#include "spaceshipinitialization.h"
+#include "asteroidinitialization.h"
+
+#include "spaceshipinputcontrol.h"
+#include "asteroidbehaviour.h"
+#include "collisions.h"
+#include "gunbehaviour.h"
+
+#include "../dev/particlesystemtest.h"
+
+#include "../dev/rotation.h"
 
 void setCamera(GameEngine& engine);
+
+void initializeGame(GameEngine& engine);
+void processGame(GameEngine& engine);
+
+void initializeParticlesTest(GameEngine& engine);
+void processParticlesTest(GameEngine& engine);

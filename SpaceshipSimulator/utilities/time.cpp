@@ -9,12 +9,17 @@ Time::Time()
 	, timer(std::make_unique<TimerOptions<NoTimer> >())
 	, timeResidue(0.0f)
 	, timerCounter(0.0f)
-{}
+{
+	timers.push_back(this);
+}
 
 Time::~Time()
 {
-	if (timersVecItPtr)
-		timers.erase(*timersVecItPtr);
+	for (int i = 0 ;i<timers.size();++i)
+	{
+		if (timers[i] == this)
+			timers.erase(timers.begin() + i);
+	}
 }
 
 void Time::starMeasurment()
@@ -45,9 +50,6 @@ int Time::getTimerCount()const
 
 void Time::setTimer(std::shared_ptr<BasicTimerOptions> options, const std::function<void(int)>& callback)
 {
-	timers.push_back(this);
-	timersVecItPtr = std::make_unique<TimeVec::iterator>(timers.end() - 1);
-
 	timer = options;
 	this->callback = callback;
 

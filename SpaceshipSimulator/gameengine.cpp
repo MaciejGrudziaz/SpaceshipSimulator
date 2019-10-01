@@ -58,6 +58,7 @@ void GameEngine::checkCloseEvent()
 void GameEngine::processLogic(int refreshCount)
 {
 	processFun(*this);
+	//processGraphics();
 }
 
 void GameEngine::processGraphics()

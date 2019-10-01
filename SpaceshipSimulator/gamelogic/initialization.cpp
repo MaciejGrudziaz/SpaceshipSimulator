@@ -8,3 +8,46 @@ void setCamera(GameEngine& engine)
 	engine.setCamera(camera);
 	engine.getResources()->camera = camera;
 }
+
+void initializeGame(GameEngine& engine)
+{
+	srand(time(0));
+
+	setCamera(engine);
+	loadSpaceship(engine);
+	loadPatternAsteroid(engine);
+	loadAsteroids(engine);
+
+	registerInput(engine);
+	loadObjectsCollisionProperty(engine);
+	registerAsteroidBehaviours(engine);
+	registerSpaceshipGunBehaviours(engine);
+
+	engine.getResources()->spaceship->init();
+
+	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
+		asteroid->init();
+	});
+}
+
+void processGame(GameEngine& engine)
+{
+	engine.getResources()->camera->update();
+	engine.getResources()->spaceship->process();
+
+	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
+		asteroid->process();
+	});
+}
+
+void initializeParticlesTest(GameEngine& engine)
+{
+	setCamera(engine);
+	initializeParticleSystem(engine);
+}
+
+void processParticlesTest(GameEngine& engine)
+{
+	engine.getResources()->camera->update();
+	processParticleSystem(engine);
+}

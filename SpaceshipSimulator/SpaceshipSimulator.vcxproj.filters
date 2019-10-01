@@ -111,6 +111,18 @@
     <ClCompile Include="gameobjects\spaceshipgun.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="gamelogic\gunbehaviour.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\particles.cpp">
+      <Filter>Source Files\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\particlerenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\particlesystemtest.cpp">
+      <Filter>Source Files\dev</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -179,6 +191,18 @@
     <ClInclude Include="gameobjects\spaceshipgun.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
+    <ClInclude Include="gamelogic\gunbehaviour.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\particles.h">
+      <Filter>Header Files\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\particlerenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\particlesystemtest.h">
+      <Filter>Header Files\dev</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\spaceshipShader.frag">
@@ -199,10 +223,10 @@
     <None Include="shaders\standardHitbox.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\shader2_Static.frag">
+    <None Include="shaders\particle.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\shader2_Static.vert">
+    <None Include="shaders\particle.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

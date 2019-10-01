@@ -24,3 +24,10 @@ struct HitboxObjectData
 	std::string fragmentShaderFilename;
 };
 
+struct ParticleSystemData
+{
+	std::string particleTexture;
+	std::string vertexShaderFilename;
+	std::string fragmentShaderFilename;
+};
+

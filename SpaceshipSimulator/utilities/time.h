@@ -30,7 +30,6 @@ public:
 
 private:
 	static TimeVec timers;
-	std::unique_ptr<TimeVec::iterator> timersVecItPtr;
 
 	std::chrono::system_clock::time_point timePoint;
 
