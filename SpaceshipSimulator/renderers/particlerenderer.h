@@ -1,49 +1,13 @@
 #pragma once
 
 #include <GameRenderer/texturerenderobject.h>
-
-struct Particle
-{
-	glm::vec3 pos;
-	float lifeTime;
-	float maxLifeTime;
-	glm::vec3 speed;
-	float distanceFromCamera;
-	float size;
-
-	Particle()
-		: pos(0.0f)
-		, lifeTime(0.0f)
-		, speed(0.0f)
-		, size(1.0f)
-	{}
-
-	void update(float dt)
-	{
-		if (lifeTime > 0.0f)
-		{
-			lifeTime -= dt;
-			pos += speed * dt;
-		}
-
-		if (lifeTime < 0.0f)
-			lifeTime = 0.0f;
-	}
-
-	bool operator<(const Particle& particle)
-	{
-		//return (this->distanceFromCamera > particle.distanceFromCamera);
-		if (this->distanceFromCamera > particle.distanceFromCamera)
-			return true;
-		else return false;
-	}
-};
+#include "../dev/particle.h"
 
 class ParticleRenderer : public TextureRenderObject
 {
 public:
 
-	ParticleRenderer(std::vector<Particle>& particles);
+	ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer);
 
 	void init()override;
 	void process()override;
@@ -52,6 +16,9 @@ public:
 	void loadBuffers();
 
 	void setParticlesCount(int val);
+
+	void updatePositionBuffer();
+	void updateColorBuffer();
 
 private:
 	GLuint particlePositionSizeBuffer;
@@ -62,9 +29,11 @@ private:
 	GLint attribPosSize;
 	GLint attribColor;
 
-	std::vector<Particle>& particles;
-	std::vector<float> particlesPositionSize;
-	std::vector<float> particlesColor;
+	//std::vector<Particle>& particles;
+	bool posSizeBufferUpdateFlag;
+	bool colorBufferUpdateFlag;
+	std::vector<float>& particlesPositionSize;
+	std::vector<float>& particlesColor;
 
 	void bindBuffers();
 	void updateBuffers();

@@ -114,13 +114,16 @@
     <ClCompile Include="gamelogic\gunbehaviour.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
-    <ClCompile Include="dev\particles.cpp">
-      <Filter>Source Files\dev</Filter>
-    </ClCompile>
     <ClCompile Include="renderers\particlerenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
     <ClCompile Include="dev\particlesystemtest.cpp">
+      <Filter>Source Files\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\particlesystem.cpp">
+      <Filter>Source Files\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\particle.cpp">
       <Filter>Source Files\dev</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,13 +197,16 @@
     <ClInclude Include="gamelogic\gunbehaviour.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="dev\particles.h">
-      <Filter>Header Files\dev</Filter>
-    </ClInclude>
     <ClInclude Include="renderers\particlerenderer.h">
       <Filter>Header Files\renderers</Filter>
     </ClInclude>
     <ClInclude Include="dev\particlesystemtest.h">
+      <Filter>Header Files\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\particlesystem.h">
+      <Filter>Header Files\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\particle.h">
       <Filter>Header Files\dev</Filter>
     </ClInclude>
   </ItemGroup>

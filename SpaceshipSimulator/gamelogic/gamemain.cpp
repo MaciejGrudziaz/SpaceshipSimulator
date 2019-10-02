@@ -15,5 +15,5 @@ GAME_PROCESS(engine)
 
 GAME_END(engine)
 {
-
+	invalidateParticles(engine);
 }

@@ -1,7 +1,10 @@
 #include "particlerenderer.h"
 
-ParticleRenderer::ParticleRenderer(std::vector<Particle>& particles)
-	: particles(particles)
+ParticleRenderer::ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer)
+	: particlesPositionSize(posSizeBuffer)
+	, particlesColor(colorBuffer)
+	, posSizeBufferUpdateFlag(true)
+	, colorBufferUpdateFlag(true)
 {}
 
 void ParticleRenderer::init()
@@ -24,10 +27,9 @@ void ParticleRenderer::process()
 
 		updateBuffers();
 
-		//glEnable(GL_POINT_SPRITE);
-		//glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
 
 		glUseProgram(shader->getProgram());
 
@@ -67,52 +69,42 @@ void ParticleRenderer::bindBuffers()
 
 void ParticleRenderer::updateBuffers()
 {
-	static int test = 0;
-	++test;
+	//std::sort(particles.begin(), particles.end());
 
-	std::sort(particles.begin(), particles.end());
+	//glm::vec3 color(0.7f, 0.7f, 0.7f);
 
-	glm::vec3 color(1.0f, 0.0f, 0.0f);
+	//int counter = 0;
+	//for (const Particle& particle : particles)
+	//{
+	//	if (counter < particlesCount)
+	//	{
+	//		memcpy(particlesPositionSize.data() + 4 * counter, glm::value_ptr(particle.pos), 3 * sizeof(float));
+	//		particlesPositionSize[4 * counter + 3] = particle.size;
 
-	particlesPositionSize.clear();
-	particlesColor.clear();
+	//		memcpy(particlesColor.data() + 4 * counter, glm::value_ptr(color), 3 * sizeof(float));
+	//		particlesColor[4 * counter + 3] = particle.lifeTime / particle.maxLifeTime;
 
-	int counter = 0;
-	for (const Particle& particle : particles)
+	//		++counter;
+	//	}
+	//}
+
+	if (posSizeBufferUpdateFlag)
 	{
-		if (counter < particlesCount)
-		{
-			particlesPositionSize.push_back(particle.pos.x);
-			particlesPositionSize.push_back(particle.pos.y);
-			particlesPositionSize.push_back(particle.pos.z);
-			particlesPositionSize.push_back(particle.size);
+		glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
+		glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, particlesCount * 4 * sizeof(float), particlesPositionSize.data());
 
-			particlesColor.push_back(color.x);
-			particlesColor.push_back(color.y);
-			particlesColor.push_back(color.z);
-			particlesColor.push_back(particle.lifeTime/particle.maxLifeTime);
-
-			++counter;
-		}
-	}
-	if (counter != particlesCount)
-	{
-		for (int i = counter; i < particlesCount; ++i)
-		{
-			particlesColor.push_back(0.0f);
-			particlesColor.push_back(0.0f);
-			particlesColor.push_back(0.0f);
-			particlesColor.push_back(0.0f);
-		}
+		posSizeBufferUpdateFlag = false;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
-	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, particlesCount * 4 * sizeof(float), particlesPositionSize.data());
+	if (colorBufferUpdateFlag)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
+		glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, particlesCount * 4 * sizeof(float), particlesColor.data());
 
-	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, particlesCount * 4 * sizeof(float), particlesColor.data());
+		colorBufferUpdateFlag = false;
+	}
 }	
 
 void ParticleRenderer::invalidate()
@@ -125,25 +117,44 @@ void ParticleRenderer::invalidate()
 
 void ParticleRenderer::loadBuffers()
 {
-	static const GLfloat g_vertex_buffer_data[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f,
+	static const GLfloat vertexBuffer[] = {
+		-0.5f, -0.5f,  0.0f,
+		 0.5f, -0.5f,  0.0f,
+		-0.5f,  0.5f,  0.0f,
+		 0.5f,  0.5f,  0.0f,
 	};
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
 	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+
+	for (int i = 0; i < particlesCount; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			particlesPositionSize.push_back(0.0f);
+			particlesColor.push_back(0.0f);
+		}
+	}
 }
 
 void ParticleRenderer::setParticlesCount(int val)
 {
 	particlesCount = val;
+}
+
+void ParticleRenderer::updatePositionBuffer()
+{
+	posSizeBufferUpdateFlag = true;
+}
+
+void ParticleRenderer::updateColorBuffer()
+{
+	colorBufferUpdateFlag = true;
 }

@@ -129,7 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dev\particles.cpp" />
+    <ClCompile Include="dev\particle.cpp" />
+    <ClCompile Include="dev\particlesystem.cpp" />
     <ClCompile Include="dev\particlesystemtest.cpp" />
     <ClCompile Include="dev\rotation.cpp" />
     <ClCompile Include="gameengine.cpp" />
@@ -154,7 +155,8 @@
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dev\particles.h" />
+    <ClInclude Include="dev\particle.h" />
+    <ClInclude Include="dev\particlesystem.h" />
     <ClInclude Include="dev\particlesystemtest.h" />
     <ClInclude Include="dev\rotation.h" />
     <ClInclude Include="gameengine.h" />

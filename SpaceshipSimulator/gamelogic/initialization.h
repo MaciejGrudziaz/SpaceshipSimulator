@@ -23,3 +23,4 @@ void processGame(GameEngine& engine);
 
 void initializeParticlesTest(GameEngine& engine);
 void processParticlesTest(GameEngine& engine);
+void invalidateParticles(GameEngine& engine);

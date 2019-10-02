@@ -17,6 +17,14 @@ struct ModelExternalUniforms
 	ConstMat4Ptr projection;
 };
 
+struct ParticleSystemUniforms
+{
+	ConstMat4Ptr view;
+	ConstMat4Ptr projection;
+	ConstVec3Ptr cameraUp;
+	ConstVec3Ptr cameraRight;
+};
+
 struct HitboxObjectData
 {
 	std::string hitboxFilename;

@@ -3,7 +3,7 @@
 void setCamera(GameEngine& engine)
 {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 30.0f));
+	camera->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 10.0f));
 
 	engine.setCamera(camera);
 	engine.getResources()->camera = camera;
@@ -50,4 +50,10 @@ void processParticlesTest(GameEngine& engine)
 {
 	engine.getResources()->camera->update();
 	processParticleSystem(engine);
+}
+
+void invalidateParticles(GameEngine& engine)
+{
+	engine.getResources()->particles->invalidate();
+	engine.getResources()->particles2->invalidate();
 }
