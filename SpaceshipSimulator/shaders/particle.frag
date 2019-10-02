@@ -8,7 +8,7 @@ out vec4 color;
 void main(void)
 {
 	color = texture(particleTexture, UV) * particleColor;
-	//color.a = color.a * color.a;
+	color.a = color.a * color.a;
 
 	if(color.a < 0.05)
 		discard;

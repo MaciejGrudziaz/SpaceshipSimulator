@@ -231,6 +231,13 @@ void StandardGameObject::process()
 	*modelTransform = parentTransform * getTransform().getTransformMat();
 }
 
+void StandardGameObject::setActive(bool val)
+{
+	GameObject::setActive(val);
+
+	renderer->setActive(val);
+}
+
 std::shared_ptr<RenderObject> StandardGameObject::getRenderer()const
 {
 	return renderer;
@@ -252,10 +259,4 @@ StandardGameObject::error StandardGameObject::getErrorCode()
 	else code = NO_ERROR;
 
 	return code;
-}
-
-void StandardGameObject::setActive(bool val)
-{
-	GameObject::setActive(val);
-	renderer->setActive(val);
 }

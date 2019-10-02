@@ -1,10 +1,11 @@
 #include "particlerenderer.h"
 
-ParticleRenderer::ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer)
+ParticleRenderer::ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer, const BlendFunctions& blend)
 	: particlesPositionSize(posSizeBuffer)
 	, particlesColor(colorBuffer)
 	, posSizeBufferUpdateFlag(true)
 	, colorBufferUpdateFlag(true)
+	, blendFunc(blend)
 {}
 
 void ParticleRenderer::init()
@@ -28,8 +29,7 @@ void ParticleRenderer::process()
 		updateBuffers();
 
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+		glBlendFunc(blendFunc.sfactor, blendFunc.dfactor);
 
 		glUseProgram(shader->getProgram());
 
@@ -45,6 +45,8 @@ void ParticleRenderer::process()
 		glDisableVertexAttribArray(attribVertex);
 		glDisableVertexAttribArray(attribPosSize);
 		glDisableVertexAttribArray(attribColor);
+
+		glDisable(GL_BLEND);
 
 	}
 	else errorCode.push(NO_SHADER_AVAILABLE);
@@ -69,25 +71,6 @@ void ParticleRenderer::bindBuffers()
 
 void ParticleRenderer::updateBuffers()
 {
-	//std::sort(particles.begin(), particles.end());
-
-	//glm::vec3 color(0.7f, 0.7f, 0.7f);
-
-	//int counter = 0;
-	//for (const Particle& particle : particles)
-	//{
-	//	if (counter < particlesCount)
-	//	{
-	//		memcpy(particlesPositionSize.data() + 4 * counter, glm::value_ptr(particle.pos), 3 * sizeof(float));
-	//		particlesPositionSize[4 * counter + 3] = particle.size;
-
-	//		memcpy(particlesColor.data() + 4 * counter, glm::value_ptr(color), 3 * sizeof(float));
-	//		particlesColor[4 * counter + 3] = particle.lifeTime / particle.maxLifeTime;
-
-	//		++counter;
-	//	}
-	//}
-
 	if (posSizeBufferUpdateFlag)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);

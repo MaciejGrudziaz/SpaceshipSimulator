@@ -10,3 +10,4 @@ void addWingHitboxToSpaceship(GameEngine& engine);
 void addCocpitHitboxToSpaceship(GameEngine& engine);
 void addMainEngineHitboxToSpaceship(GameEngine& engine);
 void loadGuns(GameEngine& engine);
+void loadParticlesSytem(GameEngine& engine);

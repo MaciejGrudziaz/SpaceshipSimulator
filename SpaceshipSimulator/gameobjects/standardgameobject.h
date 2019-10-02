@@ -20,13 +20,12 @@ public:
 	virtual void load(const ModelData& data, const ModelExternalUniforms& uniforms);
 
 	virtual void process() override;
+	virtual void setActive(bool val) override;
 
 	std::shared_ptr<RenderObject> getRenderer()const;
 	HitboxPtr getMainHitbox()const;
 
 	error getErrorCode();
-
-	void setActive(bool val);
 
 protected:
 	std::shared_ptr<RenderObject> renderer;

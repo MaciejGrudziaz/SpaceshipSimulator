@@ -1,13 +1,24 @@
 #pragma once
 
 #include <GameRenderer/texturerenderobject.h>
-#include "../dev/particle.h"
+#include "../gameobjects/particle.h"
+
+struct BlendFunctions
+{
+	GLenum sfactor;
+	GLenum dfactor;
+
+	BlendFunctions()
+		: sfactor(GL_SRC_ALPHA)
+		, dfactor(GL_ONE_MINUS_SRC_ALPHA)
+	{}
+};
 
 class ParticleRenderer : public TextureRenderObject
 {
 public:
 
-	ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer);
+	ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer, const BlendFunctions& blend);
 
 	void init()override;
 	void process()override;
@@ -29,7 +40,8 @@ private:
 	GLint attribPosSize;
 	GLint attribColor;
 
-	//std::vector<Particle>& particles;
+	BlendFunctions blendFunc;
+
 	bool posSizeBufferUpdateFlag;
 	bool colorBufferUpdateFlag;
 	std::vector<float>& particlesPositionSize;

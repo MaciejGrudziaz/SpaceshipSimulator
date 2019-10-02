@@ -15,7 +15,7 @@ void loadSpaceship(GameEngine& engine)
 	SpaceshipPtr spaceship = std::make_shared<Spaceship>();
 	spaceship->load(filesData, uniforms);
 
-	spaceship->getTransform().setPosition(glm::vec3(0.0f, -15.0f, 0.0f));
+	spaceship->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	engine.addRenderer(spaceship->getRenderer());
 	engine.getResources()->spaceship = spaceship;
@@ -25,6 +25,7 @@ void loadSpaceship(GameEngine& engine)
 	addCocpitHitboxToSpaceship(engine);
 	addMainEngineHitboxToSpaceship(engine);
 
+	loadParticlesSytem(engine);
 	loadGuns(engine);
 }
 
@@ -152,4 +153,56 @@ void loadGuns(GameEngine& engine)
 	{
 		engine.addRenderer(static_cast<StandardGameObject&>(*obj).getRenderer());
 	}
+}
+
+void loadParticlesSytem(GameEngine& engine)
+{
+	SpaceshipPtr spaceship = engine.getResources()->spaceship;
+
+	ParticleSystemPtr particles = std::make_shared<ParticleSystem>();
+	particles->setName("particles");
+	particles->setParticlesCount(2000);
+	particles->setParticlesMaxSpeed(10.0f);
+	particles->setParticlesMaxLifetime(0.3f);
+	particles->setParticlesSize(0.8f);
+	particles->setParticlesSpreadCone(-30.0f, 30.0f);
+	particles->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(0.2f, 0.2f, 0.2f));
+	particles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
+	particles->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+	particles->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
+
+	particles->registerCamera(engine.getResources()->camera);
+
+	ParticleSystemData data;
+	data.particleTexture = "sprites/smoke.png";
+	data.vertexShaderFilename = "shaders/particle.vert";
+	data.fragmentShaderFilename = "shaders/particle.frag";
+
+	ModelExternalUniforms uniforms;
+	uniforms.view = engine.getResources()->camera->getViewPtr();
+	uniforms.projection = engine.getProjectionMatPtr();
+
+	particles->load(data, uniforms);
+	particles->launch();
+
+	spaceship->addChild(particles);
+	engine.addRenderer(particles->getRenderer());
+
+	ParticleSystemPtr particles2 = std::make_shared<ParticleSystem>();
+	particles2->setName("particles2");
+	particles2->setParticlesCount(2000);
+	particles2->setParticlesMaxSpeed(5.0f);
+	particles2->setParticlesMaxLifetime(0.3f);
+	particles2->setParticlesSize(0.8f);
+	particles2->setParticlesSpreadCone(-110.0f, 110.0f);
+	particles2->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(1.0f, 1.0f, 1.0f));
+	particles2->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+	particles2->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
+
+	particles2->registerCamera(engine.getResources()->camera);
+	particles2->load(data, uniforms);
+	particles2->launch();
+
+	spaceship->addChild(particles2);
+	engine.addRenderer(particles2->getRenderer());
 }

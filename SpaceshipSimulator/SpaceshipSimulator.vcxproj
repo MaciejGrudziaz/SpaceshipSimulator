@@ -129,8 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dev\particle.cpp" />
-    <ClCompile Include="dev\particlesystem.cpp" />
     <ClCompile Include="dev\particlesystemtest.cpp" />
     <ClCompile Include="dev\rotation.cpp" />
     <ClCompile Include="gameengine.cpp" />
@@ -145,6 +143,8 @@
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp" />
     <ClCompile Include="gameobjects\asteroid.cpp" />
     <ClCompile Include="gameobjects\hitboxobject.cpp" />
+    <ClCompile Include="gameobjects\particle.cpp" />
+    <ClCompile Include="gameobjects\particlesystem.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
     <ClCompile Include="gameobjects\spaceshipgun.cpp" />
     <ClCompile Include="gameobjects\standardgameobject.cpp" />
@@ -155,8 +155,6 @@
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dev\particle.h" />
-    <ClInclude Include="dev\particlesystem.h" />
     <ClInclude Include="dev\particlesystemtest.h" />
     <ClInclude Include="dev\rotation.h" />
     <ClInclude Include="gameengine.h" />
@@ -174,6 +172,8 @@
     <ClInclude Include="gameobjects\gameresources.h" />
     <ClInclude Include="gameobjects\hitboxobject.h" />
     <ClInclude Include="gameobjects\modelimportstruct.h" />
+    <ClInclude Include="gameobjects\particle.h" />
+    <ClInclude Include="gameobjects\particlesystem.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="gameobjects\spaceshipgun.h" />
     <ClInclude Include="gameobjects\standardgameobject.h" />

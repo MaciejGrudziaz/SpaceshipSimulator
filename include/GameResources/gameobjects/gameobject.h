@@ -18,7 +18,7 @@ public:
 	GameObject(const std::string& name);
 	virtual ~GameObject();
 
-	void setActive(bool val);
+	virtual void setActive(bool val);
 	bool isActive() const;
 	void setName(const std::string& name);
 	std::string getName()const;

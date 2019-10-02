@@ -120,11 +120,11 @@
     <ClCompile Include="dev\particlesystemtest.cpp">
       <Filter>Source Files\dev</Filter>
     </ClCompile>
-    <ClCompile Include="dev\particlesystem.cpp">
-      <Filter>Source Files\dev</Filter>
+    <ClCompile Include="gameobjects\particle.cpp">
+      <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
-    <ClCompile Include="dev\particle.cpp">
-      <Filter>Source Files\dev</Filter>
+    <ClCompile Include="gameobjects\particlesystem.cpp">
+      <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,11 +203,11 @@
     <ClInclude Include="dev\particlesystemtest.h">
       <Filter>Header Files\dev</Filter>
     </ClInclude>
-    <ClInclude Include="dev\particlesystem.h">
-      <Filter>Header Files\dev</Filter>
+    <ClInclude Include="gameobjects\particle.h">
+      <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
-    <ClInclude Include="dev\particle.h">
-      <Filter>Header Files\dev</Filter>
+    <ClInclude Include="gameobjects\particlesystem.h">
+      <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,11 +3,15 @@
 void setCamera(GameEngine& engine)
 {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 10.0f));
+	camera->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 30.0f));
 
 	engine.setCamera(camera);
 	engine.getResources()->camera = camera;
 }
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------MAIN GAME---------------------------------------
+//---------------------------------------------------------------------------------------
 
 void initializeGame(GameEngine& engine)
 {
@@ -16,7 +20,7 @@ void initializeGame(GameEngine& engine)
 	setCamera(engine);
 	loadSpaceship(engine);
 	loadPatternAsteroid(engine);
-	loadAsteroids(engine);
+	//loadAsteroids(engine);
 
 	registerInput(engine);
 	loadObjectsCollisionProperty(engine);
@@ -39,6 +43,19 @@ void processGame(GameEngine& engine)
 		asteroid->process();
 	});
 }
+
+void invalidateGame(GameEngine& engine)
+{
+	engine.getResources()->spaceship->invalidate();
+
+	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
+		asteroid->invalidate();
+	});
+}
+
+//---------------------------------------------------------------------------------------
+//------------------------------------PARTICLES TEST-------------------------------------
+//---------------------------------------------------------------------------------------
 
 void initializeParticlesTest(GameEngine& engine)
 {

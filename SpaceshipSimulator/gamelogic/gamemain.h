@@ -6,7 +6,14 @@
 
 #include "initialization.h"
 
-//#include "spaceshipinputcontrol.h"
-//#include "asteroidbehaviour.h"
-//#include "collisions.h"
-//#include "../dev/rotation.h"
+#define ver 0
+
+#if ver==0
+#define MAIN_GAME
+#endif
+
+#if ver==1
+#define PARTICLES_TEST
+#endif
+
+

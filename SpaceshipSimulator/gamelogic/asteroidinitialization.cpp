@@ -15,6 +15,7 @@ void loadPatternAsteroid(GameEngine& engine)
 	StandardGameObjectPtr asteroid = std::make_shared<StandardGameObject>();
 	asteroid->load(filesData, uniforms);
 	asteroid->setName("asteroid");
+	asteroid->getTransform().setScale(glm::vec3(0.75f, 0.75f, 0.75f));
 
 	engine.getResources()->asteroidPattern = asteroid;
 	//engine.addRenderer(asteroid->getRenderer());

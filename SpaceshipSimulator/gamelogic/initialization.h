@@ -20,6 +20,7 @@ void setCamera(GameEngine& engine);
 
 void initializeGame(GameEngine& engine);
 void processGame(GameEngine& engine);
+void invalidateGame(GameEngine& engine);
 
 void initializeParticlesTest(GameEngine& engine);
 void processParticlesTest(GameEngine& engine);
