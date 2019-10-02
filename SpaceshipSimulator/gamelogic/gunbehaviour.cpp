@@ -19,7 +19,7 @@ bool DelayControl::set(float fireRate)
 
 void GunShoot::init()
 {
-	fireRate = 10.0f;
+	fireRate = 5.0f;
 	maxMoveDist = 0.5f;
 	currMoveDist = 0.0f;
 	dir = stop;
@@ -34,19 +34,26 @@ void GunShoot::process()
 		{
 			if (delay.useDelay)
 			{
-				if(delay.set(fireRate))
+				if (delay.set(fireRate))
+				{
 					dir = backward;
+					shoot();
+				}
 			}
-			else dir = backward;
+			else
+			{
+				dir = backward;
+				shoot();
+			}
 		}
 
-		shoot();
+		shootAnimation();
 	}
 	else {
 		if (dir != stop)
 		{
 			delay.reset();
-			shoot();
+			shootAnimation();
 		}
 	}
 
@@ -56,6 +63,22 @@ void GunShoot::process()
 }
 
 void GunShoot::shoot()
+{
+	Spaceship& parent = static_cast<Spaceship&>(object.getParent());
+
+	LaserBeamPtr beam = std::make_shared<LaserBeam>();
+	beam->loadViewMatrixPtr(parent.getCamera()->getViewPtr());
+	beam->loadProjectionMatrixPtr(parent.getProjectionMat());
+	beam->setSpeed(1.0f);
+
+	glm::vec3 pos = parent.getTransform().getTransformMat() * glm::vec4(1.0f, 3.0f, 0.0f, 1.0f);
+
+	beam->launch(pos, parent.getTransform().getOrientation());
+	
+	parent.addLaserBeam(beam);
+}
+
+void GunShoot::shootAnimation()
 {
 	if (dir == backward)
 	{

@@ -67,7 +67,7 @@ bool TextureRenderObject::checkTextureFile(const std::string& filename)
 
 void TextureRenderObject::process()
 {
-	if (shader->getErrorCode() == Shader::NO_ERROR && isActive)
+	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
 		bindVertexArray();
 		updateUniforms();

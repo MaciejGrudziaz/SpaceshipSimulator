@@ -2,6 +2,7 @@
 
 #include "../gameengine.h"
 #include "../gameobjects/gameresources.h"
+#include "../gameobjects/laserbeam.h"
 
 struct DelayControl
 {
@@ -44,6 +45,7 @@ private:
 
 	DelayControl delay;
 
+	void shootAnimation();
 	void shoot();
 };
 

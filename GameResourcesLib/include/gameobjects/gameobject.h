@@ -38,6 +38,9 @@ public:
 	std::list<std::string> getChildrenNames() const;
 	std::shared_ptr<GameObject> getChild(std::string name);
 
+	bool hasParent()const;
+	GameObject& getParent();
+
 	void addModel(BasicObjectPtr model);
 	void removeModel(std::string name);
 	std::list<std::string> getModelsNames() const;
@@ -52,6 +55,7 @@ public:
 	void deepCopy(const GameObject& object);
 
 protected:
+	GameObject* parent;
 	Transform transform;
 	glm::mat4 parentTransform;
 	bool active;

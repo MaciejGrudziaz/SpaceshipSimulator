@@ -3,7 +3,7 @@
 void setCamera(GameEngine& engine)
 {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 30.0f));
+	camera->getTransform().setPosition(glm::vec3(0.0f, 12.0f, 30.0f));
 
 	engine.setCamera(camera);
 	engine.getResources()->camera = camera;
@@ -26,6 +26,7 @@ void initializeGame(GameEngine& engine)
 	loadObjectsCollisionProperty(engine);
 	registerAsteroidBehaviours(engine);
 	registerSpaceshipGunBehaviours(engine);
+	registerSpaceshipEnginesControl(engine);
 
 	engine.getResources()->spaceship->init();
 

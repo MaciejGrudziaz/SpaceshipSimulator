@@ -18,10 +18,10 @@ void PlayerInput::processKeyInput()
 {
 	glm::vec3 moveVec(0.0f);
 
-	if (GameEngine::getKey(GLFW_KEY_W) == GLFW_PRESS)
-		moveVec.y += 1.0f;
-	if (GameEngine::getKey(GLFW_KEY_S) == GLFW_PRESS)
-		moveVec.y -= 1.0f;
+	//if (GameEngine::getKey(GLFW_KEY_W) == GLFW_PRESS)
+	//	moveVec.y += 1.0f;
+	//if (GameEngine::getKey(GLFW_KEY_S) == GLFW_PRESS)
+	//	moveVec.y -= 1.0f;
 	if (GameEngine::getKey(GLFW_KEY_A) == GLFW_PRESS)
 		moveVec.x -= 1.0f;
 	if (GameEngine::getKey(GLFW_KEY_D) == GLFW_PRESS)

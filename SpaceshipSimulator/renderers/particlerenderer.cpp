@@ -3,8 +3,8 @@
 ParticleRenderer::ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer, const BlendFunctions& blend)
 	: particlesPositionSize(posSizeBuffer)
 	, particlesColor(colorBuffer)
-	, posSizeBufferUpdateFlag(true)
-	, colorBufferUpdateFlag(true)
+	, posSizeBufferUpdateFlag(false)
+	, colorBufferUpdateFlag(false)
 	, blendFunc(blend)
 {}
 
@@ -22,7 +22,7 @@ void ParticleRenderer::init()
 
 void ParticleRenderer::process()
 {
-	if (shader->getErrorCode() == Shader::NO_ERROR && isActive)
+	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
 		bindBuffers();
 
@@ -116,15 +116,6 @@ void ParticleRenderer::loadBuffers()
 
 	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-
-	for (int i = 0; i < particlesCount; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			particlesPositionSize.push_back(0.0f);
-			particlesColor.push_back(0.0f);
-		}
-	}
 }
 
 void ParticleRenderer::setParticlesCount(int val)

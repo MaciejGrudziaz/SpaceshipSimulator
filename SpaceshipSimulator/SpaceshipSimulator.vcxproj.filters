@@ -126,6 +126,18 @@
     <ClCompile Include="gameobjects\particlesystem.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="gamelogic\spaceshipenginescontrol.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\laserbeam.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\dynamicparticlerenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\beamsrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -209,6 +221,18 @@
     <ClInclude Include="gameobjects\particlesystem.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
+    <ClInclude Include="gamelogic\spaceshipenginescontrol.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\laserbeam.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\dynamicparticlerenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\beamsrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\spaceshipShader.frag">
@@ -233,6 +257,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\particle.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\laserShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\laserShader.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

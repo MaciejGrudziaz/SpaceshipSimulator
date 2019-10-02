@@ -4,12 +4,14 @@ GameObject::GameObject()
 	: active(true)
 	, name("")
 	, parentTransform(1.0f)
+	, parent(nullptr)
 {}
 
 GameObject::GameObject(const std::string& name)
 	: active(true)
 	, name(name)
 	, parentTransform(1.0f)
+	, parent(nullptr)
 {}
 
 GameObject::~GameObject()
@@ -84,7 +86,11 @@ void GameObject::addChild(std::shared_ptr<GameObject> child)
 {
 	if (child->name != "" && isChildNameUnique(child->name))
 	{
-		children.insert(GameObjectMap::value_type(child->name, child));
+		std::pair<GameObjectMap::iterator, bool> insertStatus = children.insert(GameObjectMap::value_type(child->name, child));
+		if (insertStatus.second)
+		{
+			child->parent = this;
+		}
 	}
 }
 
@@ -134,6 +140,17 @@ std::shared_ptr<GameObject> GameObject::getChild(std::string name)
 	else {
 		return std::make_shared<NullGameObject>();
 	}
+}
+
+bool GameObject::hasParent()const
+{
+	if (parent != nullptr) return true;
+	else return false;
+}
+
+GameObject& GameObject::getParent()
+{
+	return *parent;
 }
 
 void GameObject::addModel(BasicObjectPtr model)

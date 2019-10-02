@@ -11,6 +11,7 @@
 #include "asteroidbehaviour.h"
 #include "collisions.h"
 #include "gunbehaviour.h"
+#include "spaceshipenginescontrol.h"
 
 #include "../dev/particlesystemtest.h"
 

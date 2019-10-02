@@ -8,17 +8,19 @@ ParticleSystem::ParticleSystem()
 	, maxSpeed(0.0f)
 	, maxLifetime(0.0f)
 	, bufferVertexAttribSize(4)
-	, baseColor(1.0f,1.0f,1.0f)
-	, destColor(1.0f,1.0f,1.0f)
+	, baseColor(1.0f, 1.0f, 1.0f)
+	, destColor(1.0f, 1.0f, 1.0f)
 	, endParticlesProcess(false)
 	, evenSpred(false)
-	, isPauseMutexLocked(false)
+	//, isPauseMutexLocked(false)
 	, continuous(true)
+	, launched(false)
+	, externalLaunchFlag(false)
 {}
 
 void ParticleSystem::load(const ParticleSystemData& data, const ModelExternalUniforms& uniforms)
 {
-	createParticles();
+	//createParticles();
 
 	renderer = std::make_shared<ParticleRenderer>(particlesPosSizeBuffer, particlesColorBuffer, blendFunc);
 	renderer->setParticlesCount(particlesCount);
@@ -28,10 +30,10 @@ void ParticleSystem::load(const ParticleSystemData& data, const ModelExternalUni
 	renderer->loadBuffers();
 	renderer->loadTexture(data.particleTexture);
 
-	updateRendererBuffers();
+	//updateRendererBuffers();
 
-	updateStatus = false;
-	pause();
+	updateStatus = true;
+	//pause();
 	particleThread = std::thread(&ParticleSystem::processParticles, this);
 }
 
@@ -177,7 +179,7 @@ void ParticleSystem::process()
 
 	modelTransform = parentTransform * getTransform().getTransformMat();
 
-	if (updateStatus && !isPauseMutexLocked)
+	if(updateStatus)
 	{
 		updateMut.lock();
 		updateStatus = false;
@@ -189,8 +191,14 @@ void ParticleSystem::processParticles()
 {
 	while (!endParticlesProcess)
 	{
-		pauseMutex.lock();
-		if (!updateStatus)
+		if (externalLaunchFlag)
+		{
+			createParticles();
+			launched = true;
+			externalLaunchFlag = false;
+		}
+
+		if (!updateStatus && launched)
 		{
 			updateMut.lock();
 			updateStatus = true;
@@ -216,19 +224,17 @@ void ParticleSystem::processParticles()
 
 			if (deadParticles == particlesCount && !continuous)
 			{
-				pause();
+				launched = false;
 			}
-
 			updateMut.unlock();
 		}
-		pauseMutex.unlock();
 	}
 }
 
 void ParticleSystem::invalidate()
 {
 	endParticlesProcess = true;
-	if (isPauseMutexLocked) run();
+	//if (isPauseMutexLocked) run();
 	particleThread.join();
 }
 
@@ -236,34 +242,38 @@ void ParticleSystem::setActive(bool val)
 {
 	GameObject::setActive(val);
 
-	if (val) run();
-	else pause();
+	//if (val) run();
+	//else pause();
 
 	renderer->setActive(val);
 }
 
-void ParticleSystem::pause()
-{
-	if (!isPauseMutexLocked)
-	{
-		pauseMutex.lock();
-		isPauseMutexLocked = true;
-	}
-}
-
-void ParticleSystem::run()
-{
-	if (isPauseMutexLocked)
-	{
-		pauseMutex.unlock();
-		isPauseMutexLocked = false;
-	}
-}
+//void ParticleSystem::pause()
+//{
+//	if (!isPauseMutexLocked)
+//	{
+//		pauseMutex.lock();
+//		isPauseMutexLocked = true;
+//	}
+//}
+//
+//void ParticleSystem::run()
+//{
+//	if (isPauseMutexLocked)
+//	{
+//		pauseMutex.unlock();
+//		isPauseMutexLocked = false;
+//	}
+//}
 
 void ParticleSystem::launch()
 {
-	createParticles();
-	run();
+	//createParticles();
+	externalLaunchFlag = true;
+	//pauseMutex.lock();
+	//launched = true;
+	//pauseMutex.unlock();
+	//run();
 }
 
 ParticleRendererPtr ParticleSystem::getRenderer()const
@@ -362,4 +372,9 @@ glm::vec3 ParticleSystem::getBaseColor()const
 glm::vec3 ParticleSystem::getDestColor()const
 {
 	return destColor;
+}
+
+bool ParticleSystem::isRunning()const
+{
+	return (!endParticlesProcess && launched);
 }

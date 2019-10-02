@@ -14,10 +14,14 @@ void loadSpaceship(GameEngine& engine)
 
 	SpaceshipPtr spaceship = std::make_shared<Spaceship>();
 	spaceship->load(filesData, uniforms);
+	spaceship->registerCamera(engine.getResources()->camera);
+	spaceship->registerProjectionMat(engine.getProjectionMatPtr());
 
 	spaceship->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	spaceship->getTransform().setDefaultOrientation(glm::vec3(0.0f, 1.0f, 0.0f));
 
 	engine.addRenderer(spaceship->getRenderer());
+	engine.addRenderer(spaceship->getBeamsRenderer());
 	engine.getResources()->spaceship = spaceship;
 
 	addBodyHitboxToSpaceship(engine);
@@ -159,19 +163,19 @@ void loadParticlesSytem(GameEngine& engine)
 {
 	SpaceshipPtr spaceship = engine.getResources()->spaceship;
 
-	ParticleSystemPtr particles = std::make_shared<ParticleSystem>();
-	particles->setName("particles");
-	particles->setParticlesCount(2000);
-	particles->setParticlesMaxSpeed(10.0f);
-	particles->setParticlesMaxLifetime(0.3f);
-	particles->setParticlesSize(0.8f);
-	particles->setParticlesSpreadCone(-30.0f, 30.0f);
-	particles->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(0.2f, 0.2f, 0.2f));
-	particles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
-	particles->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
-	particles->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
+	ParticleSystemPtr mainEngine = std::make_shared<ParticleSystem>();
+	mainEngine->setName("particles_mainEngine");
+	mainEngine->setParticlesCount(2000);
+	mainEngine->setParticlesMaxSpeed(10.0f);
+	mainEngine->setParticlesMaxLifetime(0.3f);
+	mainEngine->setParticlesSize(0.5f);
+	mainEngine->setParticlesSpreadCone(-30.0f, 30.0f);
+	mainEngine->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(0.2f, 0.2f, 0.2f));
+	mainEngine->setBlendingFunctions(GL_ONE, GL_ONE);
+	mainEngine->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+	mainEngine->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
 
-	particles->registerCamera(engine.getResources()->camera);
+	mainEngine->registerCamera(engine.getResources()->camera);
 
 	ParticleSystemData data;
 	data.particleTexture = "sprites/smoke.png";
@@ -182,27 +186,99 @@ void loadParticlesSytem(GameEngine& engine)
 	uniforms.view = engine.getResources()->camera->getViewPtr();
 	uniforms.projection = engine.getProjectionMatPtr();
 
-	particles->load(data, uniforms);
-	particles->launch();
+	mainEngine->load(data, uniforms);
+	//mainEngine->launch();
 
-	spaceship->addChild(particles);
-	engine.addRenderer(particles->getRenderer());
+	spaceship->addChild(mainEngine);
+	engine.addRenderer(mainEngine->getRenderer());
 
-	ParticleSystemPtr particles2 = std::make_shared<ParticleSystem>();
-	particles2->setName("particles2");
-	particles2->setParticlesCount(2000);
-	particles2->setParticlesMaxSpeed(5.0f);
-	particles2->setParticlesMaxLifetime(0.3f);
-	particles2->setParticlesSize(0.8f);
-	particles2->setParticlesSpreadCone(-110.0f, 110.0f);
-	particles2->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(1.0f, 1.0f, 1.0f));
-	particles2->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
-	particles2->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
+	ParticleSystemPtr mainEngineSmoke = std::make_shared<ParticleSystem>();
+	mainEngineSmoke->setName("particles_mainEngineSmoke");
+	mainEngineSmoke->setParticlesCount(2000);
+	mainEngineSmoke->setParticlesMaxSpeed(3.0f);
+	mainEngineSmoke->setParticlesMaxLifetime(0.6f);
+	mainEngineSmoke->setParticlesSize(0.8f);
+	mainEngineSmoke->setParticlesSpreadCone(-110.0f, 110.0f);
+	mainEngineSmoke->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(1.0f, 1.0f, 1.0f));
+	mainEngineSmoke->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+	mainEngineSmoke->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
 
-	particles2->registerCamera(engine.getResources()->camera);
-	particles2->load(data, uniforms);
-	particles2->launch();
+	mainEngineSmoke->registerCamera(engine.getResources()->camera);
+	mainEngineSmoke->load(data, uniforms);
+	//mainEngineSmoke->launch();
 
-	spaceship->addChild(particles2);
-	engine.addRenderer(particles2->getRenderer());
+	spaceship->addChild(mainEngineSmoke);
+	engine.addRenderer(mainEngineSmoke->getRenderer());
+
+	ParticleSystemPtr lowerRightEngine = std::make_shared<ParticleSystem>();
+	lowerRightEngine->setName("particles_lowerRightEngine");
+	lowerRightEngine->setParticlesCount(2000);
+	lowerRightEngine->setParticlesMaxSpeed(5.0f);
+	lowerRightEngine->setParticlesMaxLifetime(0.3f);
+	lowerRightEngine->setParticlesSize(0.5f);
+	lowerRightEngine->setParticlesSpreadCone(-45.0f, 45.0f);
+	lowerRightEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+	lowerRightEngine->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 45.0f));
+	lowerRightEngine->getTransform().setPosition(glm::vec3(1.6f, -1.78f, 0.0f));
+
+	lowerRightEngine->registerCamera(engine.getResources()->camera);
+	lowerRightEngine->load(data, uniforms);
+	//lowerRightEngine->launch();
+
+	spaceship->addChild(lowerRightEngine);
+	engine.addRenderer(lowerRightEngine->getRenderer());
+
+	ParticleSystemPtr lowerLeftEngine = std::make_shared<ParticleSystem>();
+	lowerLeftEngine->setName("particles_lowerLeftEngine");
+	lowerLeftEngine->setParticlesCount(2000);
+	lowerLeftEngine->setParticlesMaxSpeed(5.0f);
+	lowerLeftEngine->setParticlesMaxLifetime(0.3f);
+	lowerLeftEngine->setParticlesSize(0.5f);
+	lowerLeftEngine->setParticlesSpreadCone(-45.0f, 45.0f);
+	lowerLeftEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+	lowerLeftEngine->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, -45.0f));
+	lowerLeftEngine->getTransform().setPosition(glm::vec3(-1.6f, -1.78f, 0.0f));
+
+	lowerLeftEngine->registerCamera(engine.getResources()->camera);
+	lowerLeftEngine->load(data, uniforms);
+	//lowerLeftEngine->launch();
+
+	spaceship->addChild(lowerLeftEngine);
+	engine.addRenderer(lowerLeftEngine->getRenderer());
+
+	ParticleSystemPtr upperLeftEngine = std::make_shared<ParticleSystem>();
+	upperLeftEngine->setName("particles_upperLeftEngine");
+	upperLeftEngine->setParticlesCount(2000);
+	upperLeftEngine->setParticlesMaxSpeed(5.0f);
+	upperLeftEngine->setParticlesMaxLifetime(0.3f);
+	upperLeftEngine->setParticlesSize(0.5f);
+	upperLeftEngine->setParticlesSpreadCone(-45.0f, 45.0f);
+	upperLeftEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+	upperLeftEngine->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, -135.0f));
+	upperLeftEngine->getTransform().setPosition(glm::vec3(-1.15f, 2.9f, 0.0f));
+
+	upperLeftEngine->registerCamera(engine.getResources()->camera);
+	upperLeftEngine->load(data, uniforms);
+	//upperLeftEngine->launch();
+
+	spaceship->addChild(upperLeftEngine);
+	engine.addRenderer(upperLeftEngine->getRenderer());
+
+	ParticleSystemPtr upperRightEngine = std::make_shared<ParticleSystem>();
+	upperRightEngine->setName("particles_upperRightEngine");
+	upperRightEngine->setParticlesCount(2000);
+	upperRightEngine->setParticlesMaxSpeed(5.0f);
+	upperRightEngine->setParticlesMaxLifetime(0.3f);
+	upperRightEngine->setParticlesSize(0.5f);
+	upperRightEngine->setParticlesSpreadCone(-45.0f, 45.0f);
+	upperRightEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.2f, 0.2f, 0.2f));
+	upperRightEngine->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 135.0f));
+	upperRightEngine->getTransform().setPosition(glm::vec3(1.15f, 2.9f, 0.0f));
+
+	upperRightEngine->registerCamera(engine.getResources()->camera);
+	upperRightEngine->load(data, uniforms);
+	//upperRightEngine->launch();
+
+	spaceship->addChild(upperRightEngine);
+	engine.addRenderer(upperRightEngine->getRenderer());
 }

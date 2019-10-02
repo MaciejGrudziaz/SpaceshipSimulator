@@ -20,7 +20,7 @@ void HitboxRenderer::init()
 
 void HitboxRenderer::process()
 {
-	if (shader->getErrorCode() == Shader::NO_ERROR && isActive)
+	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
 		glUseProgram(shader->getProgram());
 

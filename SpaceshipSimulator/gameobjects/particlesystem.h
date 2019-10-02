@@ -25,8 +25,8 @@ public:
 	virtual void invalidate()override;
 	virtual void setActive(bool val)override;
 
-	void pause();
-	void run();
+	//void pause();
+	//void run();
 	void launch();
 
 	ParticleRendererPtr getRenderer()const;
@@ -51,6 +51,7 @@ public:
 	glm::vec2 getParticlesSpreadCone()const;
 	glm::vec3 getBaseColor()const;
 	glm::vec3 getDestColor()const;
+	bool isRunning()const;
 
 private:
 	glm::mat4 modelTransform;
@@ -66,12 +67,14 @@ private:
 	glm::vec3 destColor;
 	BlendFunctions blendFunc;	//OpenGL blend functions
 	bool continuous;			//flag for continuous creation of particles
-	
+	bool externalLaunchFlag;
+
+	bool launched;
 	bool endParticlesProcess;	//flag for closing partciles processing thread
 	bool updateStatus;			//flag for updating particles data in seperate thread
 	std::mutex updateMut;		//mutex for particles updating [single particles update in single logic refresh function]
-	bool isPauseMutexLocked;	//flag for checking if pause mutex is locked [so the user cant unlock not assigned mutex and don't have to wait for locking one]
-	std::mutex pauseMutex;		//mutex for pausing particles processing thread
+	//bool isPauseMutexLocked;	//flag for checking if pause mutex is locked [so the user cant unlock not assigned mutex and don't have to wait for locking one]
+	//std::mutex pauseMutex;		//mutex for pausing particles processing thread
 	std::thread particleThread;	//particle processing thread
 
 	std::vector<Particle> particles;
@@ -81,6 +84,9 @@ private:
 
 	CameraPtr camera;
 	ParticleRendererPtr renderer;
+
+	//void pause();
+	//void run();
 
 	void createParticles();
 	void initUniforms(const ModelExternalUniforms& uniforms);

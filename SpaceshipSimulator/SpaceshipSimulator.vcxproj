@@ -139,10 +139,12 @@
     <ClCompile Include="gamelogic\gamemain.cpp" />
     <ClCompile Include="gamelogic\gunbehaviour.cpp" />
     <ClCompile Include="gamelogic\initialization.cpp" />
+    <ClCompile Include="gamelogic\spaceshipenginescontrol.cpp" />
     <ClCompile Include="gamelogic\spaceshipinitialization.cpp" />
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp" />
     <ClCompile Include="gameobjects\asteroid.cpp" />
     <ClCompile Include="gameobjects\hitboxobject.cpp" />
+    <ClCompile Include="gameobjects\laserbeam.cpp" />
     <ClCompile Include="gameobjects\particle.cpp" />
     <ClCompile Include="gameobjects\particlesystem.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
@@ -150,6 +152,8 @@
     <ClCompile Include="gameobjects\standardgameobject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
+    <ClCompile Include="renderers\beamsrenderer.cpp" />
+    <ClCompile Include="renderers\dynamicparticlerenderer.cpp" />
     <ClCompile Include="renderers\hitboxrenderer.cpp" />
     <ClCompile Include="renderers\particlerenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
@@ -166,11 +170,13 @@
     <ClInclude Include="gamelogic\gamemain.h" />
     <ClInclude Include="gamelogic\gunbehaviour.h" />
     <ClInclude Include="gamelogic\initialization.h" />
+    <ClInclude Include="gamelogic\spaceshipenginescontrol.h" />
     <ClInclude Include="gamelogic\spaceshipinitialization.h" />
     <ClInclude Include="gamelogic\spaceshipinputcontrol.h" />
     <ClInclude Include="gameobjects\asteroid.h" />
     <ClInclude Include="gameobjects\gameresources.h" />
     <ClInclude Include="gameobjects\hitboxobject.h" />
+    <ClInclude Include="gameobjects\laserbeam.h" />
     <ClInclude Include="gameobjects\modelimportstruct.h" />
     <ClInclude Include="gameobjects\particle.h" />
     <ClInclude Include="gameobjects\particlesystem.h" />
@@ -178,12 +184,16 @@
     <ClInclude Include="gameobjects\spaceshipgun.h" />
     <ClInclude Include="gameobjects\standardgameobject.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
+    <ClInclude Include="renderers\beamsrenderer.h" />
+    <ClInclude Include="renderers\dynamicparticlerenderer.h" />
     <ClInclude Include="renderers\hitboxrenderer.h" />
     <ClInclude Include="renderers\particlerenderer.h" />
     <ClInclude Include="utilities\time.h" />
     <ClInclude Include="utilities\timeroptions.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\laserShader.frag" />
+    <None Include="shaders\laserShader.vert" />
     <None Include="shaders\particle.frag" />
     <None Include="shaders\particle.vert" />
     <None Include="shaders\spaceshipShader.frag" />
