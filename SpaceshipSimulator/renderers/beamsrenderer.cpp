@@ -2,7 +2,7 @@
 
 BeamsRenderer::BeamsRenderer(std::vector<float>& buffer, int bufferSize)
 	: buffer(buffer)
-	, currBufferSize(bufferSize)
+	, currBufferSize(0)
 	, updateBufferFlag(false)
 	, maxBufferSize(200 * 6)
 {}
@@ -21,38 +21,50 @@ void BeamsRenderer::process()
 	++test;
 	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
-     	glUseProgram(shader->getProgram());
+		glLineWidth(5.0f);
+
+        glUseProgram(shader->getProgram());
 		glBindVertexArray(VAO);
 
-		if (updateBufferFlag)
-			updateBuffer();
-			
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		updateBuffer();
+			
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
 
 		updateUniforms();
 
-		glDrawArrays(GL_LINES, 0, 2);
+		glDrawArrays(GL_LINES, 0, currBufferSize/3);
 
+		glDisableVertexAttribArray(0);
+
+		glLineWidth(1.0f);
 	}
 	else errorCode.push(NO_SHADER_AVAILABLE);
 }
 
 void BeamsRenderer::updateBuffer()
 {
-	currBufferSize = buffer.size();
+	static int test = 0;
+	++test;
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, maxBufferSize * sizeof(float), NULL, GL_STREAM_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, buffer.size() * sizeof(float), buffer.data());
+	if (updateBufferFlag)
+	{
+		currBufferSize = buffer.size();
 
-	updateBufferFlag = false;
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, maxBufferSize * sizeof(float), NULL, GL_STREAM_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, currBufferSize * sizeof(float), buffer.data());
+
+		updateBufferFlag = false;
+	}
 }
 
 void BeamsRenderer::enableVertexAttribPointers()
 {
 	for (ShaderAttrList::value_type shaderAttrEntry : shaderAttributes)
 	{
-		glVertexAttribPointer(shaderAttrEntry.location, shaderAttrEntry.size, GL_FLOAT, GL_FALSE, shaderAttributesTotalSize * sizeof(float), shaderAttrEntry.offset);
+		glVertexAttribPointer(shaderAttrEntry.location, shaderAttrEntry.size, GL_FLOAT, GL_FALSE, shaderAttributesTotalSize, shaderAttrEntry.offset);
 		glEnableVertexAttribArray(shaderAttrEntry.location);
 	}
 }

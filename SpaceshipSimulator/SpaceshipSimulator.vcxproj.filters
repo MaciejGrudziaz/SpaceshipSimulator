@@ -138,6 +138,9 @@
     <ClCompile Include="renderers\beamsrenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\texturebeamsrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -233,6 +236,9 @@
     <ClInclude Include="renderers\beamsrenderer.h">
       <Filter>Header Files\renderers</Filter>
     </ClInclude>
+    <ClInclude Include="renderers\texturebeamsrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\spaceshipShader.frag">
@@ -263,6 +269,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\laserShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\texLaserShaders.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\texLaserShaders.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -24,14 +24,15 @@ void ParticleRenderer::process()
 {
 	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
-		bindBuffers();
 
-		updateBuffers();
 
 		glEnable(GL_BLEND);
 		glBlendFunc(blendFunc.sfactor, blendFunc.dfactor);
 
 		glUseProgram(shader->getProgram());
+
+		bindBuffers();
+		updateBuffers();
 
 		bindTexture();
 		updateUniforms();
@@ -56,13 +57,13 @@ void ParticleRenderer::bindBuffers()
 {
 	
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
-	glVertexAttribPointer(attribPosSize, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(attribPosSize, 4, GL_FLOAT, GL_FALSE, 4*sizeof(float), (void*)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
 	glEnableVertexAttribArray(attribVertex);
 	glEnableVertexAttribArray(attribPosSize);

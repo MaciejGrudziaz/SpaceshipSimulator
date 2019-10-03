@@ -156,6 +156,7 @@
     <ClCompile Include="renderers\dynamicparticlerenderer.cpp" />
     <ClCompile Include="renderers\hitboxrenderer.cpp" />
     <ClCompile Include="renderers\particlerenderer.cpp" />
+    <ClCompile Include="renderers\texturebeamsrenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="renderers\dynamicparticlerenderer.h" />
     <ClInclude Include="renderers\hitboxrenderer.h" />
     <ClInclude Include="renderers\particlerenderer.h" />
+    <ClInclude Include="renderers\texturebeamsrenderer.h" />
     <ClInclude Include="utilities\time.h" />
     <ClInclude Include="utilities\timeroptions.h" />
   </ItemGroup>
@@ -202,6 +204,8 @@
     <None Include="shaders\spaceshipShaderTex.vert" />
     <None Include="shaders\standardHitbox.frag" />
     <None Include="shaders\standardHitbox.vert" />
+    <None Include="shaders\texLaserShaders.frag" />
+    <None Include="shaders\texLaserShaders.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

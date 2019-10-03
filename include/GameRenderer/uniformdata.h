@@ -56,6 +56,20 @@ struct UniformDataMat4 : public UniformData
 	}
 };
 
+struct UniformDataVec2 : public UniformData
+{
+	UniformDataVec2(const std::string& name)
+		: UniformData(name)
+	{}
+
+	std::shared_ptr<const glm::vec2> vec;
+
+	void update()override
+	{
+		glUniform2fv(location, 1, glm::value_ptr(*vec));
+	}
+};
+
 struct UniformDataVec3 : public UniformData
 {
 	UniformDataVec3(const std::string& name)
@@ -86,9 +100,11 @@ struct UniformDataVec4 : public UniformData
 
 typedef std::shared_ptr<UniformData> UniformDataPtr;
 typedef std::shared_ptr<UniformDataMat4> UniformDataMat4Ptr;
+typedef std::shared_ptr<UniformDataVec2> UniformDataVec2Ptr;
 typedef std::shared_ptr<UniformDataVec3> UniformDataVec3Ptr;
 typedef std::shared_ptr<UniformDataVec4> UniformDataVec4Ptr;
 
 typedef std::shared_ptr<const glm::mat4> ConstMat4Ptr;
+typedef std::shared_ptr<const glm::vec2> ConstVec2Ptr;
 typedef std::shared_ptr<const glm::vec3> ConstVec3Ptr;
 typedef std::shared_ptr<const glm::vec4> ConstVec4Ptr;

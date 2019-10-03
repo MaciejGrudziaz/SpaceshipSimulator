@@ -2,33 +2,51 @@
 
 Spaceship::Spaceship()
 {
-	beamsColor = std::make_shared<glm::vec3>(1.0f, 0.0f, 0.0f);
-	beamsRenderer = std::make_shared<BeamsRenderer>(beamsBuffer);
+	beamsColor = std::make_shared<glm::vec4>(1.0f, 0.0f, 0.0f, 1.0f);
+	beamsSize = std::make_shared<glm::vec2>(0.2f, 3.0f);
+	//beamsRenderer = std::make_shared<BeamsRenderer>(beamsBuffer);
+	beamsRenderer = std::make_shared<TextureBeamsRenderer>(beamsBuffer);
 }
 
 void Spaceship::init()
 {
 	StandardGameObject::init();
 
-	beamsRenderer->loadShaders();
-	beamsRenderer->init();
+	beamsRenderer->loadShader("shaders/texLaserShaders.vert", "shaders/texLaserShaders.frag");
 	loadUniforms();
-	loadAttribPointers();
+	//loadAttribPointers();
+	beamsRenderer->init();
+
+	beamsRenderer->loadBuffers();
+	beamsRenderer->loadTexture("sprites/laser_beam_2.png");
 }
 
 void Spaceship::loadUniforms()
 {
-	UniformDataVec3Ptr colorUniform = std::make_shared<UniformDataVec3>("color");
+	UniformDataVec4Ptr colorUniform = std::make_shared<UniformDataVec4>("color");
+	UniformDataVec2Ptr sizeUniform = std::make_shared<UniformDataVec2>("size");
+
 	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
 	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
 
+	UniformDataVec3Ptr cameraUpUniform = std::make_shared<UniformDataVec3>("cameraUp");
+	UniformDataVec3Ptr cameraRightUniform = std::make_shared<UniformDataVec3>("cameraRight");
+
 	colorUniform->vec = beamsColor;
+	sizeUniform->vec = beamsSize;
+
 	viewUniform->mat = camera->getViewPtr();
 	projectionUniform->mat = projectionMat;
 
+	cameraUpUniform->vec = camera->getUpVecPtr();
+	cameraRightUniform->vec = camera->getRightVecPtr();
+
 	beamsRenderer->addUniform(colorUniform);
+	beamsRenderer->addUniform(sizeUniform);
 	beamsRenderer->addUniform(viewUniform);
 	beamsRenderer->addUniform(projectionUniform);	
+	beamsRenderer->addUniform(cameraUpUniform);
+	beamsRenderer->addUniform(cameraRightUniform);
 }
 
 void Spaceship::loadAttribPointers()
@@ -55,19 +73,25 @@ void Spaceship::process()
 void Spaceship::updateBeamsBuffer()
 {
 	glm::vec3 pos;
-	if (beamsBuffer.size() / 6 < laserShots.size())
+	if (beamsBuffer.size() / 7 < laserShots.size())
 	{
-		for (int i = beamsBuffer.size() / 6; i < laserShots.size(); ++i)
+		for (int i = beamsBuffer.size() / 7; i < laserShots.size(); ++i)
 		{
 			pos = laserShots[i]->getTransform().getPosition();
 
 			for (int j = 0; j < 3; ++j)
 				beamsBuffer.push_back(pos[j]);
 
-			pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
+			float rot = glm::orientedAngle(glm::vec3(0.0f, 1.0f, 0.0f), laserShots[i]->getDirection(), glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::quat q(glm::vec3(0.0f, 0.0f, rot));
 
-			for (int j = 0; j < 3; ++j)
-				beamsBuffer.push_back(pos[j]);
+			for (int j = 0; j < 4; ++j)
+				beamsBuffer.push_back(q[j]);
+
+			//pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
+
+			//for (int j = 0; j < 3; ++j)
+			//	beamsBuffer.push_back(pos[j]);
 		}
 	}
 
@@ -76,12 +100,18 @@ void Spaceship::updateBeamsBuffer()
 		pos = laserShots[i]->getTransform().getPosition();
 
 		for (int j = 0; j < 3; ++j)
-			beamsBuffer[6 * i + j] = pos[j];
+			beamsBuffer[7 * i + j] = pos[j];
 
-		pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
+		float rot = glm::orientedAngle(glm::vec3(0.0f, 1.0f, 0.0f), laserShots[i]->getDirection(), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::quat q(glm::vec3(0.0f, 0.0f, rot));
 
-		for (int j = 0; j < 3; ++j)
-			beamsBuffer[6 * i + j + 3] = pos[j];
+		for (int j = 0; j < 4; ++j)
+			beamsBuffer[7 * i + j + 3] = q[j];
+
+		//pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
+
+		//for (int j = 0; j < 3; ++j)
+		//	beamsBuffer[6 * i + j + 3] = pos[j];
 	}
 
 	beamsRenderer->setUpdateBufferFlag();
@@ -137,7 +167,7 @@ ConstMat4Ptr Spaceship::getProjectionMat()const
 	return projectionMat;
 }
 
-BeamsRendererPtr Spaceship::getBeamsRenderer()const
+TextureBeamsRendererPtr Spaceship::getBeamsRenderer()const
 {
 	return beamsRenderer;
 }
