@@ -13,8 +13,6 @@ GameEngine::GameEngine()
 void GameEngine::launch()
 {
 	glfwWindowHint(GLFW_SAMPLES, 16);
-
-	mainWnd->setFov(45.0f);
 	mainWnd->create();
 
 	setupMouseInputMode();

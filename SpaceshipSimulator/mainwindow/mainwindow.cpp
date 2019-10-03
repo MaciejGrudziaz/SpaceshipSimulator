@@ -15,7 +15,7 @@ MainWindow::MainWindow(const std::string& title, int width, int height, float fo
 
 void MainWindow::updateProjection()
 {
-	*projection = glm::perspective(fov, static_cast<float>(width) / static_cast<float>(height), 0.01f, 1000.0f);
+	*projection = glm::perspective(glm::radians(fov), static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
 }
 
 void globalResize(GLFWwindow* wnd, int width, int height)

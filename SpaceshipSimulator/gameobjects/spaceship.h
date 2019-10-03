@@ -25,8 +25,13 @@ public:
 	CameraPtr getCamera()const;
 	ConstMat4Ptr getProjectionMat()const;
 
-	//BeamsRendererPtr getBeamsRenderer()const;
 	TextureBeamsRendererPtr getBeamsRenderer()const;
+
+	void setInputMoveVec(const glm::vec3& val);
+	glm::vec3 getInputMoveVec()const;
+
+	void setInputRotation(float val);
+	float getInputRotation()const;
 
 private:
 	void loadStandardBufferData()override;
@@ -34,17 +39,20 @@ private:
 
 	std::vector<LaserBeamPtr> laserShots;
 	std::vector<float> beamsBuffer;
-	//BeamsRendererPtr beamsRenderer;
 	TextureBeamsRendererPtr beamsRenderer;
 	std::shared_ptr<glm::vec4> beamsColor;
 	std::shared_ptr<glm::vec2> beamsSize;
 
 	CameraPtr camera;
 	ConstMat4Ptr projectionMat;
+	glm::vec3 inputMoveVec;
+	float inputRotation;
+
+	float maneuverEngineThrust;
+	float mainEngineThrust;
 
 	void updateBeamsBuffer();
-	void loadUniforms();
-	void loadAttribPointers();
+	void loadBeamsUniforms();
 };
 
 typedef std::shared_ptr<Spaceship> SpaceshipPtr;

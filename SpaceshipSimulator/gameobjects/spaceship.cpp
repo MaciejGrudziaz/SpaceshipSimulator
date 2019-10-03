@@ -1,10 +1,10 @@
 #include "spaceship.h"
 
 Spaceship::Spaceship()
+	: inputRotation(0.0f)
 {
-	beamsColor = std::make_shared<glm::vec4>(1.0f, 0.0f, 0.0f, 1.0f);
+	beamsColor = std::make_shared<glm::vec4>(0.0f, 1.0f, 0.0f, 0.8f);
 	beamsSize = std::make_shared<glm::vec2>(0.2f, 3.0f);
-	//beamsRenderer = std::make_shared<BeamsRenderer>(beamsBuffer);
 	beamsRenderer = std::make_shared<TextureBeamsRenderer>(beamsBuffer);
 }
 
@@ -13,15 +13,14 @@ void Spaceship::init()
 	StandardGameObject::init();
 
 	beamsRenderer->loadShader("shaders/texLaserShaders.vert", "shaders/texLaserShaders.frag");
-	loadUniforms();
-	//loadAttribPointers();
+	loadBeamsUniforms();
 	beamsRenderer->init();
 
 	beamsRenderer->loadBuffers();
 	beamsRenderer->loadTexture("sprites/laser_beam_2.png");
 }
 
-void Spaceship::loadUniforms()
+void Spaceship::loadBeamsUniforms()
 {
 	UniformDataVec4Ptr colorUniform = std::make_shared<UniformDataVec4>("color");
 	UniformDataVec2Ptr sizeUniform = std::make_shared<UniformDataVec2>("size");
@@ -49,16 +48,6 @@ void Spaceship::loadUniforms()
 	beamsRenderer->addUniform(cameraRightUniform);
 }
 
-void Spaceship::loadAttribPointers()
-{
-	ShaderAttribute posAttrib;
-	posAttrib.location = 0;
-	posAttrib.size = 3;
-	posAttrib.offset = (void*)0;
-
-	beamsRenderer->addShaderAttribute(posAttrib);
-}
-
 void Spaceship::process()
 {
 	StandardGameObject::process();
@@ -82,16 +71,10 @@ void Spaceship::updateBeamsBuffer()
 			for (int j = 0; j < 3; ++j)
 				beamsBuffer.push_back(pos[j]);
 
-			float rot = glm::orientedAngle(glm::vec3(0.0f, 1.0f, 0.0f), laserShots[i]->getDirection(), glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::quat q(glm::vec3(0.0f, 0.0f, rot));
+			glm::quat q(laserShots[i]->getTransform().getRotationQuat());
 
 			for (int j = 0; j < 4; ++j)
 				beamsBuffer.push_back(q[j]);
-
-			//pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
-
-			//for (int j = 0; j < 3; ++j)
-			//	beamsBuffer.push_back(pos[j]);
 		}
 	}
 
@@ -102,16 +85,10 @@ void Spaceship::updateBeamsBuffer()
 		for (int j = 0; j < 3; ++j)
 			beamsBuffer[7 * i + j] = pos[j];
 
-		float rot = glm::orientedAngle(glm::vec3(0.0f, 1.0f, 0.0f), laserShots[i]->getDirection(), glm::vec3(0.0f, 0.0f, 1.0f));
-		glm::quat q(glm::vec3(0.0f, 0.0f, rot));
+		glm::quat q(laserShots[i]->getTransform().getRotationQuat());
 
 		for (int j = 0; j < 4; ++j)
 			beamsBuffer[7 * i + j + 3] = q[j];
-
-		//pos = pos - laserShots[i]->getDirection() * laserShots[i]->getLength();
-
-		//for (int j = 0; j < 3; ++j)
-		//	beamsBuffer[6 * i + j + 3] = pos[j];
 	}
 
 	beamsRenderer->setUpdateBufferFlag();
@@ -170,6 +147,26 @@ ConstMat4Ptr Spaceship::getProjectionMat()const
 TextureBeamsRendererPtr Spaceship::getBeamsRenderer()const
 {
 	return beamsRenderer;
+}
+
+void Spaceship::setInputMoveVec(const glm::vec3& val)
+{
+	inputMoveVec = val;
+}
+
+glm::vec3 Spaceship::getInputMoveVec()const
+{
+	return inputMoveVec;
+}
+
+void Spaceship::setInputRotation(float val)
+{
+	inputRotation = val;
+}
+
+float Spaceship::getInputRotation()const
+{
+	return inputRotation;
 }
 
 void Spaceship::loadStandardBufferData()

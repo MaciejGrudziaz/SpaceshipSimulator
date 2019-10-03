@@ -5,7 +5,7 @@
 class TextureBeamsRenderer : public TextureRenderObject
 {
 public:
-	TextureBeamsRenderer(std::vector<float>& posRotBuffer, int maxBufferSize = (3+4) * 10);
+	TextureBeamsRenderer(std::vector<float>& posRotBuffer, int maxBufferSize = (3+4) * 100);
 
 	void init()override;
 	void process()override;
@@ -15,9 +15,6 @@ public:
 	void setUpdateBufferFlag();
 
 private:
-	const std::string vertexShader = "shaders/laserShader.vert";
-	const std::string fragmentShader = "shaders/laserShader.frag";
-
 	GLuint posRotBufferId;
 
 	std::vector<float>& posRotBuffer;

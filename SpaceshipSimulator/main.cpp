@@ -3,6 +3,8 @@
 #include "gameobjects/spaceship.h"
 #include "gameengine.h"
 
+#include <conio.h>
+
 #define DEBUG
 
 #ifdef DEBUG
@@ -22,5 +24,6 @@ int WinMain(
 	engine.process();
 	engine.end();
 
+	_getch();
 	return 0;
 }

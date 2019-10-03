@@ -69,11 +69,13 @@ void GunShoot::shoot()
 	LaserBeamPtr beam = std::make_shared<LaserBeam>();
 	beam->loadViewMatrixPtr(parent.getCamera()->getViewPtr());
 	beam->loadProjectionMatrixPtr(parent.getProjectionMat());
-	beam->setSpeed(15.0f);
+	beam->setSpeed(20.0f);
 
-	glm::vec3 pos = parent.getTransform().getTransformMat() * glm::vec4(1.0f, 3.0f, 0.0f, 1.0f);
+	glm::vec3 pos;
+	if(delay.useDelay) pos = parent.getTransform().getTransformMat() * glm::vec4(0.3f, 2.6f, -0.3f, 1.0f);
+	else pos = parent.getTransform().getTransformMat() * glm::vec4(-0.3f, 2.6f, -0.3f, 1.0f);
 
-	beam->launch(pos, parent.getTransform().getOrientation());
+	beam->launch(pos, parent.getTransform().getRotationQuat());
 	
 	parent.addLaserBeam(beam);
 }
