@@ -4,6 +4,7 @@
 #include "../renderers/multipleasteroidsrenderer.h"
 #include "asteroid.h"
 #include "hitboxobject.h"
+#include "particlesystem.h"
 
 struct SpawnLimits
 {
@@ -22,7 +23,7 @@ class AsteroidsManager: public GameObject
 public:
 	AsteroidsManager();
 
-	void create(int initialCount, ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr);
+	void create(int initialCount, CameraPtr camera, ConstMat4Ptr projectionPtr);
 
 	void init()override;
 	void process()override;
@@ -39,11 +40,14 @@ public:
 
 private:
 	MultipleAsteroidsRendererPtr renderer;
-	ConstMat4Ptr viewPtr;
+	CameraPtr camera;
 	ConstMat4Ptr projectionPtr;
 
 	AsteroidPtr patternAsteroid;
 	HitboxObjectPtr asteroidHitboxPattern;
+	ParticleSystemPtr asteroidsExplosionFragmentsPattern;
+	ParticleSystemPtr asteroidsExplosionPattern;
+
 	std::vector<AsteroidPtr> asteroids;
 	SpawnLimits arenaLimits;
 
@@ -51,8 +55,10 @@ private:
 
 	std::mt19937 rng;
 
-	void createPatternAsteroid(ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr);
-	void createPatternAsteroidHitbox(ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr);
+	void createPatternAsteroid();
+	void createPatternAsteroidHitbox();
+	void createPatternAsteroidExplosionParticleSystem();
+
 	void initializeAsteroidsVector(int initialCount);
 	void initializeAsteroid(AsteroidPtr asteroid);
 

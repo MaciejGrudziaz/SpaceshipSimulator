@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GameResources/gameobjects/camera.h>
+#include "../gamelogic/collisions.h"
 #include "standardgameobject.h"
 #include "spaceshipgun.h"
 #include "laserbeam.h"

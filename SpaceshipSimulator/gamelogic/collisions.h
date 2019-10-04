@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "../gameengine.h"
-//#include "../gameobjects/gameresources.h"
 #include "../gameobjects/standardgameobject.h"
 #include "collisiondetectionalgorithm.h"
 #include "../gameobjects/hitboxobject.h"
@@ -15,7 +13,7 @@ struct CollisionData
 	float objectSpeed;
 	float objectMass;
 
-	int hitboxIdx;
+	int objIdx;
 };
 
 class ObjectCollision : public Property<GameObject>
@@ -27,19 +25,39 @@ public:
 	void process()override;
 	void invalidate()override;
 
-	//static std::vector<GameObjectPtr> allHitboxes;
 	std::vector<GameObjectPtr> objectHitboxes;
 	std::list<CollisionData> collisionData;
-	float collisionRadius;
 
 	void addCollisionData(const CollisionData& data);
 
 private:
 	void loadHitboxObjects();
-	void calcCollisionRadius();
 	HitboxObject& getHitboxObject(GameObjectPtr obj);
-	bool isHitboxExternal(GameObjectPtr obj);
 	void resetHitboxes();
 
 	std::mutex colDataMutex;
+};
+
+class PointCollision : public Property<GameObject>
+{
+public:
+	PointCollision(const std::string& name, GameObject& object);
+
+	void init()override;
+	void process()override;
+	void invalidate()override;
+
+	void addCollisionPoint(std::shared_ptr<glm::vec3> pt);
+	std::vector<std::shared_ptr<glm::vec3> >& getCollisionPtVec();
+	void releaseCollisionPtVec();
+	
+	void addCollisionData(const CollisionData& data);
+
+private:
+	std::vector<std::shared_ptr<glm::vec3> > collisionPoints;
+	std::list<CollisionData> collisionData;
+
+	std::mutex colDataMutex;
+	std::mutex colPtMutex;
+	bool colPtVecAvailableFlag;
 };

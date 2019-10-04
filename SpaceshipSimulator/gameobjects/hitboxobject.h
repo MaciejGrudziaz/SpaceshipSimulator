@@ -26,16 +26,24 @@ public:
 	void setHitboxColor(const glm::vec3& color);
 	glm::vec3 getHitboxColor()const;
 
+	float getCollisionRadius()const;
+
 private:
 	HitboxRendererPtr renderer;
 	HitboxPtr hitbox;
 	std::shared_ptr<glm::mat4> modelTransform;
 	std::shared_ptr<glm::vec3> hitboxColor;
 
+	const glm::vec3 radiusIdentityVec = glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f));
+	float basicCollisionRadius;
+	float actualCollisionRadius;
+
 	void loadHitboxFromfile(const std::string& hitboxFilename);
 	bool isHitboxFileCorrect(const std::string& hitboxFilename);
 	void loadControlPoints(std::fstream& file, std::vector<glm::vec3>& controlPt, const int lineSize, char delimCharacter);
 	void loadIndices(std::fstream& file, std::vector<unsigned>& indices, const int lineSize, char delimCharacter);
+	void loadNormals(std::fstream& file, std::vector<glm::vec3>& normals, const int lineSize, char delimCharacter);
+	void calcHitboxCollisionRadius();
 
 	void initializeData(const HitboxObjectData& filesData, const ModelExternalUniforms& uniform);
 	void initUniforms(const ModelExternalUniforms& uniform);

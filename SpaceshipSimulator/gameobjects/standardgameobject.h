@@ -22,6 +22,9 @@ public:
 	virtual void process() override;
 	virtual void setActive(bool val) override;
 
+	virtual void dealDamage()
+	{}
+
 	std::shared_ptr<RenderObject> getRenderer()const;
 	HitboxPtr getMainHitbox()const;
 

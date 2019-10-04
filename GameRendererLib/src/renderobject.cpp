@@ -113,17 +113,22 @@ void RenderObject::loadBuffer(const std::vector<float>& verticesBuffer)
 	if (err != GL_NO_ERROR)
 		errorCode.push(BUFFER_DATA_ERROR);
 
+	initAttribArrayPointers();
+
+	bufferVerticesCount = verticesBuffer.size() / shaderAttributesTotalSize;
+}
+
+void RenderObject::initAttribArrayPointers()
+{
 	for (ShaderAttrList::value_type shaderAttrEntry : shaderAttributes)
 	{
 		glVertexAttribPointer(shaderAttrEntry.location, shaderAttrEntry.size, GL_FLOAT, GL_FALSE, shaderAttributesTotalSize * sizeof(float), shaderAttrEntry.offset);
 		glEnableVertexAttribArray(shaderAttrEntry.location);
 
-		err = glGetError();
+		GLenum err = glGetError();
 		if (err != GL_NO_ERROR)
 			errorCode.push(VERTEX_ATTRIB_POINTER_NOT_VALID);
 	}
-
-	bufferVerticesCount = verticesBuffer.size() / shaderAttributesTotalSize;
 }
 
 void RenderObject::init()
@@ -153,6 +158,7 @@ void RenderObject::bindVertexArray()
 {
 	glUseProgram(shader->getProgram());
 	glBindVertexArray(VAO);
+	glBindBuffer(GL_VERTEX_ARRAY, VBO);
 }
 
 void RenderObject::updateUniforms()

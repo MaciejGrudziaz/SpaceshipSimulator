@@ -375,5 +375,5 @@ glm::vec3 ParticleSystem::getDestColor()const
 
 bool ParticleSystem::isRunning()const
 {
-	return (!endParticlesProcess && launched);
+	return (!endParticlesProcess && (externalLaunchFlag || launched));
 }

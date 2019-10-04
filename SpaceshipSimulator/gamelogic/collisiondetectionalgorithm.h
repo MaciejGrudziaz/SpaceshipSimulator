@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <random>
+#include <array>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GameResources/gameobjects/hitbox.h>
+//#include <GameResources/gameobjects/hitbox.h>
+#include "../gameobjects/hitboxobject.h"
 
 const unsigned int RayCastLinesNum = 128;																					//liczba prostych u¿ywanych przy algorytmie 'Ray Cast'
 
@@ -65,6 +67,7 @@ public:
 			}
 		}
 	};
+	typedef std::shared_ptr<Surface> SurfacePtr;
 
 	struct Line {
 		glm::vec3 vec;
@@ -113,8 +116,11 @@ private:
 	static void GetCollisionNormals_SortCandidates_GenerateTestPoints(const glm::vec3& surfMidPt, const glm::vec3& surfVec1, const glm::vec3& surfVec2, const glm::vec3& surfPtProj,
 		const int testPtCount, std::vector<glm::vec3>& testPoints);
 
+	static void createSurfaces(std::array<SurfacePtr, 6>& surfaces, const Hitbox& model);
+
 public:
 	static bool CheckCollision(const Hitbox& model1, const Hitbox& model2);												//sprawdzanie kolizji pomiêdzy dwoma modelami
+	static bool CheckCollision(HitboxObject& model, const glm::vec3& point);
 
 	static void GetCollisionNormals(const Hitbox& model1, const Hitbox& model2, std::vector<glm::vec3>& collisionNormals);
 

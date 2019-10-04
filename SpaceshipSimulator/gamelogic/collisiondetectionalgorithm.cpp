@@ -39,6 +39,57 @@ bool CollisionDetection::CheckCollision(const Hitbox& model1, const Hitbox& mode
 	else return false;
 }
 
+bool CollisionDetection::CheckCollision(HitboxObject& model, const glm::vec3& point)
+{
+	glm::vec3 pos = model.getParentTransform() * glm::vec4(model.getTransform().getPosition(),1.0f);
+	float radius = model.getCollisionRadius();
+	bool collisionOccured;
+
+	if (glm::distance(pos, point) <= radius)
+	{
+		std::array<SurfacePtr, 6> hitboxSurfaces;
+
+		createSurfaces(hitboxSurfaces, *(model.getHitbox()));
+
+		collisionOccured = true;
+		for (auto surf : hitboxSurfaces)
+		{
+			if (GetParam_T_SurfacePointProjection(*surf, point) < 0.0f)
+			{
+				collisionOccured = false;
+				break;
+			}
+		}
+	}
+	else collisionOccured = false;
+
+	return collisionOccured;
+}
+
+void CollisionDetection::createSurfaces(std::array<CollisionDetection::SurfacePtr, 6>& surfaces, const Hitbox& model)
+{
+	//			hitbox vert idx		hitbox normal
+	//surface 1 [0, 1, 2, 3]		n[0]
+	//surface 2 [4, 5, 6, 7]		n[1]
+	//surface 3 [1, 5, 6, 2]		n[2]
+	//surface 4 [2, 6, 7, 3]		n[3]
+	//surface 5 [3, 7, 4, 0]		n[4]
+	//surface 6 [1, 5, 4, 0]		n[5]
+
+	SurfacePtr surf = std::make_shared<Surface>(model.transformNormals[0], model.transformVertices[0]);
+	surfaces[0] = surf;
+	surf = std::make_shared<Surface>(model.transformNormals[1], model.transformVertices[4]);
+	surfaces[1] = surf;
+	surf = std::make_shared<Surface>(model.transformNormals[2], model.transformVertices[1]);
+	surfaces[2] = surf;
+	surf = std::make_shared<Surface>(model.transformNormals[3], model.transformVertices[2]);
+	surfaces[3] = surf;
+	surf = std::make_shared<Surface>(model.transformNormals[4], model.transformVertices[3]);
+	surfaces[4] = surf;
+	surf = std::make_shared<Surface>(model.transformNormals[5], model.transformVertices[1]);
+	surfaces[5] = surf;
+}
+
 void CollisionDetection::GetCollisionNormals(const Hitbox& model1, const Hitbox& model2, std::vector<glm::vec3>& collisionNormals) {
 	std::map<int, Surface> surfaceCandidates;
 

@@ -17,9 +17,13 @@ public:
 	void run();
 
 	void registerCollisionObject(GameObjectPtr object);
+	void registerCollisionPoints(GameObjectPtr object);
 
 private:
+	int warmupCounter;
+	const int warmupLimitCount = 10;
 	std::vector<std::shared_ptr<Property<GameObject> > > collisionObjects;
+	std::vector<std::shared_ptr<Property<GameObject> > > collisionPoints;
 
 	std::thread collisionDetectionThread;
 	std::mutex updateMutex;
@@ -28,6 +32,7 @@ private:
 
 	void processCollisions();
 	void checkAllCollisions();
+	void checkPointCollisions();
 };
 
 typedef std::shared_ptr<CollisionsManager> CollisionsManagerPtr;

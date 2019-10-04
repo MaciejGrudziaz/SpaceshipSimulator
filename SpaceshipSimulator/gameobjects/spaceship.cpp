@@ -122,6 +122,13 @@ void Spaceship::loadGuns()
 void Spaceship::addLaserBeam(LaserBeamPtr beam)
 {
 	laserShots.push_back(beam);
+
+	auto colPtProperty = getProperty("point_collision");
+	if (colPtProperty->isUsable())
+	{
+		PointCollision& property = static_cast<PointCollision&>(*colPtProperty);
+		property.addCollisionPoint(beam->getCurrentPosPtr());
+	}
 }
 
 void Spaceship::registerCamera(CameraPtr camera)

@@ -4,16 +4,17 @@ AsteroidsManager::AsteroidsManager()
 	: renderer(std::make_shared<MultipleAsteroidsRenderer>())
 {}
 
-void AsteroidsManager::create(int initialCount, ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr)
+void AsteroidsManager::create(int initialCount, CameraPtr camera, ConstMat4Ptr projectionPtr)
 {
-	this->viewPtr = viewPtr;
+	this->camera = camera;
 	this->projectionPtr = projectionPtr;
-	createPatternAsteroid(viewPtr, projectionPtr);
-	createPatternAsteroidHitbox(viewPtr, projectionPtr);
+	createPatternAsteroid();
+	createPatternAsteroidHitbox();
+	createPatternAsteroidExplosionParticleSystem();
 	initializeAsteroidsVector(initialCount);
 }
 
-void AsteroidsManager::createPatternAsteroid(ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr)
+void AsteroidsManager::createPatternAsteroid()
 {
 	ModelData filesData;
 	filesData.modelFilename = "models/asteroid_1.mgr";
@@ -22,18 +23,20 @@ void AsteroidsManager::createPatternAsteroid(ConstMat4Ptr viewPtr, ConstMat4Ptr 
 	filesData.textureFilename = "models/textures/asteroid_1_texture.png";
 
 	ModelExternalUniforms uniforms;
-	uniforms.view = viewPtr;
+	uniforms.view = camera->getViewPtr();
 	uniforms.projection = projectionPtr;
 
 	AsteroidPtr asteroid = std::make_shared<Asteroid>();
 	asteroid->load(filesData, uniforms);
 	asteroid->setName("asteroid");
 	asteroid->getTransform().setScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	asteroid->registerCamera(camera);
+	asteroid->registerProjectionMatrixPtr(projectionPtr);
 
 	patternAsteroid = asteroid;
 }
 
-void AsteroidsManager::createPatternAsteroidHitbox(ConstMat4Ptr viewPtr, ConstMat4Ptr projectionPtr)
+void AsteroidsManager::createPatternAsteroidHitbox()
 {
 	HitboxObjectPtr asteroidHitbox = std::make_shared<HitboxObject>();
 	asteroidHitbox->setName("hitbox_main");
@@ -45,11 +48,59 @@ void AsteroidsManager::createPatternAsteroidHitbox(ConstMat4Ptr viewPtr, ConstMa
 
 	ModelExternalUniforms uniforms;
 	uniforms.projection = projectionPtr;
-	uniforms.view = viewPtr;
+	uniforms.view = camera->getViewPtr();
 
 	asteroidHitbox->load(data, uniforms);
 
 	asteroidHitboxPattern = asteroidHitbox;
+}
+
+void AsteroidsManager::createPatternAsteroidExplosionParticleSystem()
+{
+	//asteroidsExplosionPattern = std::make_shared<ParticleSystem>();
+	//asteroidsExplosionPattern->setParticlesCount(4000);
+	//asteroidsExplosionPattern->setParticlesMaxSpeed(6.5f);
+	//asteroidsExplosionPattern->setParticlesMaxLifetime(1.0f);
+	//asteroidsExplosionPattern->setParticlesSize(0.5f);
+	//asteroidsExplosionPattern->setEvenSpread();
+	//asteroidsExplosionPattern->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(0.7f, 0.7f, 0.7f));
+	//asteroidsExplosionPattern->registerCamera(camera);
+	//asteroidsExplosionPattern->getTransform().setPosition(glm::vec3(0.0f));
+	//asteroidsExplosionPattern->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
+
+	//ParticleSystemData data;
+	//data.particleTexture = "sprites/asteroid_particle.png";
+	//data.vertexShaderFilename = "shaders/particle.vert";
+	//data.fragmentShaderFilename = "shaders/particle.frag";
+
+	//ModelExternalUniforms uniforms;
+	//uniforms.view = camera->getViewPtr();
+	//uniforms.projection = projectionPtr;
+
+	//asteroidsExplosionPattern->load(data, uniforms);
+
+	//renderer->registerRenderer(asteroidsExplosionPattern->getRenderer());
+
+	//asteroidsExplosionPattern->setSingleSpread();
+	//asteroidsExplosionPattern->launch();
+
+	//asteroidsExplosionFragmentsPattern = std::make_shared<ParticleSystem>();
+	//asteroidsExplosionFragmentsPattern->setParticlesCount(2000);
+	//asteroidsExplosionFragmentsPattern->setParticlesMaxSpeed(5.0f);
+	//asteroidsExplosionFragmentsPattern->setParticlesMaxLifetime(3.0f);
+	//asteroidsExplosionFragmentsPattern->setParticlesSize(0.6f);
+	//asteroidsExplosionFragmentsPattern->setEvenSpread();
+	//asteroidsExplosionFragmentsPattern->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.7f, 0.7f, 0.7f));
+	//asteroidsExplosionFragmentsPattern->registerCamera(camera);
+	//asteroidsExplosionFragmentsPattern->getTransform().setPosition(glm::vec3(0.0f));
+	//asteroidsExplosionFragmentsPattern->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
+
+	//asteroidsExplosionFragmentsPattern->load(data, uniforms);
+
+	//renderer->registerRenderer(asteroidsExplosionFragmentsPattern->getRenderer());
+
+	//asteroidsExplosionFragmentsPattern->setSingleSpread();
+	//asteroidsExplosionFragmentsPattern->launch();
 }
 
 void AsteroidsManager::initializeAsteroidsVector(int initialCount)
@@ -71,8 +122,11 @@ void AsteroidsManager::initializeAsteroidsVector(int initialCount)
 		asteroid->registerWorldSpeed(worldSpeed);
 
 		initializeAsteroid(asteroid);
+		asteroid->initParticleSystems();
 
 		renderer->registerRenderer(asteroid->getRenderer());
+		renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
+		renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
 		renderer->registerRenderer(hitbox->getRenderer());
 
 		asteroids.push_back(asteroid);
@@ -81,7 +135,7 @@ void AsteroidsManager::initializeAsteroidsVector(int initialCount)
 
 void AsteroidsManager::initializeAsteroid(AsteroidPtr asteroid)
 {
-	std::uniform_real_distribution<> linearSpeedRandX(0.0f, 5.0f);
+	std::uniform_real_distribution<> linearSpeedRandX(0.0f, 3.0f);
 	std::uniform_real_distribution<> linearSpeedRandY(-10.0f, -4.0f);
 	std::uniform_real_distribution<> rotSpeedRand(-5.0f, 5.0f);
 	std::uniform_real_distribution<> xPosRand(0.8f * arenaLimits.minX, 0.8f * arenaLimits.maxX);
@@ -120,6 +174,9 @@ void AsteroidsManager::init()
 	{
 		asteroid->init();
 	}
+
+	//asteroidsExplosionPattern->init();
+	//asteroidsExplosionFragmentsPattern->init();
 }
 
 void AsteroidsManager::process()
@@ -132,7 +189,16 @@ void AsteroidsManager::process()
 
 		if (asteroid->getTransform().getPosition().y < 1.1 * arenaLimits.minY)
 			initializeAsteroid(asteroid);
+
+		if (!asteroid->isActive() && !asteroid->isParticleSystemRunning())
+		{
+			initializeAsteroid(asteroid);
+			asteroid->setActive(true);
+		}
 	}
+
+	//asteroidsExplosionPattern->process();
+	//asteroidsExplosionFragmentsPattern->process();
 }
 
 void AsteroidsManager::invalidate()
@@ -143,6 +209,9 @@ void AsteroidsManager::invalidate()
 	{
 		asteroid->invalidate();
 	}
+
+	//asteroidsExplosionPattern->invalidate();
+	//asteroidsExplosionFragmentsPattern->invalidate();
 }
 
 void AsteroidsManager::registerWorldSpeed(std::shared_ptr<float> speed)
@@ -164,7 +233,7 @@ void AsteroidsManager::findLimitPosY()
 {
 	glm::vec4 pos(0.0f, -1.0f, 0.0f, 1.0f);
 	glm::vec4 clipPos;
-	glm::mat4 VP = (*projectionPtr) * (*viewPtr);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
 	clipPos = VP * pos;
 	clipPos /= clipPos.w;
 
@@ -219,7 +288,7 @@ void AsteroidsManager::findLimitPosX()
 	std::pair<float, float> limits;
 	glm::vec4 pos(-1.0f, 0.0f, 0.0f, 1.0f);
 	glm::vec4 clipPos;
-	glm::mat4 VP = (*projectionPtr) * (*viewPtr);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
 	clipPos = VP * pos;
 	clipPos /= clipPos.w;
 

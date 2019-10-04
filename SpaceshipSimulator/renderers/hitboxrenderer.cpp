@@ -24,12 +24,11 @@ void HitboxRenderer::process()
 	{
 		glUseProgram(shader->getProgram());
 
-		updateUniforms();
-
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer);
-		
+		updateUniforms();
+
 		glDrawElementsBaseVertex(GL_LINES, indicesCount, GL_UNSIGNED_INT, 0, 0);
 	}
 }

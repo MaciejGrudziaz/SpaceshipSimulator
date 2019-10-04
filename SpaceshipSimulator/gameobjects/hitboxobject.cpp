@@ -5,6 +5,8 @@ HitboxObject::HitboxObject()
 	, hitbox(std::make_shared<Hitbox>())
 	, modelTransform(std::make_shared<glm::mat4>(1.0f))
 	, hitboxColor(std::make_shared<glm::vec3>(1.0f, 0.0f, 0.0f))
+	, basicCollisionRadius(0.0f)
+	, actualCollisionRadius(0.0f)
 {}
 
 void HitboxObject::load(const HitboxObjectData& filesData, const ModelExternalUniforms& uniforms)
@@ -24,6 +26,7 @@ void HitboxObject::loadHitboxFromfile(const std::string& hitboxFilename)
 
 		std::vector<glm::vec3> controlPt;
 		std::vector<unsigned> indices;
+		std::vector<glm::vec3> normals;
 		while (!file.eof())
 		{
 			file.getline(buffer, lineSize, delimCharacter);
@@ -32,6 +35,7 @@ void HitboxObject::loadHitboxFromfile(const std::string& hitboxFilename)
 			{
 				loadControlPoints(file, controlPt, lineSize, delimCharacter);
 				loadIndices(file, indices, lineSize, delimCharacter);
+				loadNormals(file, normals, lineSize, delimCharacter);
 			}
 		}
 
@@ -40,6 +44,10 @@ void HitboxObject::loadHitboxFromfile(const std::string& hitboxFilename)
 		for (int i = 0; i < 8; ++i)
 		{
 			hitbox->basicVertices[i] = controlPt[i];
+		}
+		for (int i = 0; i < 6; ++i)
+		{
+			hitbox->basicNormals[i] = normals[i];
 		}
 		hitbox->indices = indices;
 	}
@@ -70,7 +78,7 @@ void HitboxObject::loadControlPoints(std::fstream& file, std::vector<glm::vec3>&
 {
 	std::unique_ptr<char> buffer(new char[lineSize]);
 	std::string line;
-	while (line != "indices")
+	while (line != "indices" && !file.eof())
 	{
 		glm::vec3 vec;
 		file.getline(buffer.get(), lineSize, delimCharacter);
@@ -95,13 +103,13 @@ void HitboxObject::loadIndices(std::fstream& file, std::vector<unsigned>& indice
 {
 	std::unique_ptr<char> buffer(new char[lineSize]);
 	std::string line;
-	while (!file.eof())
+	while (line!="normals" && !file.eof())
 	{
 		glm::vec3 vec;
 		file.getline(buffer.get(), lineSize, delimCharacter);
 		line = buffer.get();
 
-		if (line != "")
+		if (line != "" && line !="normals")
 		{
 			size_t pos = line.find_first_of(' ');
 			std::string num = line.substr(0, pos);
@@ -111,6 +119,50 @@ void HitboxObject::loadIndices(std::fstream& file, std::vector<unsigned>& indice
 			indices.push_back(std::stoi(line));
 		}
 	}
+}
+
+void HitboxObject::loadNormals(std::fstream& file, std::vector<glm::vec3>& normals, const int lineSize, char delimCharacter)
+{
+	std::unique_ptr<char> buffer(new char[lineSize]);
+	std::string line;
+	while (!file.eof())
+	{
+		glm::vec3 vec;
+		file.getline(buffer.get(), lineSize, delimCharacter);
+		line = buffer.get();
+
+		if (line != "")
+		{
+			size_t pos = line.find_first_of(' ');
+			std::string xVal = line.substr(0, pos);
+			line = line.substr(pos + 1);
+			pos = line.find_first_of(' ');
+			std::string yVal = line.substr(0, pos);
+			line = line.substr(pos + 1);
+			pos = line.find_first_of(' ');
+			std::string zVal = line.substr(0, pos);
+
+			normals.push_back(glm::vec3(std::stof(xVal), std::stof(yVal), std::stof(zVal)));
+		}
+	}
+}
+
+void HitboxObject::calcHitboxCollisionRadius()
+{
+	float dist = 0.0f;
+	float candidate = 0.0f;
+
+	for(int i = 0; i < 8 - 1; ++i)
+	{
+		for (int j = i + 1; j < 8; ++j)
+		{
+			candidate = glm::length(hitbox->basicVertices[i] - hitbox->basicVertices[j]);
+			if (candidate > dist)
+				dist = candidate;
+		}
+	}
+
+	basicCollisionRadius = dist / 2.0f;
 }
 
 void HitboxObject::load(HitboxPtr hitbox, const HitboxObjectData& filesData, const ModelExternalUniforms& uniforms)
@@ -127,6 +179,7 @@ void HitboxObject::initializeData(const HitboxObjectData& filesData, const Model
 	initAttribPointers();
 	renderer->init();
 	loadBufferData();
+	calcHitboxCollisionRadius();
 }
 
 void HitboxObject::initUniforms(const ModelExternalUniforms& uniforms)
@@ -194,6 +247,13 @@ void HitboxObject::updateHitboxData()
 	{
 		hitbox->transformVertices[i] = (*modelTransform) * glm::vec4(hitbox->basicVertices[i], 1.0f);
 	}
+	for (int i = 0; i < 6; ++i)
+	{
+		hitbox->transformNormals[i] = (*modelTransform) * glm::vec4(hitbox->basicNormals[i], 0.0f);
+	}
+
+	glm::vec4 transformedColRadiusVec = (*modelTransform) * glm::vec4((radiusIdentityVec * basicCollisionRadius), 0.0f);
+	actualCollisionRadius = glm::length(transformedColRadiusVec);
 }
 
 void HitboxObject::deepCopy(const HitboxObject& object)
@@ -206,6 +266,7 @@ void HitboxObject::deepCopy(const HitboxObject& object)
 
 	this->modelTransform = std::make_shared<glm::mat4>(1.0f);
 	this->hitboxColor = std::make_shared<glm::vec3>(1.0f, 0.0f, 0.0f);
+	this->basicCollisionRadius = object.basicCollisionRadius;
 
 	copyModelUniform();
 	copyColorUniform();
@@ -267,4 +328,9 @@ void HitboxObject::setHitboxColor(const glm::vec3& color)
 glm::vec3 HitboxObject::getHitboxColor()const
 {
 	return *hitboxColor;
+}
+
+float HitboxObject::getCollisionRadius()const
+{
+	return actualCollisionRadius;
 }

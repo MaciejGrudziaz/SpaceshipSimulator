@@ -67,6 +67,7 @@ protected:
 	void loadUniformsLoc();
 
 	void bindVertexArray();
+	void initAttribArrayPointers();
 	void updateUniforms();
 	void drawArrays();
 };

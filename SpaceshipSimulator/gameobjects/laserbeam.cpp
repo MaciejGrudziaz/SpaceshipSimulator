@@ -4,6 +4,7 @@ LaserBeam::LaserBeam()
 	: speed(1.0f)
 	, length(1.0f)
 	, activeFlag(false)
+	, currPos(std::make_shared<glm::vec3>(0.0f))
 {
 	transform.setDefaultOrientation(glm::vec3(0.0f, 1.0f, 0.0f));
 }
@@ -17,6 +18,7 @@ void LaserBeam::process()
 		glm::vec3 pos = transform.getPosition();
 		pos += speed * transform.getOrientation() * Time::deltaTime;
 		transform.setPosition(pos);
+		*currPos = pos;
 	}
 }
 
@@ -55,4 +57,9 @@ float LaserBeam::getSpeed()const
 float LaserBeam::getLength()const
 {
 	return length;
+}
+
+std::shared_ptr<glm::vec3> LaserBeam::getCurrentPosPtr()const
+{
+	return currPos;
 }

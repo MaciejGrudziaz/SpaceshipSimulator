@@ -20,6 +20,9 @@ GameObject::~GameObject()
 void GameObject::setActive(bool val)
 {
 	active = val;
+
+	for (auto child : children)
+		child.second->setActive(val);
 }
 
 bool GameObject::isActive() const

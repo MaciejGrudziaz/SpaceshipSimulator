@@ -23,21 +23,17 @@ void initializeGame(GameEngine& engine)
 
 	setCamera(engine);
 	loadSpaceship(engine);
-	//loadPatternAsteroid(engine);
 	loadAsteroids(engine);
 
 	registerInput(engine);
-	loadObjectsCollisionProperty(engine);
 	registerAsteroidBehaviours(engine);
 	registerSpaceshipGunBehaviours(engine);
 	registerSpaceshipEnginesControl(engine);
+	loadObjectsCollisionProperty(engine);
 
 	engine.getResources()->spaceship->init();
 
 	engine.getResources()->asteroids->init();
-	//std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
-	//	asteroid->init();
-	//});
 }
 
 void processGame(GameEngine& engine)
@@ -48,9 +44,6 @@ void processGame(GameEngine& engine)
 	engine.getResources()->asteroids->process();
 
 	engine.getResources()->collisionsManager->process();
-	//std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
-	//	asteroid->process();
-	//});
 }
 
 void invalidateGame(GameEngine& engine)
@@ -60,9 +53,19 @@ void invalidateGame(GameEngine& engine)
 	engine.getResources()->asteroids->invalidate();
 
 	engine.getResources()->collisionsManager->invalidate();
-	//std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
-	//	asteroid->invalidate();
-	//});
+}
+
+void loadObjectsCollisionProperty(GameEngine& engine)
+{
+	engine.getResources()->collisionsManager->registerCollisionObject(engine.getResources()->spaceship);
+	engine.getResources()->collisionsManager->registerCollisionPoints(engine.getResources()->spaceship);
+
+	for (auto asteroid : engine.getResources()->asteroids->getAsteroids())
+	{
+		engine.getResources()->collisionsManager->registerCollisionObject(asteroid);
+	}
+
+	engine.getResources()->collisionsManager->run();
 }
 
 //---------------------------------------------------------------------------------------
@@ -85,20 +88,4 @@ void invalidateParticles(GameEngine& engine)
 {
 	engine.getResources()->particles->invalidate();
 	engine.getResources()->particles2->invalidate();
-}
-
-void loadObjectsCollisionProperty(GameEngine& engine)
-{
-	//engine.getResources()->spaceship->addProperty<ObjectCollision>("collision");
-
-	//engine.getResources()->asteroids->addAsteroidsProperty<ObjectCollision>("collision");
-
-	engine.getResources()->collisionsManager->registerCollisionObject(engine.getResources()->spaceship);
-
-	for (auto asteroid : engine.getResources()->asteroids->getAsteroids())
-	{
-		engine.getResources()->collisionsManager->registerCollisionObject(asteroid);
-	}
-
-	engine.getResources()->collisionsManager->run();
 }

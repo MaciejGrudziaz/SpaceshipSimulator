@@ -3,16 +3,19 @@
 CollisionsManager::CollisionsManager()
 	: runFlag(false)
 	, updateFlag(false)
+	, warmupCounter(0)
 {}
 
 void CollisionsManager::process()
 {
-	//if (updateFlag)
-	//{
-	//	updateMutex.lock();
-	//	updateFlag = false;
-	//	updateMutex.unlock();
-	//}
+	if (warmupCounter < warmupLimitCount)
+	{
+		++warmupCounter;
+	}
+	else if (warmupCounter == warmupLimitCount) {
+		updateFlag = true;
+		++warmupCounter;
+	}
 }
 
 void CollisionsManager::invalidate()
@@ -32,10 +35,9 @@ void CollisionsManager::processCollisions()
 {
 	while (runFlag)
 	{
-		if (!updateFlag)
+		if (updateFlag)
 		{
 			updateMutex.lock();
-			//updateFlag = true;
 
 			checkAllCollisions();
 
@@ -63,12 +65,41 @@ void CollisionsManager::checkAllCollisions()
 					if (CollisionDetection::CheckCollision(*hitbox1.getHitbox(), *hitbox2.getHitbox()))
 					{
 						CollisionData data;
-						data.hitboxIdx = k;
-						//colObj1.collisionData.push_back(data);
+						data.objIdx = k;
 						colObj1.addCollisionData(data);
-						data.hitboxIdx = l;
+						data.objIdx = l;
 						colObj2.addCollisionData(data);
-						//colObj2.collisionData.push_back(data);
+					}
+				}
+			}
+		}
+	}
+
+	checkPointCollisions();
+}
+
+void CollisionsManager::checkPointCollisions()
+{
+	for (auto colPtRaw : collisionPoints)
+	{
+		for (auto colObjRaw : collisionObjects)
+		{
+			PointCollision& colPt = static_cast<PointCollision&>(*colPtRaw);
+			ObjectCollision& colObj = static_cast<ObjectCollision&>(*colObjRaw);
+
+			auto colPtVec = colPt.getCollisionPtVec();
+
+			for (int i = 0; i < colPtVec.size(); ++i)
+			{
+				std::shared_ptr<glm::vec3> pt = colPtVec[i];
+				for (int j = 0; j < colObj.objectHitboxes.size(); ++j)
+				{
+					HitboxObject& hitbox = static_cast<HitboxObject&>(*colObj.objectHitboxes[j]);
+					if (CollisionDetection::CheckCollision(hitbox, *pt))
+					{
+						CollisionData data;
+						data.objIdx = j;
+						colObj.addCollisionData(data);
 					}
 				}
 			}
@@ -81,4 +112,11 @@ void CollisionsManager::registerCollisionObject(GameObjectPtr object)
 	object->addProperty<ObjectCollision>("collision");
 
 	collisionObjects.push_back(static_cast<std::shared_ptr<Property<GameObject> > >(object->getProperty("collision")));
+}
+
+void CollisionsManager::registerCollisionPoints(GameObjectPtr object)
+{
+	object->addProperty<PointCollision>("point_collision");
+
+	collisionPoints.push_back(static_cast<std::shared_ptr<Property<GameObject> >>(object->getProperty("point_collision")));
 }

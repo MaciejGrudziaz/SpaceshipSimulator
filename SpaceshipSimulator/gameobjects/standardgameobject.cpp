@@ -246,6 +246,7 @@ std::shared_ptr<RenderObject> StandardGameObject::getRenderer()const
 HitboxPtr StandardGameObject::getMainHitbox()const
 {
 	return mainHitbox;
+;
 }
 
 StandardGameObject::error StandardGameObject::getErrorCode()

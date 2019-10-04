@@ -24,8 +24,6 @@ void ParticleRenderer::process()
 {
 	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
-
-
 		glEnable(GL_BLEND);
 		glBlendFunc(blendFunc.sfactor, blendFunc.dfactor);
 
@@ -55,7 +53,8 @@ void ParticleRenderer::process()
 
 void ParticleRenderer::bindBuffers()
 {
-	
+	glBindVertexArray(VAO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glVertexAttribPointer(attribVertex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 

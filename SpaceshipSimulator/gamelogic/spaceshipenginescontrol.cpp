@@ -11,13 +11,13 @@ void EnginesControl::init()
 	ManeuverEnginePtr lowerRight = std::make_shared<ManeuverEngine>();
 	lowerRight->thrust = maneuverEngineThrust;
 	lowerRight->thrustForceDirection = glm::normalize(glm::vec3(-1.0f, 1.0f, 0.0f));
-	lowerRight->forceArm = glm::vec3(0.0f, -2.0f, 0.0f);
+	lowerRight->forceArm = glm::vec3(0.0f, -3.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[2], lowerRight));
 
 	ManeuverEnginePtr lowerLeft = std::make_shared<ManeuverEngine>();
 	lowerLeft->thrust = maneuverEngineThrust;
 	lowerLeft->thrustForceDirection = glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f));
-	lowerLeft->forceArm = glm::vec3(0.0f, -2.0f, 0.0f);
+	lowerLeft->forceArm = glm::vec3(0.0f, -3.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[3], lowerLeft));
 
 	ManeuverEnginePtr upperLeft = std::make_shared<ManeuverEngine>();

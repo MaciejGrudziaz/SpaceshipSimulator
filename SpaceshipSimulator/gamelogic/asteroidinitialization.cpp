@@ -18,7 +18,6 @@ void loadPatternAsteroid(GameEngine& engine)
 	asteroid->getTransform().setScale(glm::vec3(0.75f, 0.75f, 0.75f));
 
 	engine.getResources()->asteroidPattern = asteroid;
-	//engine.addRenderer(asteroid->getRenderer());
 
 	addHitboxToAsteroid(engine);
 }
@@ -40,37 +39,13 @@ void addHitboxToAsteroid(GameEngine& engine)
 	asteroidHitbox->load(data, uniforms);
 
 	engine.getResources()->asteroidHitboxPattern = asteroidHitbox;
-
-	//engine.addRenderer(asteroidHitbox->getRenderer());
-	//engine.getResources()->asteroidPattern->addChild(asteroidHitbox);
 }
 
 void loadAsteroids(GameEngine& engine)
 {
-	//for (int i = 0; i < 10; ++i)
-	//{
-	//	glm::vec3 randPos;
-	//	randPos.x = (rand() % 40) - 20;
-	//	randPos.y = (rand() % 10);
-
-	//	StandardGameObjectPtr asteroid = std::make_shared<StandardGameObject>();
-	//	asteroid->deepCopy(*(engine.getResources()->asteroidPattern));
-
-	//	HitboxObjectPtr hitbox = std::make_shared<HitboxObject>();
-	//	hitbox->deepCopy(*(engine.getResources()->asteroidHitboxPattern));
-	//	hitbox->setName("hitbox_main");
-
-	//	asteroid->addChild(hitbox);
-	//	asteroid->getTransform().setPosition(randPos);
-
-	//	engine.getResources()->asteroids.push_back(asteroid);
-	//	engine.addRenderer(asteroid->getRenderer());
-	//	engine.addRenderer(hitbox->getRenderer());
-	//}
-
 	AsteroidsManagerPtr asteroids = std::make_shared<AsteroidsManager>();
 	asteroids->registerWorldSpeed(engine.getResources()->worldSpeed);
-	asteroids->create(30, engine.getResources()->camera->getViewPtr(), engine.getProjectionMatPtr());
+	asteroids->create(1, engine.getResources()->camera, engine.getProjectionMatPtr());
 
 	engine.addRenderer(asteroids->getRenderer());
 	engine.getResources()->asteroids = asteroids;

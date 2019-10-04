@@ -188,7 +188,6 @@ void loadParticlesSytem(GameEngine& engine)
 	uniforms.projection = engine.getProjectionMatPtr();
 
 	mainEngine->load(data, uniforms);
-	//mainEngine->launch();
 
 	spaceship->addChild(mainEngine);
 	engine.addRenderer(mainEngine->getRenderer());
@@ -206,7 +205,6 @@ void loadParticlesSytem(GameEngine& engine)
 
 	mainEngineSmoke->registerCamera(engine.getResources()->camera);
 	mainEngineSmoke->load(data, uniforms);
-	//mainEngineSmoke->launch();
 
 	spaceship->addChild(mainEngineSmoke);
 	engine.addRenderer(mainEngineSmoke->getRenderer());
@@ -224,7 +222,6 @@ void loadParticlesSytem(GameEngine& engine)
 
 	lowerRightEngine->registerCamera(engine.getResources()->camera);
 	lowerRightEngine->load(data, uniforms);
-	//lowerRightEngine->launch();
 
 	spaceship->addChild(lowerRightEngine);
 	engine.addRenderer(lowerRightEngine->getRenderer());
@@ -242,7 +239,6 @@ void loadParticlesSytem(GameEngine& engine)
 
 	lowerLeftEngine->registerCamera(engine.getResources()->camera);
 	lowerLeftEngine->load(data, uniforms);
-	//lowerLeftEngine->launch();
 
 	spaceship->addChild(lowerLeftEngine);
 	engine.addRenderer(lowerLeftEngine->getRenderer());
@@ -260,7 +256,6 @@ void loadParticlesSytem(GameEngine& engine)
 
 	upperLeftEngine->registerCamera(engine.getResources()->camera);
 	upperLeftEngine->load(data, uniforms);
-	//upperLeftEngine->launch();
 
 	spaceship->addChild(upperLeftEngine);
 	engine.addRenderer(upperLeftEngine->getRenderer());
@@ -278,7 +273,6 @@ void loadParticlesSytem(GameEngine& engine)
 
 	upperRightEngine->registerCamera(engine.getResources()->camera);
 	upperRightEngine->load(data, uniforms);
-	//upperRightEngine->launch();
 
 	spaceship->addChild(upperRightEngine);
 	engine.addRenderer(upperRightEngine->getRenderer());
