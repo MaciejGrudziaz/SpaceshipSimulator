@@ -1,7 +1,5 @@
 #include "collisions.h"
 
-std::vector<GameObjectPtr> ObjectCollision::allHitboxes;
-
 ObjectCollision::ObjectCollision(const std::string& name, GameObject& object)
 	: Property<GameObject>(name, object)
 	, collisionRadius(0.0f)
@@ -27,7 +25,7 @@ void ObjectCollision::loadHitboxObjects()
 			if (childName.substr(0, pos) == "hitbox")
 			{
 				this->objectHitboxes.push_back(this->object.getChild(childName));
-				this->allHitboxes.push_back(this->object.getChild(childName));
+				//this->allHitboxes.push_back(this->object.getChild(childName));
 			}
 		}
 	});
@@ -64,23 +62,37 @@ void ObjectCollision::calcCollisionRadius()
 
 void ObjectCollision::process()
 {
+	//resetHitboxes();
+
+	//for (auto hitbox : allHitboxes)
+	//{
+	//	if (isHitboxExternal(hitbox))
+	//	{
+	//		HitboxObject& hitbox1 = getHitboxObject(hitbox);
+	//		for (auto objHitbox : objectHitboxes)
+	//		{
+	//			HitboxObject& hitbox2 = getHitboxObject(objHitbox);
+
+	//			if (CollisionDetection::CheckCollision(*hitbox1.getHitbox(), *hitbox2.getHitbox()))
+	//			{
+	//				hitbox2.setHitboxColor(glm::vec3(0.0f, 1.0f, 0.0f));
+	//			}
+	//		}	
+	//	}
+	//}
 	resetHitboxes();
 
-	for (auto hitbox : allHitboxes)
+	if (!collisionData.empty())
 	{
-		if (isHitboxExternal(hitbox))
-		{
-			HitboxObject& hitbox1 = getHitboxObject(hitbox);
-			for (auto objHitbox : objectHitboxes)
-			{
-				HitboxObject& hitbox2 = getHitboxObject(objHitbox);
+		colDataMutex.lock();
 
-				if (CollisionDetection::CheckCollision(*hitbox1.getHitbox(), *hitbox2.getHitbox()))
-				{
-					hitbox2.setHitboxColor(glm::vec3(0.0f, 1.0f, 0.0f));
-				}
-			}	
+		for (auto data : collisionData)
+		{
+			getHitboxObject(objectHitboxes[data.hitboxIdx]).setHitboxColor(glm::vec3(0.0f, 1.0f, 0.0f));
 		}
+
+		collisionData.clear();
+		colDataMutex.unlock();
 	}
 }
 
@@ -118,11 +130,9 @@ void ObjectCollision::invalidate()
 
 }
 
-void loadObjectsCollisionProperty(GameEngine& engine)
+void ObjectCollision::addCollisionData(const CollisionData& data)
 {
-	engine.getResources()->spaceship->addProperty<ObjectCollision>("collision");
-
-	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid) {
-		asteroid->addProperty<ObjectCollision>("collision");
-	});
+	colDataMutex.lock();
+	collisionData.push_back(data);
+	colDataMutex.unlock();
 }

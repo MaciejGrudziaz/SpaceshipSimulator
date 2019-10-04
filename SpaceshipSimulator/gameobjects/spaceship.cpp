@@ -238,3 +238,18 @@ void Spaceship::loadTextureBufferData()
 
 	renderer->loadBuffer(buffer);
 }
+
+void Spaceship::registerWorldSpeed(std::shared_ptr<float> speed)
+{
+	worldSpeed = speed;
+}
+
+void Spaceship::setWorldSpeed(float val)
+{
+	*worldSpeed = val;
+}
+
+float Spaceship::getWorldSpeed()const
+{
+	return *worldSpeed;
+}

@@ -33,6 +33,10 @@ public:
 	void setInputRotation(float val);
 	float getInputRotation()const;
 
+	void registerWorldSpeed(std::shared_ptr<float> speed);
+	void setWorldSpeed(float val);
+	float getWorldSpeed()const;
+
 private:
 	void loadStandardBufferData()override;
 	void loadTextureBufferData()override;
@@ -47,6 +51,7 @@ private:
 	ConstMat4Ptr projectionMat;
 	glm::vec3 inputMoveVec;
 	float inputRotation;
+	std::shared_ptr<float> worldSpeed;
 
 	float maneuverEngineThrust;
 	float mainEngineThrust;

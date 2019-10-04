@@ -141,6 +141,15 @@
     <ClCompile Include="renderers\texturebeamsrenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\multipleasteroidsrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\asteroidsmanager.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\collisionsmanager.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -238,6 +247,15 @@
     </ClInclude>
     <ClInclude Include="renderers\texturebeamsrenderer.h">
       <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\multipleasteroidsrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\asteroidsmanager.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\collisionsmanager.h">
+      <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

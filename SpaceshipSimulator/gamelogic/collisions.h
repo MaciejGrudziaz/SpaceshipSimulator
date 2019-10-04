@@ -1,8 +1,11 @@
 #pragma once
 
-#include "../gameengine.h"
-#include "../gameobjects/gameresources.h"
+//#include "../gameengine.h"
+//#include "../gameobjects/gameresources.h"
+#include "../gameobjects/standardgameobject.h"
 #include "collisiondetectionalgorithm.h"
+#include "../gameobjects/hitboxobject.h"
+#include <mutex>
 
 struct CollisionData
 {
@@ -11,6 +14,8 @@ struct CollisionData
 	
 	float objectSpeed;
 	float objectMass;
+
+	int hitboxIdx;
 };
 
 class ObjectCollision : public Property<GameObject>
@@ -22,10 +27,12 @@ public:
 	void process()override;
 	void invalidate()override;
 
-	static std::vector<GameObjectPtr> allHitboxes;
+	//static std::vector<GameObjectPtr> allHitboxes;
 	std::vector<GameObjectPtr> objectHitboxes;
 	std::list<CollisionData> collisionData;
 	float collisionRadius;
+
+	void addCollisionData(const CollisionData& data);
 
 private:
 	void loadHitboxObjects();
@@ -33,6 +40,6 @@ private:
 	HitboxObject& getHitboxObject(GameObjectPtr obj);
 	bool isHitboxExternal(GameObjectPtr obj);
 	void resetHitboxes();
-};
 
-void loadObjectsCollisionProperty(GameEngine& engine);
+	std::mutex colDataMutex;
+};

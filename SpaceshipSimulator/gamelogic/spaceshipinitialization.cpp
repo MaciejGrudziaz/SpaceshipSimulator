@@ -16,6 +16,7 @@ void loadSpaceship(GameEngine& engine)
 	spaceship->load(filesData, uniforms);
 	spaceship->registerCamera(engine.getResources()->camera);
 	spaceship->registerProjectionMat(engine.getProjectionMatPtr());
+	spaceship->registerWorldSpeed(engine.getResources()->worldSpeed);
 
 	spaceship->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	spaceship->getTransform().setDefaultOrientation(glm::vec3(0.0f, 1.0f, 0.0f));

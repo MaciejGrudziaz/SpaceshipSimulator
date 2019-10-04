@@ -47,9 +47,9 @@ void AsteroidMovement::invalidate()
 void registerAsteroidBehaviours(GameEngine& engine)
 {
 	//engine.getResources()->asteroid->addProperty<RandomRotation>("rotation");
-	std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid)
-	{
-		asteroid->addProperty<RandomRotation>("rotation");
-		asteroid->addProperty<AsteroidMovement>("movement");
-	});
+	//std::for_each(engine.getResources()->asteroids.begin(), engine.getResources()->asteroids.end(), [](auto asteroid)
+	//{
+	//	asteroid->addProperty<RandomRotation>("rotation");
+	//	asteroid->addProperty<AsteroidMovement>("movement");
+	//});
 }

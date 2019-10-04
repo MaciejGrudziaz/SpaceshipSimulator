@@ -143,6 +143,7 @@
     <ClCompile Include="gamelogic\spaceshipinitialization.cpp" />
     <ClCompile Include="gamelogic\spaceshipinputcontrol.cpp" />
     <ClCompile Include="gameobjects\asteroid.cpp" />
+    <ClCompile Include="gameobjects\asteroidsmanager.cpp" />
     <ClCompile Include="gameobjects\hitboxobject.cpp" />
     <ClCompile Include="gameobjects\laserbeam.cpp" />
     <ClCompile Include="gameobjects\particle.cpp" />
@@ -150,11 +151,13 @@
     <ClCompile Include="gameobjects\spaceship.cpp" />
     <ClCompile Include="gameobjects\spaceshipgun.cpp" />
     <ClCompile Include="gameobjects\standardgameobject.cpp" />
+    <ClCompile Include="gameobjects\collisionsmanager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow\mainwindow.cpp" />
     <ClCompile Include="renderers\beamsrenderer.cpp" />
     <ClCompile Include="renderers\dynamicparticlerenderer.cpp" />
     <ClCompile Include="renderers\hitboxrenderer.cpp" />
+    <ClCompile Include="renderers\multipleasteroidsrenderer.cpp" />
     <ClCompile Include="renderers\particlerenderer.cpp" />
     <ClCompile Include="renderers\texturebeamsrenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
@@ -175,6 +178,7 @@
     <ClInclude Include="gamelogic\spaceshipinitialization.h" />
     <ClInclude Include="gamelogic\spaceshipinputcontrol.h" />
     <ClInclude Include="gameobjects\asteroid.h" />
+    <ClInclude Include="gameobjects\asteroidsmanager.h" />
     <ClInclude Include="gameobjects\gameresources.h" />
     <ClInclude Include="gameobjects\hitboxobject.h" />
     <ClInclude Include="gameobjects\laserbeam.h" />
@@ -184,10 +188,12 @@
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="gameobjects\spaceshipgun.h" />
     <ClInclude Include="gameobjects\standardgameobject.h" />
+    <ClInclude Include="gameobjects\collisionsmanager.h" />
     <ClInclude Include="mainwindow\mainwindow.h" />
     <ClInclude Include="renderers\beamsrenderer.h" />
     <ClInclude Include="renderers\dynamicparticlerenderer.h" />
     <ClInclude Include="renderers\hitboxrenderer.h" />
+    <ClInclude Include="renderers\multipleasteroidsrenderer.h" />
     <ClInclude Include="renderers\particlerenderer.h" />
     <ClInclude Include="renderers\texturebeamsrenderer.h" />
     <ClInclude Include="utilities\time.h" />

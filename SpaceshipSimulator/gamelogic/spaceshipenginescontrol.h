@@ -54,6 +54,7 @@ private:
 	typedef std::map<std::string, ManeuverEnginePtr> ManeuverEngineMap;
 	ManeuverEngineMap maneuverEngines;
 
+	float mainEngineThrust;
 	float spaceshipMass;
 	float maneuverEngineThrust;
 	float currSpeed;

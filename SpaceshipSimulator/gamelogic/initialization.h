@@ -23,6 +23,8 @@ void initializeGame(GameEngine& engine);
 void processGame(GameEngine& engine);
 void invalidateGame(GameEngine& engine);
 
+void loadObjectsCollisionProperty(GameEngine& engine);
+
 void initializeParticlesTest(GameEngine& engine);
 void processParticlesTest(GameEngine& engine);
 void invalidateParticles(GameEngine& engine);

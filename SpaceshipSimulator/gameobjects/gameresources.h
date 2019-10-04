@@ -5,6 +5,8 @@
 #include "../gameengine.h"
 #include "../gameenginemacros.h"
 #include "hitboxobject.h"
+#include "asteroidsmanager.h"
+#include "collisionsmanager.h"
 
 GAME_RESOURCES
 {
@@ -16,7 +18,12 @@ public:
 	StandardGameObjectPtr asteroidPattern;
 	HitboxObjectPtr asteroidHitboxPattern;
 	
-	std::vector<StandardGameObjectPtr> asteroids;
+	//std::vector<StandardGameObjectPtr> asteroids;
+	AsteroidsManagerPtr asteroids;
+
+	std::shared_ptr<float> worldSpeed;
+
+	CollisionsManagerPtr collisionsManager;
 
 	ParticleSystemPtr particles;
 	ParticleSystemPtr particles2;

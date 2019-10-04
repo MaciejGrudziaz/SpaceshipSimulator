@@ -4,31 +4,32 @@ void EnginesControl::init()
 {
 	currRotSpeed = 0.0f;
 	currSpeed = 0.0f;
+	mainEngineThrust = 20000;
 	maneuverEngineThrust = 100000;	//1000kN
 	spaceshipMass = 1000; //1000kg
 
 	ManeuverEnginePtr lowerRight = std::make_shared<ManeuverEngine>();
 	lowerRight->thrust = maneuverEngineThrust;
 	lowerRight->thrustForceDirection = glm::normalize(glm::vec3(-1.0f, 1.0f, 0.0f));
-	lowerRight->forceArm = glm::vec3(0.0f, -1.0f, 0.0f);
+	lowerRight->forceArm = glm::vec3(0.0f, -2.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[2], lowerRight));
 
 	ManeuverEnginePtr lowerLeft = std::make_shared<ManeuverEngine>();
 	lowerLeft->thrust = maneuverEngineThrust;
 	lowerLeft->thrustForceDirection = glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f));
-	lowerLeft->forceArm = glm::vec3(0.0f, -1.0f, 0.0f);
+	lowerLeft->forceArm = glm::vec3(0.0f, -2.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[3], lowerLeft));
 
 	ManeuverEnginePtr upperLeft = std::make_shared<ManeuverEngine>();
 	upperLeft->thrust = maneuverEngineThrust;
 	upperLeft->thrustForceDirection = glm::normalize(glm::vec3(1.0f, -1.0f, 0.0f));
-	upperLeft->forceArm = glm::vec3(0.0f, 1.0f, 0.0f);
+	upperLeft->forceArm = glm::vec3(0.0f, 3.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[4], upperLeft));
 
 	ManeuverEnginePtr upperRight = std::make_shared<ManeuverEngine>();
 	upperRight->thrust = maneuverEngineThrust;
 	upperRight->thrustForceDirection = glm::normalize(glm::vec3(-1.0f, -1.0f, 0.0f));
-	upperRight->forceArm = glm::vec3(0.0f, 1.0f, 0.0f);
+	upperRight->forceArm = glm::vec3(0.0f, 3.0f, 0.0f);
 	maneuverEngines.insert(ManeuverEngineMap::value_type(enginesNames[5], upperRight));
 }
 void EnginesControl::process()
@@ -46,7 +47,7 @@ void EnginesControl::processMainEngine()
 {
 	static Spaceship& spaceship = static_cast<Spaceship&>(object);
 	const glm::vec3 forwardDir(0.0f, 1.0f, 0.0f);
-	const float limitAngle = 90.0f;	//degress
+	const float limitAngle = 25.0f;	//degress
 
 	glm::vec3 moveDir = spaceship.getInputMoveVec();
 	float angle = glm::degrees(glm::acos(glm::dot(forwardDir, object.getTransform().getOrientation())));
@@ -59,24 +60,31 @@ void EnginesControl::processMainEngineCentralFlame(const glm::vec3& moveDir, flo
 {
 	static Spaceship& spaceship = static_cast<Spaceship&>(object);
 
-	float dotProd;
-	if (areEqual(moveDir, glm::vec3(0.0f))) dotProd = 0.0f;
-	else dotProd = glm::dot(glm::normalize(moveDir), object.getTransform().getOrientation());
-
 	GameObjectPtr obj = object.getChild(enginesNames[0]);
 	if (obj->isUsable())
 	{
 		ParticleSystem& mainEngine = static_cast<ParticleSystem&>(*obj);
-		if (angle < limitAngle  && dotProd >= 0.0f && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		if (angle < limitAngle  && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		{
 			if (!mainEngine.isRunning())
 			{
 				mainEngine.setContinuousSpred();
 				mainEngine.launch();
 			}
+
+			float speed = spaceship.getWorldSpeed();
+			speed += mainEngineThrust / spaceshipMass * Time::deltaTime;
+			spaceship.setWorldSpeed(speed);
 		}
 		else if (mainEngine.isRunning())
+		{
 			mainEngine.setSingleSpread();
+
+			float speed = spaceship.getWorldSpeed();
+			speed -= mainEngineThrust / spaceshipMass * Time::deltaTime;
+			if (speed < 0.0f) speed = 0.0f;
+			spaceship.setWorldSpeed(speed);
+		}
 	}
 }
 
@@ -84,15 +92,11 @@ void EnginesControl::processMainEngineExhaustCloud(const glm::vec3& moveDir, flo
 {
 	static Spaceship& spaceship = static_cast<Spaceship&>(object);
 
-	float dotProd;
-	if (areEqual(moveDir, glm::vec3(0.0f))) dotProd = 0.0f;
-	else dotProd = glm::dot(glm::normalize(moveDir), object.getTransform().getOrientation());
-
 	GameObjectPtr obj = object.getChild(enginesNames[1]);
 	if (obj->isUsable())
 	{
 		ParticleSystem& mainEngineSmoke = static_cast<ParticleSystem&>(*obj);
-		if (angle < limitAngle && dotProd >= 0.0f && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		if (angle < limitAngle && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		{
 			if (!mainEngineSmoke.isRunning())
 			{
@@ -257,12 +261,18 @@ void EnginesControl::spaceshipMovement()
 
 	glm::vec3 rotation = object.getTransform().getRotation();
 	rotation.z += currRotSpeed * Time::deltaTime;
+
+	if (rotation.z > 360.0f) rotation.z = rotation.z - 360.0f;
+	if (rotation.z < -360.0f) rotation.z = rotation.z + 360.0f;
+
 	object.getTransform().setRotation(rotation);
 }
 
 void EnginesControl::checkPosition()
 {
 	static Spaceship& spaceship = static_cast<Spaceship&>(object);
+	static int cnt = 0;
+	++cnt;
 
 	glm::vec3 globalPos = spaceship.getTransform().getPosition();
 	glm::mat4 VP = (*spaceship.getProjectionMat()) * (*spaceship.getCamera()->getViewPtr());
