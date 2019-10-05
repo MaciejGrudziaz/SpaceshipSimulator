@@ -13,8 +13,6 @@ public:
 	void process()override;
 	void invalidate()override;
 
-	void initParticleSystems();
-
 	void deepCopy(const Asteroid& asteroid);
 
 	virtual void setActive(bool val)override;
@@ -30,6 +28,8 @@ public:
 
 	RenderObjectPtr getExplosionParticlesRenderer()const;
 	RenderObjectPtr getExplosionFragmentsParticlesRenderer()const;
+	//ParticleSystemPtr getExplosionParticlesSystem()const;
+	//ParticleSystemPtr getExplosionFragmentsParticlesSystem()const;
 
 	bool isParticleSystemRunning()const;
 
@@ -42,6 +42,8 @@ private:
 
 	ParticleSystemPtr explosionParticles;
 	ParticleSystemPtr explosionFragmentsParticles;
+
+	void initParticleSystems();
 };
 
 typedef std::shared_ptr<Asteroid> AsteroidPtr;

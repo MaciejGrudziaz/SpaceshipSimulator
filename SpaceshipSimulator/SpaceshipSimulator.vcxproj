@@ -146,6 +146,7 @@
     <ClCompile Include="gameobjects\asteroidsmanager.cpp" />
     <ClCompile Include="gameobjects\hitboxobject.cpp" />
     <ClCompile Include="gameobjects\laserbeam.cpp" />
+    <ClCompile Include="gameobjects\multisourceparticlesystem.cpp" />
     <ClCompile Include="gameobjects\particle.cpp" />
     <ClCompile Include="gameobjects\particlesystem.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="renderers\dynamicparticlerenderer.cpp" />
     <ClCompile Include="renderers\hitboxrenderer.cpp" />
     <ClCompile Include="renderers\multipleasteroidsrenderer.cpp" />
+    <ClCompile Include="renderers\multisourceparticlerenderer.cpp" />
     <ClCompile Include="renderers\particlerenderer.cpp" />
     <ClCompile Include="renderers\texturebeamsrenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="gameobjects\hitboxobject.h" />
     <ClInclude Include="gameobjects\laserbeam.h" />
     <ClInclude Include="gameobjects\modelimportstruct.h" />
+    <ClInclude Include="gameobjects\multisourceparticlesystem.h" />
     <ClInclude Include="gameobjects\particle.h" />
     <ClInclude Include="gameobjects\particlesystem.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
@@ -194,7 +197,9 @@
     <ClInclude Include="renderers\dynamicparticlerenderer.h" />
     <ClInclude Include="renderers\hitboxrenderer.h" />
     <ClInclude Include="renderers\multipleasteroidsrenderer.h" />
+    <ClInclude Include="renderers\multisourceparticlerenderer.h" />
     <ClInclude Include="renderers\particlerenderer.h" />
+    <ClInclude Include="renderers\rendererstruct.h" />
     <ClInclude Include="renderers\texturebeamsrenderer.h" />
     <ClInclude Include="utilities\time.h" />
     <ClInclude Include="utilities\timeroptions.h" />

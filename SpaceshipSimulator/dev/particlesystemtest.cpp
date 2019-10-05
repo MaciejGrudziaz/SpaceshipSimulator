@@ -22,7 +22,7 @@ void initializeParticleSystem(GameEngine& engine)
 	uniforms.view = engine.getResources()->camera->getViewPtr();
 	uniforms.projection = engine.getProjectionMatPtr();
 
-	particles->load(data, uniforms);
+	particles->loadRenderer(data, uniforms);
 
 	//particles->addProperty<PlayerInput>("input");
 	particles->getTransform().setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
@@ -41,7 +41,7 @@ void initializeParticleSystem(GameEngine& engine)
 	particles2->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(1.0f, 1.0f, 1.0f));
 	particles2->registerCamera(engine.getResources()->camera);
 	particles2->getTransform().setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
-	particles2->load(data, uniforms);
+	particles2->loadRenderer(data, uniforms);
 
 	engine.getResources()->particles2 = particles2;
 	engine.addRenderer(particles2->getRenderer());

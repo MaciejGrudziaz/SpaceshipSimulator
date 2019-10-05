@@ -18,7 +18,7 @@ class ParticleSystem: public GameObject
 public:
 	ParticleSystem();
 
-	void load(const ParticleSystemData& data, const ModelExternalUniforms& uniforms);
+	void loadRenderer(const ParticleSystemData& data, const ModelExternalUniforms& uniforms);
 
 	virtual void init()override;
 	virtual void process()override;
@@ -51,7 +51,12 @@ public:
 	glm::vec2 getParticlesSpreadCone()const;
 	glm::vec3 getBaseColor()const;
 	glm::vec3 getDestColor()const;
+	BlendFunctions getBlendFunctions()const;
+
 	bool isRunning()const;
+
+	std::vector<float>& getParticlesPosSizeBuffer();
+	std::vector<float>& getParticlesColorBuffer();
 
 private:
 	glm::mat4 modelTransform;
@@ -88,6 +93,7 @@ private:
 	//void pause();
 	//void run();
 
+	void startThread();
 	void createParticles();
 	void initUniforms(const ModelExternalUniforms& uniforms);
 	void setParticleRandomData(Particle& particle);

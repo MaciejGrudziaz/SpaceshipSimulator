@@ -18,6 +18,28 @@ void ParticleRenderer::init()
 	attribColor = glGetAttribLocation(shader->getProgram(), "color");
 	attribVertex = glGetAttribLocation(shader->getProgram(), "vertex");
 	attribPosSize = glGetAttribLocation(shader->getProgram(), "centerPosSize");
+
+	loadBuffers();
+}
+
+void ParticleRenderer::loadBuffers()
+{
+	static const GLfloat vertexBuffer[] = {
+		-0.5f, -0.5f,  0.0f,
+		0.5f, -0.5f,  0.0f,
+		-0.5f,  0.5f,  0.0f,
+		0.5f,  0.5f,  0.0f,
+	};
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
+	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
+	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 }
 
 void ParticleRenderer::process()
@@ -96,26 +118,6 @@ void ParticleRenderer::invalidate()
 
 	glDeleteBuffers(1, &particlePositionSizeBuffer);
 	glDeleteBuffers(1, &particleColorBuffer);
-}
-
-void ParticleRenderer::loadBuffers()
-{
-	static const GLfloat vertexBuffer[] = {
-		-0.5f, -0.5f,  0.0f,
-		 0.5f, -0.5f,  0.0f,
-		-0.5f,  0.5f,  0.0f,
-		 0.5f,  0.5f,  0.0f,
-	};
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, particlePositionSizeBuffer);
-	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, particlesCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 }
 
 void ParticleRenderer::setParticlesCount(int val)

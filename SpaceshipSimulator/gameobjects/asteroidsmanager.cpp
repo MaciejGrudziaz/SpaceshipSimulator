@@ -2,16 +2,21 @@
 
 AsteroidsManager::AsteroidsManager()
 	: renderer(std::make_shared<MultipleAsteroidsRenderer>())
+	//, particlesSystem(std::make_shared<MultiSourceParticleSystem>())
 {}
 
 void AsteroidsManager::create(int initialCount, CameraPtr camera, ConstMat4Ptr projectionPtr)
 {
 	this->camera = camera;
+	//this->particlesSystem->registerCamera(camera);
 	this->projectionPtr = projectionPtr;
 	createPatternAsteroid();
 	createPatternAsteroidHitbox();
 	createPatternAsteroidExplosionParticleSystem();
 	initializeAsteroidsVector(initialCount);
+
+	loadParticlesSystemRenderer();
+	//renderer->registerRenderer(particlesSystem->getRenderer());
 }
 
 void AsteroidsManager::createPatternAsteroid()
@@ -122,11 +127,11 @@ void AsteroidsManager::initializeAsteroidsVector(int initialCount)
 		asteroid->registerWorldSpeed(worldSpeed);
 
 		initializeAsteroid(asteroid);
-		asteroid->initParticleSystems();
+		//asteroid->initParticleSystems();
 
 		renderer->registerRenderer(asteroid->getRenderer());
-		renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
-		renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
+		//renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
+		//renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
 		renderer->registerRenderer(hitbox->getRenderer());
 
 		asteroids.push_back(asteroid);
@@ -166,6 +171,20 @@ void AsteroidsManager::initializeAsteroid(AsteroidPtr asteroid)
 	asteroid->setRotSpeed(spawnRotSpeed);
 }
 
+void AsteroidsManager::loadParticlesSystemRenderer()
+{
+	ParticleSystemData data;
+	data.particleTexture = "sprites/asteroid_particle.png";
+	data.vertexShaderFilename = "shaders/particle.vert";
+	data.fragmentShaderFilename = "shaders/particle.frag";
+
+	ModelExternalUniforms uniforms;
+	uniforms.view = camera->getViewPtr();
+	uniforms.projection = projectionPtr;
+
+	//particlesSystem->loadRenderer(data, uniforms);
+}
+
 void AsteroidsManager::init()
 {
 	GameObject::init();
@@ -173,7 +192,13 @@ void AsteroidsManager::init()
 	for (auto asteroid : asteroids)
 	{
 		asteroid->init();
+		renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
+		renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
+		//particlesSystem->registerParticleSystem(asteroid->getExplosionParticlesSystem());
+		//particlesSystem->registerParticleSystem(asteroid->getExplosionFragmentsParticlesSystem());
 	}
+
+	//particlesSystem->init();
 
 	//asteroidsExplosionPattern->init();
 	//asteroidsExplosionFragmentsPattern->init();
@@ -190,12 +215,15 @@ void AsteroidsManager::process()
 		if (asteroid->getTransform().getPosition().y < 1.1 * arenaLimits.minY)
 			initializeAsteroid(asteroid);
 
-		if (!asteroid->isActive() && !asteroid->isParticleSystemRunning())
+		//if (!asteroid->isActive() && !asteroid->isParticleSystemRunning())
+		if(!asteroid->isActive())
 		{
 			initializeAsteroid(asteroid);
 			asteroid->setActive(true);
 		}
 	}
+
+	//particlesSystem->process();
 
 	//asteroidsExplosionPattern->process();
 	//asteroidsExplosionFragmentsPattern->process();
@@ -209,6 +237,8 @@ void AsteroidsManager::invalidate()
 	{
 		asteroid->invalidate();
 	}
+
+	//particlesSystem->invalidate();
 
 	//asteroidsExplosionPattern->invalidate();
 	//asteroidsExplosionFragmentsPattern->invalidate();
@@ -228,6 +258,11 @@ RenderObjectPtr AsteroidsManager::getRenderer()const
 {
 	return renderer;
 }
+
+//MultiSourceParticleRendererPtr AsteroidsManager::getParticlesRenderer()const
+//{
+//	return particlesSystem->getRenderer();
+//}
 
 void AsteroidsManager::findLimitPosY()
 {

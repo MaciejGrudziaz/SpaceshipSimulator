@@ -17,23 +17,31 @@ ParticleSystem::ParticleSystem()
 	, externalLaunchFlag(false)
 {}
 
-void ParticleSystem::load(const ParticleSystemData& data, const ModelExternalUniforms& uniforms)
+void ParticleSystem::loadRenderer(const ParticleSystemData& data, const ModelExternalUniforms& uniforms)
 {
-	//createParticles();
-
 	renderer = std::make_shared<ParticleRenderer>(particlesPosSizeBuffer, particlesColorBuffer, blendFunc);
 	renderer->setParticlesCount(particlesCount);
 	renderer->loadShader(data.vertexShaderFilename, data.fragmentShaderFilename);
 	initUniforms(uniforms);
-	renderer->init();
-	renderer->loadBuffers();
 	renderer->loadTexture(data.particleTexture);
+}
 
-	//updateRendererBuffers();
+void ParticleSystem::initUniforms(const ModelExternalUniforms& uniforms)
+{
+	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
+	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
+	UniformDataVec3Ptr cameraUpUniform = std::make_shared<UniformDataVec3>("cameraUp");
+	UniformDataVec3Ptr cameraRightUniform = std::make_shared<UniformDataVec3>("cameraRight");
 
-	updateStatus = true;
-	//pause();
-	particleThread = std::thread(&ParticleSystem::processParticles, this);
+	viewUniform->mat = uniforms.view;
+	projectionUniform->mat = uniforms.projection;
+	cameraUpUniform->vec = camera->getUpVecPtr();
+	cameraRightUniform->vec = camera->getRightVecPtr();
+
+	renderer->addUniform(viewUniform);
+	renderer->addUniform(projectionUniform);
+	renderer->addUniform(cameraUpUniform);
+	renderer->addUniform(cameraRightUniform);
 }
 
 void ParticleSystem::createParticles()
@@ -113,8 +121,11 @@ void ParticleSystem::updateRendererBuffers()
 			memcpy(particlesColorBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(color), 3 * sizeof(float));
 			particlesColorBuffer[bufferVertexAttribSize * i + 3] = lifetimeFrac;
 
-			renderer->updatePositionBuffer();
-			renderer->updateColorBuffer();
+			if (renderer)
+			{
+				renderer->updatePositionBuffer();
+				renderer->updateColorBuffer();
+			}
 		}
 	}
 }
@@ -123,16 +134,16 @@ void ParticleSystem::createRendererBuffers()
 {
 	if (particlesPosSizeBuffer.size() == 0)
 	{
+		particlesPosSizeBuffer = std::vector<float>(particlesCount * 4);
 		for (int i = 0; i < particlesCount; ++i)
 		{
-			particlesPosSizeBuffer.push_back(particles[i].pos.x);
-			particlesPosSizeBuffer.push_back(particles[i].pos.y);
-			particlesPosSizeBuffer.push_back(particles[i].pos.z);
-			particlesPosSizeBuffer.push_back(particles[i].size);
+			std::memcpy(particlesPosSizeBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
+			std::memcpy(particlesPosSizeBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
 		}
 	}
 	if (particlesColorBuffer.size() == 0)
 	{
+		particlesColorBuffer = std::vector<float>(particlesCount * 4);
 		glm::vec3 color;
 		float lifetimeFrac;
 		for (int i = 0; i < particlesCount; ++i)
@@ -141,35 +152,26 @@ void ParticleSystem::createRendererBuffers()
 			color = baseColor;
 			color += (destColor - baseColor) * (1.0f - lifetimeFrac);
 
-			particlesColorBuffer.push_back(color.r);
-			particlesColorBuffer.push_back(color.g);
-			particlesColorBuffer.push_back(color.b);
-			particlesColorBuffer.push_back(lifetimeFrac);
+			std::memcpy(particlesColorBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
+			std::memcpy(particlesColorBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
 		}
 	}
-}
-
-void ParticleSystem::initUniforms(const ModelExternalUniforms& uniforms)
-{
-	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
-	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
-	UniformDataVec3Ptr cameraUpUniform = std::make_shared<UniformDataVec3>("cameraUp");
-	UniformDataVec3Ptr cameraRightUniform = std::make_shared<UniformDataVec3>("cameraRight");
-
-	viewUniform->mat = uniforms.view;
-	projectionUniform->mat = uniforms.projection;
-	cameraUpUniform->vec = camera->getUpVecPtr();
-	cameraRightUniform->vec = camera->getRightVecPtr();
-
-	renderer->addUniform(viewUniform);
-	renderer->addUniform(projectionUniform);
-	renderer->addUniform(cameraUpUniform);
-	renderer->addUniform(cameraRightUniform);
 }
 
 void ParticleSystem::init()
 {
 	GameObject::init();
+
+	if(renderer)
+		renderer->init();
+
+	startThread();
+}
+
+void ParticleSystem::startThread()
+{
+	updateStatus = true;
+	particleThread = std::thread(&ParticleSystem::processParticles, this);
 }
 
 void ParticleSystem::process()
@@ -232,6 +234,11 @@ void ParticleSystem::processParticles()
 
 void ParticleSystem::invalidate()
 {
+	GameObject::invalidate();
+
+	if (renderer)
+		renderer->invalidate();
+
 	endParticlesProcess = true;
 	//if (isPauseMutexLocked) run();
 	particleThread.join();
@@ -373,7 +380,22 @@ glm::vec3 ParticleSystem::getDestColor()const
 	return destColor;
 }
 
+BlendFunctions ParticleSystem::getBlendFunctions()const
+{
+	return blendFunc;
+}
+
 bool ParticleSystem::isRunning()const
 {
 	return (!endParticlesProcess && (externalLaunchFlag || launched));
+}
+
+std::vector<float>& ParticleSystem::getParticlesPosSizeBuffer()
+{
+	return particlesPosSizeBuffer;
+}
+
+std::vector<float>& ParticleSystem::getParticlesColorBuffer()
+{
+	return particlesColorBuffer;
 }

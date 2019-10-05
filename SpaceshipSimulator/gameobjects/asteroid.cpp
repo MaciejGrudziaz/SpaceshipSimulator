@@ -7,6 +7,8 @@ void Asteroid::init()
 {
 	StandardGameObject::init();
 
+	initParticleSystems();
+
 	explosionParticles->init();
 	explosionFragmentsParticles->init();
 }
@@ -33,7 +35,7 @@ void Asteroid::initParticleSystems()
 	uniforms.view = camera->getViewPtr();
 	uniforms.projection = projection;
 
-	explosionParticles->load(data, uniforms);
+	explosionParticles->loadRenderer(data, uniforms);
 
 	explosionFragmentsParticles = std::make_shared<ParticleSystem>();
 	explosionFragmentsParticles->setParticlesCount(2000);
@@ -46,7 +48,7 @@ void Asteroid::initParticleSystems()
 	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
 	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
 
-	explosionFragmentsParticles->load(data, uniforms);
+	explosionFragmentsParticles->loadRenderer(data, uniforms);
 }
 
 void Asteroid::process()
@@ -80,6 +82,8 @@ void Asteroid::process()
 
 void Asteroid::invalidate()
 {
+	StandardGameObject::invalidate();
+
 	explosionParticles->invalidate();
 	explosionFragmentsParticles->invalidate();
 }
@@ -139,6 +143,7 @@ void Asteroid::dealDamage()
 		explosionFragmentsParticles->setSingleSpread();
 		explosionFragmentsParticles->launch();
 	}
+	setActive(false);
 }
 
 RenderObjectPtr Asteroid::getExplosionParticlesRenderer()const
@@ -150,6 +155,16 @@ RenderObjectPtr Asteroid::getExplosionFragmentsParticlesRenderer()const
 {
 	return explosionFragmentsParticles->getRenderer();
 }
+
+//ParticleSystemPtr Asteroid::getExplosionParticlesSystem()const
+//{
+//	return explosionParticles;
+//}
+//
+//ParticleSystemPtr Asteroid::getExplosionFragmentsParticlesSystem()const
+//{
+//	return explosionFragmentsParticles;
+//}
 
 bool Asteroid::isParticleSystemRunning()const
 {

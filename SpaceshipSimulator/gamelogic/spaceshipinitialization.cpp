@@ -187,7 +187,7 @@ void loadParticlesSytem(GameEngine& engine)
 	uniforms.view = engine.getResources()->camera->getViewPtr();
 	uniforms.projection = engine.getProjectionMatPtr();
 
-	mainEngine->load(data, uniforms);
+	mainEngine->loadRenderer(data, uniforms);
 
 	spaceship->addChild(mainEngine);
 	engine.addRenderer(mainEngine->getRenderer());
@@ -204,7 +204,7 @@ void loadParticlesSytem(GameEngine& engine)
 	mainEngineSmoke->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
 
 	mainEngineSmoke->registerCamera(engine.getResources()->camera);
-	mainEngineSmoke->load(data, uniforms);
+	mainEngineSmoke->loadRenderer(data, uniforms);
 
 	spaceship->addChild(mainEngineSmoke);
 	engine.addRenderer(mainEngineSmoke->getRenderer());
@@ -221,7 +221,7 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerRightEngine->getTransform().setPosition(glm::vec3(1.6f, -1.78f, 0.0f));
 
 	lowerRightEngine->registerCamera(engine.getResources()->camera);
-	lowerRightEngine->load(data, uniforms);
+	lowerRightEngine->loadRenderer(data, uniforms);
 
 	spaceship->addChild(lowerRightEngine);
 	engine.addRenderer(lowerRightEngine->getRenderer());
@@ -238,7 +238,7 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerLeftEngine->getTransform().setPosition(glm::vec3(-1.6f, -1.78f, 0.0f));
 
 	lowerLeftEngine->registerCamera(engine.getResources()->camera);
-	lowerLeftEngine->load(data, uniforms);
+	lowerLeftEngine->loadRenderer(data, uniforms);
 
 	spaceship->addChild(lowerLeftEngine);
 	engine.addRenderer(lowerLeftEngine->getRenderer());
@@ -255,7 +255,7 @@ void loadParticlesSytem(GameEngine& engine)
 	upperLeftEngine->getTransform().setPosition(glm::vec3(-1.15f, 2.9f, 0.0f));
 
 	upperLeftEngine->registerCamera(engine.getResources()->camera);
-	upperLeftEngine->load(data, uniforms);
+	upperLeftEngine->loadRenderer(data, uniforms);
 
 	spaceship->addChild(upperLeftEngine);
 	engine.addRenderer(upperLeftEngine->getRenderer());
@@ -272,7 +272,7 @@ void loadParticlesSytem(GameEngine& engine)
 	upperRightEngine->getTransform().setPosition(glm::vec3(1.15f, 2.9f, 0.0f));
 
 	upperRightEngine->registerCamera(engine.getResources()->camera);
-	upperRightEngine->load(data, uniforms);
+	upperRightEngine->loadRenderer(data, uniforms);
 
 	spaceship->addChild(upperRightEngine);
 	engine.addRenderer(upperRightEngine->getRenderer());

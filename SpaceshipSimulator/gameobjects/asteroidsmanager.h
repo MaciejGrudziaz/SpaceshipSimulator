@@ -2,6 +2,7 @@
 
 #include <random>
 #include "../renderers/multipleasteroidsrenderer.h"
+#include "multisourceparticlesystem.h"
 #include "asteroid.h"
 #include "hitboxobject.h"
 #include "particlesystem.h"
@@ -37,11 +38,14 @@ public:
 	std::vector<AsteroidPtr>& getAsteroids();
 
 	RenderObjectPtr getRenderer()const;
+	//MultiSourceParticleRendererPtr getParticlesRenderer()const;
 
 private:
 	MultipleAsteroidsRendererPtr renderer;
 	CameraPtr camera;
 	ConstMat4Ptr projectionPtr;
+
+	//MultiSourceParticleSystemPtr particlesSystem;
 
 	AsteroidPtr patternAsteroid;
 	HitboxObjectPtr asteroidHitboxPattern;
@@ -54,6 +58,8 @@ private:
 	std::shared_ptr<float> worldSpeed;
 
 	std::mt19937 rng;
+
+	void loadParticlesSystemRenderer();
 
 	void createPatternAsteroid();
 	void createPatternAsteroidHitbox();

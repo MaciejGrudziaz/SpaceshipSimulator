@@ -150,6 +150,12 @@
     <ClCompile Include="gameobjects\collisionsmanager.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\multisourceparticlerenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\multisourceparticlesystem.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -255,6 +261,15 @@
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
     <ClInclude Include="gameobjects\collisionsmanager.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\multisourceparticlerenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\rendererstruct.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\multisourceparticlesystem.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
