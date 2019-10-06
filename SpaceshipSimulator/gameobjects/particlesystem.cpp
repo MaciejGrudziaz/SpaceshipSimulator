@@ -15,9 +15,20 @@ ParticleSystem::ParticleSystem()
 	, continuous(true)
 	, launched(false)
 	, externalLaunchFlag(false)
+	, particlesUpdated(0)
+	, deadParticles(0)
+	, particlesUpdateCountPerRefresh(3000)
 {}
 
-void ParticleSystem::loadRenderer(const ParticleSystemData& data, const ModelExternalUniforms& uniforms)
+ParticleSystem::~ParticleSystem()
+{
+	for(auto particle : particles)
+	{
+		delete particle;
+	}
+}
+
+void ParticleSystem::loadRenderer(const ParticleSystemFiles& data, const ModelExternalUniforms& uniforms)
 {
 	renderer = std::make_shared<ParticleRenderer>(particlesPosSizeBuffer, particlesColorBuffer, blendFunc);
 	renderer->setParticlesCount(particlesCount);
@@ -49,8 +60,8 @@ void ParticleSystem::createParticles()
 	particles.clear();
 	for (int i = 0; i < particlesCount; ++i)
 	{
-		Particle particle;
-		setParticleRandomData(particle);
+		Particle* particle = new Particle();
+		//setParticleRandomData(particle);
 		particles.push_back(particle);
 	}
 }
@@ -63,8 +74,12 @@ void ParticleSystem::setParticleRandomData(Particle& particle)
 	std::uniform_real_distribution<> fullRandAxis(-1.0f, 1.0f);
 	std::uniform_real_distribution<> randSize(0.5f * particleSize, 1.2 * particleSize);
 
-	particle.pos = modelTransform * glm::vec4(0.0f,0.0f,0.0f,1.0f);
-	particle.size = randSize(rng);
+	//particle.pos = modelTransform * glm::vec4(0.0f,0.0f,0.0f,1.0f);
+	glm::vec3 newPos = modelTransform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	*(particle.pos[0]) = newPos.x;
+	*(particle.pos[1]) = newPos.y;
+	*(particle.pos[2]) = newPos.z;
+	*(particle.size) = randSize(rng);
 	particle.maxLifeTime = maxLifetime;
 	particle.lifeTime = randLifetime(rng);
 	particle.distanceFromCamera = 0.0f;
@@ -106,39 +121,45 @@ void ParticleSystem::updateRendererBuffers()
 	{
 		createRendererBuffers();
 	}
-	else {
-		glm::vec3 color;
-		float lifetimeFrac;
-		for(int i = 0;i<particlesCount; ++i)
-		{
-			memcpy(particlesPosSizeBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(particles[i].pos), 3 * sizeof(float));
-			particlesPosSizeBuffer[bufferVertexAttribSize * i + 3] = particles[i].size;
+	//else {
+	//	glm::vec3 color;
+	//	float lifetimeFrac;
+	//	for(int i = 0;i<particlesCount; ++i)
+	//	{
+	//		memcpy(particlesPosSizeBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(particles[i].pos), 3 * sizeof(float));
+	//		particlesPosSizeBuffer[bufferVertexAttribSize * i + 3] = particles[i].size;
 
-			lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
-			color = baseColor;
-			color += (destColor - baseColor) * (1.0f - lifetimeFrac);
-			
-			memcpy(particlesColorBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(color), 3 * sizeof(float));
-			particlesColorBuffer[bufferVertexAttribSize * i + 3] = lifetimeFrac;
+	//		lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
+	//		color = baseColor;
+	//		color += (destColor - baseColor) * (1.0f - lifetimeFrac);
+	//		
+	//		memcpy(particlesColorBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(color), 3 * sizeof(float));
+	//		particlesColorBuffer[bufferVertexAttribSize * i + 3] = lifetimeFrac;
 
-			if (renderer)
-			{
-				renderer->updatePositionBuffer();
-				renderer->updateColorBuffer();
-			}
-		}
-	}
+	//		if (renderer)
+	//		{
+	//			renderer->updatePositionBuffer();
+	//			renderer->updateColorBuffer();
+	//		}
+	//	}
+	//}
 }
 
 void ParticleSystem::createRendererBuffers()
 {
 	if (particlesPosSizeBuffer.size() == 0)
 	{
+		int i = 0;
 		particlesPosSizeBuffer = std::vector<float>(particlesCount * 4);
-		for (int i = 0; i < particlesCount; ++i)
+		//for (int i = 0; i < particlesCount; ++i)
+		for(auto particle : particles)
 		{
-			std::memcpy(particlesPosSizeBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
-			std::memcpy(particlesPosSizeBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
+			//std::memcpy(particlesPosSizeBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
+			//std::memcpy(particlesPosSizeBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
+			float* buffer = particlesPosSizeBuffer.data();
+			particle->linkPosWithParticlesBuffer(buffer + (4 * i), buffer + (4 * i + 1), buffer + (4 * i + 2));
+			particle->linkSizeWithParticlesBuffer(buffer + (4 * i + 3));
+			++i;
 		}
 	}
 	if (particlesColorBuffer.size() == 0)
@@ -146,14 +167,19 @@ void ParticleSystem::createRendererBuffers()
 		particlesColorBuffer = std::vector<float>(particlesCount * 4);
 		glm::vec3 color;
 		float lifetimeFrac;
-		for (int i = 0; i < particlesCount; ++i)
-		{
-			lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
-			color = baseColor;
-			color += (destColor - baseColor) * (1.0f - lifetimeFrac);
 
-			std::memcpy(particlesColorBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
-			std::memcpy(particlesColorBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
+		int i = 0;
+		for (auto particle : particles)
+		{
+			//lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
+			//color = baseColor;
+			//color += (destColor - baseColor) * (1.0f - lifetimeFrac);
+			//std::memcpy(particlesColorBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
+			//std::memcpy(particlesColorBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
+
+			float* buffer = particlesColorBuffer.data();
+			particle->linkColorWithParticlesBuffer(buffer + (4 * i), buffer + (4 * i + 1), buffer + (4 * i + 2), buffer + (4 * i + 3));
+			++i;
 		}
 	}
 }
@@ -161,6 +187,9 @@ void ParticleSystem::createRendererBuffers()
 void ParticleSystem::init()
 {
 	GameObject::init();
+
+	createParticles();
+	createRendererBuffers();
 
 	if(renderer)
 		renderer->init();
@@ -194,7 +223,7 @@ void ParticleSystem::processParticles()
 	{
 		if (externalLaunchFlag)
 		{
-			createParticles();
+			recreateParticles();
 			launched = true;
 			externalLaunchFlag = false;
 		}
@@ -205,23 +234,53 @@ void ParticleSystem::processParticles()
 			updateStatus = true;
 
 			int deadParticles = 0;
-			for (int i = 0; i < particlesCount; ++i)
+			int i = 0;
+			//for (int i = 0; i < particlesCount; ++i)
+			for(auto particle : particles)
 			{
-				particles[i].update(Time::deltaTime);
-				if (particles[i].lifeTime <= 0.0f)
+				particle->update(Time::deltaTime, baseColor, destColor);
+				if (particle->lifeTime <= 0.0f)
 				{
 					++deadParticles;
 					if (continuous)
 					{
-						setParticleRandomData(particles[i]);
+						setParticleRandomData(*particle);
 					}
 				}
-
-				particles[i].distanceFromCamera = glm::length2(particles[i].pos - camera->getTransform().getPosition());
+				particle->calcDistance(camera->getTransform().getPosition());
+				++i;
 			}
 
-			std::sort(particles.begin(), particles.end());
-			updateRendererBuffers();
+			//std::sort(particles.begin(), particles.end());
+
+			//if (particlesUpdated == 0) deadParticles = 0;
+			//int updateCount = particlesUpdateCountPerRefresh;
+			//if (particlesUpdated + updateCount > particlesCount)
+			//	updateCount = particlesCount - particlesUpdated;
+
+			//for (int i = particlesUpdated; i < particlesUpdated + updateCount; ++i)
+			//{
+			//	particles[i]->update(Time::deltaTime * (1.0f/particlesUpdatedPerFrameFrac), baseColor, destColor);
+			//	if (particles[i]->lifeTime <= 0.0f)
+			//	{
+			//		++deadParticles;
+			//		if (continuous)
+			//		{
+			//			setParticleRandomData(*particles[i]);
+			//		}
+			//	}
+			//	particles[i]->calcDistance(camera->getTransform().getPosition());
+			//}
+
+			//particlesUpdated += updateCount;
+			//if (particlesUpdated == particlesCount)
+			//	particlesUpdated = 0;
+
+			if (renderer)
+			{
+				renderer->updatePositionBuffer();
+				renderer->updateColorBuffer();
+			}
 
 			if (deadParticles == particlesCount && !continuous)
 			{
@@ -229,6 +288,14 @@ void ParticleSystem::processParticles()
 			}
 			updateMut.unlock();
 		}
+	}
+}
+
+void ParticleSystem::recreateParticles()
+{
+	for (auto particle : particles)
+	{
+		setParticleRandomData(*particle);
 	}
 }
 
@@ -295,6 +362,10 @@ void ParticleSystem::registerCamera(CameraPtr camera)
 void ParticleSystem::setParticlesCount(int count)
 {
 	particlesCount = count;
+
+	particlesUpdatedPerFrameFrac = particlesUpdateCountPerRefresh / particlesCount;
+
+	if (particlesUpdatedPerFrameFrac > 1.0f) particlesUpdatedPerFrameFrac = 1.0f;
 }
 
 void ParticleSystem::setParticlesMaxSpeed(float val)
@@ -343,6 +414,17 @@ void ParticleSystem::setSingleSpread()
 void ParticleSystem::setContinuousSpred()
 {
 	continuous = true;
+}
+
+void ParticleSystem::setParticlesUpdateCountPerRefresh(int val)
+{
+	if (!launched)
+	{
+		particlesUpdateCountPerRefresh = val;
+		particlesUpdatedPerFrameFrac = static_cast<float>(particlesUpdateCountPerRefresh) / static_cast<float>(particlesCount);
+
+		if (particlesUpdatedPerFrameFrac > 1.0f) particlesUpdatedPerFrameFrac = 1.0f;
+	}
 }
 
 int ParticleSystem::getParticlesCount()const

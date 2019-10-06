@@ -1,61 +1,69 @@
 #include "asteroid.h"
 
 Asteroid::Asteroid()
-{}
+	: destroyedFlag(false)
+	, health(0.0f)
+{
+	explosionParticleSystemData = std::make_shared<ParticleSystemData>();
+	explosionParticleSystemData->init();
+
+	explosionFragmentsParticleSystemData = std::make_shared<ParticleSystemData>();
+	explosionFragmentsParticleSystemData->init();
+}
 
 void Asteroid::init()
 {
 	StandardGameObject::init();
 
-	initParticleSystems();
+	//initParticleSystemsData();
 
-	explosionParticles->init();
-	explosionFragmentsParticles->init();
+	//explosionParticles->init();
+	//explosionFragmentsParticles->init();
 }
 
-void Asteroid::initParticleSystems()
-{
-	explosionParticles = std::make_shared<ParticleSystem>();
-	explosionParticles->setParticlesCount(4000);
-	explosionParticles->setParticlesMaxSpeed(6.5f);
-	explosionParticles->setParticlesMaxLifetime(1.0f);
-	explosionParticles->setParticlesSize(0.5f);
-	explosionParticles->setEvenSpread();
-	explosionParticles->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(0.7f, 0.7f, 0.7f));
-	explosionParticles->registerCamera(camera);
-	explosionParticles->getTransform().setPosition(glm::vec3(0.0f));
-	explosionParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
-
-	ParticleSystemData data;
-	data.particleTexture = "sprites/asteroid_particle.png";
-	data.vertexShaderFilename = "shaders/particle.vert";
-	data.fragmentShaderFilename = "shaders/particle.frag";
-
-	ModelExternalUniforms uniforms;
-	uniforms.view = camera->getViewPtr();
-	uniforms.projection = projection;
-
-	explosionParticles->loadRenderer(data, uniforms);
-
-	explosionFragmentsParticles = std::make_shared<ParticleSystem>();
-	explosionFragmentsParticles->setParticlesCount(2000);
-	explosionFragmentsParticles->setParticlesMaxSpeed(5.0f);
-	explosionFragmentsParticles->setParticlesMaxLifetime(3.0f);
-	explosionFragmentsParticles->setParticlesSize(0.6f);
-	explosionFragmentsParticles->setEvenSpread();
-	explosionFragmentsParticles->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.7f, 0.7f, 0.7f));
-	explosionFragmentsParticles->registerCamera(camera);
-	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
-	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
-
-	explosionFragmentsParticles->loadRenderer(data, uniforms);
-}
+//void Asteroid::initParticleSystems()
+//{
+//	explosionParticles = std::make_shared<ParticleSystemV2>();
+//	explosionParticles->setParticlesCount(10000);
+//	explosionParticles->setParticlesMaxSpeed(6.5f);
+//	explosionParticles->setParticlesMaxLifetime(1.0f);
+//	explosionParticles->setParticlesSize(0.6f);
+//	explosionParticles->setEvenSpread();
+//	explosionParticles->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(1.0f, 0.55f, 0.1f));
+//	explosionParticles->registerCamera(camera);
+//	explosionParticles->getTransform().setPosition(glm::vec3(0.0f));
+//	explosionParticles->setBlendingFunctions(GL_ONE, GL_ONE);
+//
+//	ParticleSystemFiles data;
+//	data.particleTexture = "sprites/asteroid_particle.png";
+//	data.vertexShaderFilename = "shaders/particleV2.vert";
+//	data.fragmentShaderFilename = "shaders/particle.frag";
+//
+//	ModelExternalUniforms uniforms;
+//	uniforms.view = camera->getViewPtr();
+//	uniforms.projection = projection;
+//
+//	explosionParticles->loadRenderer(data, uniforms);
+//
+//	explosionFragmentsParticles = std::make_shared<ParticleSystemV2>();
+//	explosionFragmentsParticles->setParticlesCount(50000);
+//	explosionFragmentsParticles->setParticlesMaxSpeed(5.0f);
+//	explosionFragmentsParticles->setParticlesMaxLifetime(2.0f);
+//	explosionFragmentsParticles->setParticlesSize(1.2f);
+//	explosionFragmentsParticles->setEvenSpread();
+//	explosionFragmentsParticles->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+//	explosionFragmentsParticles->registerCamera(camera);
+//	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
+//	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//
+//	explosionFragmentsParticles->loadRenderer(data, uniforms);
+//}
 
 void Asteroid::process()
 {
 	StandardGameObject::process();
 
-	if (isActive())
+	if (isActive() && !destroyedFlag)
 	{
 		glm::vec3 pos = transform.getPosition();
 		glm::vec3 rot = transform.getRotation();
@@ -73,19 +81,47 @@ void Asteroid::process()
 		transform.setPosition(pos);
 		transform.setRotation(rot);
 	}
+	if (destroyedFlag  && !explosionFragmentsParticleSystemData->launchFlag)
+	{
+		setActive(false);
+		destroyedFlag = false; 
+	}
 
-	explosionParticles->setParentTransform(transform.getTransformMat());
-	explosionFragmentsParticles->setParentTransform(transform.getTransformMat());
-	explosionParticles->process();
-	explosionFragmentsParticles->process();
+	if (explosionParticleSystemData->launchFlag)
+	{
+		*explosionParticleSystemData->modelTransform = transform.getTransformMat();
+		*explosionParticleSystemData->runTime += Time::deltaTime;
+		if ((*explosionParticleSystemData->runTime) > explosionParticleSystemData->maxLifeTime)
+		{
+			explosionParticleSystemData->launchFlag = false;
+			*explosionParticleSystemData->runTime = 0.0f;
+			*explosionParticleSystemData->shutDownTime = 0.0f;
+		}
+	}
+	if (explosionFragmentsParticleSystemData->launchFlag)
+	{
+		*explosionFragmentsParticleSystemData->modelTransform = transform.getTransformMat();
+		*explosionFragmentsParticleSystemData->runTime += Time::deltaTime;
+		if ((*explosionFragmentsParticleSystemData->runTime) > explosionFragmentsParticleSystemData->maxLifeTime)
+		{
+			explosionFragmentsParticleSystemData->launchFlag = false;
+			*explosionFragmentsParticleSystemData->runTime = 0.0f;
+			*explosionFragmentsParticleSystemData->shutDownTime = 0.0f;
+		}
+	}
+
+	//explosionParticles->setParentTransform(transform.getTransformMat());
+	//explosionFragmentsParticles->setParentTransform(transform.getTransformMat());
+	//explosionParticles->process();
+	//explosionFragmentsParticles->process();
 }
 
 void Asteroid::invalidate()
 {
 	StandardGameObject::invalidate();
 
-	explosionParticles->invalidate();
-	explosionFragmentsParticles->invalidate();
+	//explosionParticles->invalidate();
+	//explosionFragmentsParticles->invalidate();
 }
 
 void Asteroid::deepCopy(const Asteroid& asteroid)
@@ -103,7 +139,7 @@ void Asteroid::setActive(bool val)
 {
 	StandardGameObject::setActive(val);
 
-
+	destroyedFlag = false;
 }
 
 void Asteroid::registerWorldSpeed(std::shared_ptr<float> speed)
@@ -131,30 +167,67 @@ void Asteroid::setLinearSpeed(glm::vec3 linSpeed)
 	this->linearSpeed = linSpeed;
 }
 
-void Asteroid::dealDamage()
+void Asteroid::dealDamage(float val)
 {
-	if (!explosionFragmentsParticles->isRunning())
+	if (health > 0.0f)
 	{
-		setActive(false);
+		health -= val;
 
-		explosionParticles->setSingleSpread();
-		explosionParticles->launch();
+		if (health <= 0.0f)
+		{
+			health = 0.0f;
+			//setActive(false);
+			renderer->setActive(false);
+			destroyedFlag = true;
 
-		explosionFragmentsParticles->setSingleSpread();
-		explosionFragmentsParticles->launch();
+			//explosionParticles->setSingleSpread();
+			//explosionParticles->launch();
+			//explosionFragmentsParticles->setSingleSpread();
+			//explosionFragmentsParticles->launch();
+
+			*explosionParticleSystemData->continuous = 0;
+			*explosionParticleSystemData->runTime = 0.0f;
+			*explosionParticleSystemData->shutDownTime = 0.0f;
+			explosionParticleSystemData->launchFlag = true;
+
+			*explosionFragmentsParticleSystemData->continuous = 0;
+			*explosionFragmentsParticleSystemData->runTime = 0.0f;
+			*explosionFragmentsParticleSystemData->shutDownTime = 0.0f;
+			explosionFragmentsParticleSystemData->launchFlag = true;
+		}
 	}
-	setActive(false);
+	//setActive(false);
 }
 
-RenderObjectPtr Asteroid::getExplosionParticlesRenderer()const
+void Asteroid::setHealth(float val)
 {
-	return explosionParticles->getRenderer();
+	health = val;
 }
 
-RenderObjectPtr Asteroid::getExplosionFragmentsParticlesRenderer()const
+float Asteroid::getHealth()const
 {
-	return explosionFragmentsParticles->getRenderer();
+	return health;
 }
+
+ParticleSystemDataPtr Asteroid::getExplosionParticleSystemData()const
+{
+	return explosionParticleSystemData;
+}
+
+ParticleSystemDataPtr Asteroid::getExplosionFragmentsParticleSystemData()const
+{
+	return explosionFragmentsParticleSystemData;
+}
+
+//RenderObjectPtr Asteroid::getExplosionParticlesRenderer()const
+//{
+//	return explosionParticles->getRenderer();
+//}
+//
+//RenderObjectPtr Asteroid::getExplosionFragmentsParticlesRenderer()const
+//{
+//	return explosionFragmentsParticles->getRenderer();
+//}
 
 //ParticleSystemPtr Asteroid::getExplosionParticlesSystem()const
 //{
@@ -168,5 +241,21 @@ RenderObjectPtr Asteroid::getExplosionFragmentsParticlesRenderer()const
 
 bool Asteroid::isParticleSystemRunning()const
 {
-	return explosionFragmentsParticles->isRunning();
+	//return explosionFragmentsParticles->isRunning();
+	return (explosionFragmentsParticleSystemData->launchFlag);
+}
+
+bool Asteroid::isDestroyed()const
+{
+	return destroyedFlag;
+}
+
+void Asteroid::initParticleSystemsData(float explosionParticlesysMaxLifeTime, float explosionFragmentsParticlesysMaxLifeTime)
+{
+	*explosionParticleSystemData->baseColor = glm::vec3(1.0f, 0.55f, 0.1f);
+	*explosionParticleSystemData->destColor = glm::vec3(1.0f, 0.55f, 0.1f);
+	explosionParticleSystemData->maxLifeTime = explosionParticlesysMaxLifeTime;
+	*explosionFragmentsParticleSystemData->baseColor = glm::vec3(0.8f, 0.8f, 0.8f);
+	*explosionFragmentsParticleSystemData->destColor = glm::vec3(0.3f, 0.3f, 0.3f);
+	explosionFragmentsParticleSystemData->maxLifeTime = explosionFragmentsParticlesysMaxLifeTime;
 }

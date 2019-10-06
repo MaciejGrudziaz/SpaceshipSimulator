@@ -1,77 +1,46 @@
 #include "multisourceparticlerenderer.h"
 
-MultiSourceParticleRenderer::MultiSourceParticleRenderer()
-	: posSizeBufferUpdateFlag(false)
-	, colorBufferUpdateFlag(false)
+MultiSourceParticleRenderer::MultiSourceParticleRenderer(std::vector<float>& buffer, const BlendFunctions& blend)
+	: ParticleRendererV2(buffer, blend)
 {}
-
-void MultiSourceParticleRenderer::init()
-{
-	TextureRenderObject::init();
-
-	loadBuffers();
-}
-
-void MultiSourceParticleRenderer::loadBuffers()
-{
-	static const GLfloat vertexBuffer[] = {
-		-0.5f, -0.5f,  0.0f,
-		0.5f, -0.5f,  0.0f,
-		-0.5f,  0.5f,  0.0f,
-		0.5f,  0.5f,  0.0f,
-	};
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
-
-	for (auto particleSys : particleSysRenderParams)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, particleSys->posSizeBufferId);
-		glBufferData(GL_ARRAY_BUFFER, particleSys->particleCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, particleSys->colorBufferId);
-		glBufferData(GL_ARRAY_BUFFER, particleSys->particleCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-	}
-}
 
 void MultiSourceParticleRenderer::process()
 {
 	if (shader->getErrorCode() == Shader::NO_ERROR && activeFlag)
 	{
 		glEnable(GL_BLEND);
+		glBlendFunc(blendFunc.sfactor, blendFunc.dfactor);
 
 		glUseProgram(shader->getProgram());
 
-		glBindVertexArray(VAO);
+		bindBuffers();
+		updateBuffers();
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
+		bindTexture();
 
 		glVertexAttribDivisor(0, 0);
 		glVertexAttribDivisor(1, 1);
 		glVertexAttribDivisor(2, 1);
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
 
-		updateBuffers();
-		updateUniforms();
-		bindTexture();
-
-		for (auto particleSys : particleSysRenderParams)
+		for (auto particleSys : particleSystemsData)
 		{
-			if (particleSys->isActive)
+			if (particleSys->launchFlag)
 			{
-				glBlendFunc(particleSys->blendFunctions.sfactor, particleSys->blendFunctions.dfactor);
-				bindParticleSysBuffer(particleSys);
-				glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, particleSys->particleCount);
+				setUniformsData(particleSys);
+
+				updateUniforms();
+
+				glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, particlesCount);
 			}
 		}
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(attribVertex);
+		glDisableVertexAttribArray(attribPos);
+		glDisableVertexAttribArray(attribSpeed);
+		glDisableVertexAttribArray(attribSize);
+		glDisableVertexAttribArray(attribLifeTime);
 
 		glDisable(GL_BLEND);
 
@@ -79,66 +48,22 @@ void MultiSourceParticleRenderer::process()
 	else errorCode.push(NO_SHADER_AVAILABLE);
 }
 
-void MultiSourceParticleRenderer::bindParticleSysBuffer(ParticleSysRenderParamsPtr particleSys)
+void MultiSourceParticleRenderer::setUniformsData(ParticleSystemDataPtr particleSys)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, particleSys->posSizeBufferId);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, particleSys->colorBufferId);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	*(uniformData->baseColor) = *(particleSys->baseColor);
+	*(uniformData->continuous) = *(particleSys->continuous);
+	*(uniformData->destColor) = *(particleSys->destColor);
+	*(uniformData->modelTransform) = *(particleSys->modelTransform);
+	*(uniformData->runTime) = *(particleSys->runTime);
+	*(uniformData->shutDownTime) = *(particleSys->shutDownTime);
 }
 
-void MultiSourceParticleRenderer::updateBuffers()
+void MultiSourceParticleRenderer::registerUniformsPointers(ParticleSystemDataPtr uniformData)
 {
-	if (posSizeBufferUpdateFlag)
-	{
-		for (auto particleSys : particleSysRenderParams)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, particleSys->posSizeBufferId);
-			glBufferData(GL_ARRAY_BUFFER, particleSys->particleCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, particleSys->particleCount * 4 * sizeof(float), 
-				particleSys->particlesPositionSizeBuffer.data());
-		}
-		posSizeBufferUpdateFlag = false;
-	}
-	if (colorBufferUpdateFlag)
-	{
-		for (auto particleSys : particleSysRenderParams)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, particleSys->colorBufferId);
-			glBufferData(GL_ARRAY_BUFFER, particleSys->particleCount * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, particleSys->particleCount * 4 * sizeof(float), 
-				particleSys->particlesColorBuffer.data());
-		}
-		colorBufferUpdateFlag = false;
-	}
+	this->uniformData = uniformData;
 }
 
-void MultiSourceParticleRenderer::invalidate()
+void MultiSourceParticleRenderer::registerParticleSystemData(ParticleSystemDataPtr particleSystem)
 {
-	TextureRenderObject::invalidate();
-
-	for (auto particleSys : particleSysRenderParams)
-	{
-		glDeleteBuffers(1, &particleSys->posSizeBufferId);
-		glDeleteBuffers(1, &particleSys->colorBufferId);
-	}
-}
-
-void MultiSourceParticleRenderer::registerParticleSystem(ParticleSysRenderParamsPtr particleSys)
-{
-	particleSysRenderParams.push_back(particleSys);
-
-	glCreateBuffers(1, &particleSys->posSizeBufferId);
-	glCreateBuffers(1, &particleSys->colorBufferId);
-}
-
-void MultiSourceParticleRenderer::updatePositionBuffer()
-{
-	posSizeBufferUpdateFlag = true;
-}
-
-void MultiSourceParticleRenderer::updateColorBuffer()
-{
-	colorBufferUpdateFlag = true;
+	particleSystemsData.push_back(particleSystem);
 }

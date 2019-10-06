@@ -1,53 +1,24 @@
 #pragma once
 
 #include <GameRenderer/texturerenderobject.h>
-#include "rendererstruct.h"
+#include "../gameobjects/particlestruct.h"
+#include "particlerendererv2.h"
 
-struct ParticleSysRenderParams
-{
-	std::vector<float>& particlesPositionSizeBuffer;
-	std::vector<float>& particlesColorBuffer;
-	int particleCount;
-	GLuint posSizeBufferId;
-	GLuint colorBufferId;
-	BlendFunctions blendFunctions;
-	bool isActive;
-
-	ParticleSysRenderParams(std::vector<float>& particlePosSizeBuff, std::vector<float>& particleColorBuff)
-		: particlesPositionSizeBuffer(particlePosSizeBuff)
-		, particlesColorBuffer(particleColorBuff)
-		, particleCount(0)
-		, posSizeBufferId(0)
-		, colorBufferId(0)
-		, isActive(false)
-	{}
-};
-
-typedef std::shared_ptr<ParticleSysRenderParams> ParticleSysRenderParamsPtr;
-
-class MultiSourceParticleRenderer : public TextureRenderObject
+class MultiSourceParticleRenderer : public ParticleRendererV2
 {
 public:
-	MultiSourceParticleRenderer();
+	MultiSourceParticleRenderer(std::vector<float>& buffer, const BlendFunctions& blend);
 
-	void init()override;
 	void process()override;
-	void invalidate()override;
 
-	void registerParticleSystem(ParticleSysRenderParamsPtr particleSys);
-
-	void updatePositionBuffer();
-	void updateColorBuffer();
+	void registerUniformsPointers(ParticleSystemDataPtr uniformData);
+	void registerParticleSystemData(ParticleSystemDataPtr particleSystem);
 
 private:
-	std::vector<ParticleSysRenderParamsPtr> particleSysRenderParams;
+	ParticleSystemDataPtr uniformData;
+	std::list<ParticleSystemDataPtr> particleSystemsData;
 
-	bool posSizeBufferUpdateFlag;
-	bool colorBufferUpdateFlag;
-
-	void loadBuffers();
-	void bindParticleSysBuffer(ParticleSysRenderParamsPtr particleSys);
-	void updateBuffers();
+	void setUniformsData(ParticleSystemDataPtr particleSys);
 };
 
 typedef std::shared_ptr<MultiSourceParticleRenderer> MultiSourceParticleRendererPtr;

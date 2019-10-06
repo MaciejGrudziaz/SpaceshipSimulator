@@ -63,7 +63,7 @@ void EnginesControl::processMainEngineCentralFlame(const glm::vec3& moveDir, flo
 	GameObjectPtr obj = object.getChild(enginesNames[0]);
 	if (obj->isUsable())
 	{
-		ParticleSystem& mainEngine = static_cast<ParticleSystem&>(*obj);
+		ParticleSystemV2& mainEngine = static_cast<ParticleSystemV2&>(*obj);
 		if (angle < limitAngle  && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		{
 			if (!mainEngine.isRunning())
@@ -95,7 +95,7 @@ void EnginesControl::processMainEngineExhaustCloud(const glm::vec3& moveDir, flo
 	GameObjectPtr obj = object.getChild(enginesNames[1]);
 	if (obj->isUsable())
 	{
-		ParticleSystem& mainEngineSmoke = static_cast<ParticleSystem&>(*obj);
+		ParticleSystemV2& mainEngineSmoke = static_cast<ParticleSystemV2&>(*obj);
 		if (angle < limitAngle && GameEngine::getKey(GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		{
 			if (!mainEngineSmoke.isRunning())
@@ -139,7 +139,7 @@ void EnginesControl::processManeuverEngine(int nameIdx, bool status)
 		GameObjectPtr obj = object.getChild(enginesNames[nameIdx]);
 		if (obj->isUsable())
 		{
-			ParticleSystem& engine = static_cast<ParticleSystem&>(*obj);
+			ParticleSystemV2& engine = static_cast<ParticleSystemV2&>(*obj);
 
 			if (status)
 			{

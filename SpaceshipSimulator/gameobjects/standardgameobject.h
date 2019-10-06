@@ -22,7 +22,7 @@ public:
 	virtual void process() override;
 	virtual void setActive(bool val) override;
 
-	virtual void dealDamage()
+	virtual void dealDamage(float val)
 	{}
 
 	std::shared_ptr<RenderObject> getRenderer()const;

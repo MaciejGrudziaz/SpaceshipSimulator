@@ -2,6 +2,7 @@
 
 #include <random>
 #include "../renderers/multipleasteroidsrenderer.h"
+#include "../renderers/multisourceparticlerenderer.h"
 #include "multisourceparticlesystem.h"
 #include "asteroid.h"
 #include "hitboxobject.h"
@@ -38,14 +39,21 @@ public:
 	std::vector<AsteroidPtr>& getAsteroids();
 
 	RenderObjectPtr getRenderer()const;
-	//MultiSourceParticleRendererPtr getParticlesRenderer()const;
+	MultiSourceParticleRendererPtr getExplosionParticlesRenderer()const;
+	MultiSourceParticleRendererPtr getExplosionFragmentsParticlesRenderer()const;
 
 private:
 	MultipleAsteroidsRendererPtr renderer;
 	CameraPtr camera;
 	ConstMat4Ptr projectionPtr;
 
-	//MultiSourceParticleSystemPtr particlesSystem;
+	ParticleSystemV2Ptr explosionParticles;
+	ParticleSystemV2Ptr explosionFragmentsParticles;
+	ParticleSystemDataPtr explosionParticlesUniformData;
+
+	MultiSourceParticleRendererPtr explosionParticlesRenderer;
+	MultiSourceParticleRendererPtr explosionFragmentsParticlesRenderer;
+	ParticleSystemDataPtr explosionFragmentsParticlesUniformData;
 
 	AsteroidPtr patternAsteroid;
 	HitboxObjectPtr asteroidHitboxPattern;
@@ -67,6 +75,11 @@ private:
 
 	void initializeAsteroidsVector(int initialCount);
 	void initializeAsteroid(AsteroidPtr asteroid);
+
+	void initializeParticlesSystem();
+	void initUniforms();
+	void initExplosionParticlesUniform();
+	void initExplosionFragmentParticlesUniform();
 
 	void findLimitPosX();
 	void findLimitPosY();

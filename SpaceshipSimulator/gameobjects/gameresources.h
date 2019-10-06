@@ -1,6 +1,7 @@
 #pragma once
 
 #include "particlesystem.h"
+#include "particlesystemv2.h"
 #include "spaceship.h"
 #include "../gameengine.h"
 #include "../gameenginemacros.h"

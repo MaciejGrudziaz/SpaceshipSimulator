@@ -10,6 +10,6 @@ void main(void)
 	color = texture(particleTexture, UV) * particleColor;
 	color.a = color.a * color.a;
 
-	if(color.a < 0.05)
+	if(color.a < 0.1)
 		discard;
 }

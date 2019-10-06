@@ -13,7 +13,7 @@ void initializeParticleSystem(GameEngine& engine)
 
 	particles->registerCamera(engine.getResources()->camera);
 
-	ParticleSystemData data;
+	ParticleSystemFiles data;
 	data.particleTexture = "sprites/smoke.png";
 	data.vertexShaderFilename = "shaders/particle.vert";
 	data.fragmentShaderFilename = "shaders/particle.frag";

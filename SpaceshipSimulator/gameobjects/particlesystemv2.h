@@ -3,9 +3,10 @@
 #include <GameRenderer/texturerenderobject.h>
 #include <GameResources/gameobjects/gameobject.h>
 #include <GameResources/gameobjects/camera.h>
-#include "../renderers/particlerenderer.h"
-#include "../gameobjects/particlestruct.h"
-#include "../gameobjects/modelimportstruct.h"
+#include "../renderers/particlerendererv2.h"
+#include "particlev2.h"
+#include "particlestruct.h"
+#include "modelimportstruct.h"
 #include "../utilities/time.h"
 #include <random>
 #include <glm/gtx/rotate_vector.hpp>
@@ -14,11 +15,11 @@
 #include <mutex>
 #include <array>
 
-class ParticleSystem: public GameObject
+class ParticleSystemV2 : public GameObject
 {
 public:
-	ParticleSystem();
-	~ParticleSystem();
+	ParticleSystemV2();
+	~ParticleSystemV2();
 
 	void loadRenderer(const ParticleSystemFiles& data, const ModelExternalUniforms& uniforms);
 
@@ -31,7 +32,7 @@ public:
 	//void run();
 	void launch();
 
-	ParticleRendererPtr getRenderer()const;
+	ParticleRendererV2Ptr getRenderer()const;
 
 	void registerCamera(CameraPtr camera);
 
@@ -44,8 +45,8 @@ public:
 	void setBlendingFunctions(GLenum sfactor, GLenum dfactor);
 	void setEvenSpread();
 	void setSingleSpread();
+	float shutDown();
 	void setContinuousSpred();
-	void setParticlesUpdateCountPerRefresh(int val);
 
 	int getParticlesCount()const;
 	float getParticlesMaxSpeed()const;
@@ -58,53 +59,47 @@ public:
 
 	bool isRunning()const;
 
-	std::vector<float>& getParticlesPosSizeBuffer();
-	std::vector<float>& getParticlesColorBuffer();
+	std::vector<float>& getParticlesBuffer();
 
 private:
-	glm::mat4 modelTransform;
-
 	std::mt19937 rng;			//RNG seed
 	bool evenSpred;				//flag for spherical spread
 	glm::vec2 spreadCone;		//x - min angle value, y - max angle value [angles]
-	float maxSpeed;	
+	float maxSpeed;
 	int particlesCount;
 	float maxLifetime;
 	float particleSize;
-	glm::vec3 baseColor;
-	glm::vec3 destColor;
+	//glm::vec3 baseColor;
+	//glm::vec3 destColor;
 	BlendFunctions blendFunc;	//OpenGL blend functions
-	bool continuous;			//flag for continuous creation of particles
-	bool externalLaunchFlag;
+	//bool continuous;			//flag for continuous creation of particles
+	bool launchFlag;
+	bool shutingDownFlag;
 
-	bool launched;
-	bool endParticlesProcess;	//flag for closing partciles processing thread
-	bool updateStatus;			//flag for updating particles data in seperate thread
-	std::mutex updateMut;		//mutex for particles updating [single particles update in single logic refresh function]
-	std::thread particleThread;	//particle processing thread
+	std::shared_ptr<glm::mat4> modelTransform;
+	std::shared_ptr<int> continuous;
+	std::shared_ptr<float> runTime;
+	std::shared_ptr<glm::vec3> baseColor;
+	std::shared_ptr<glm::vec3> destColor;
+	std::shared_ptr<float> shutDownTime;
+	//std::shared_ptr<glm::vec3> translate;
 
-	std::list<Particle* > particles;
-	std::vector<float> particlesPosSizeBuffer;	//buffer for renderer
-	std::vector<float> particlesColorBuffer;	//buffer for renderer
-	int bufferVertexAttribSize;					//shader attribute size for both above buffers
+	std::list<ParticleV2Ptr> particles;
+	std::vector<float> particlesBuffer;		//buffer for renderer
+	const int bufferVertexAttribSize = 8;	//shader attribute size for both above buffers
 
 	CameraPtr camera;
-	ParticleRendererPtr renderer;
+	ParticleRendererV2Ptr renderer;
 	//void pause();
 	//void run();
 
-	int particlesUpdateCountPerRefresh;
-	float particlesUpdatedPerFrameFrac;
-	int particlesUpdated;
-	int deadParticles;
+	//void processParticles();
 
-	void processParticles();
-
-	void startThread();
+	//void startThread();
 	void createParticles();
 	void recreateParticles();
 	void initUniforms(const ModelExternalUniforms& uniforms);
-	void setParticleRandomData(Particle& particle);
+	void setParticleRandomData(ParticleV2& particle);
 	glm::vec3 getNormalVec(const glm::vec3& vec);
 	void updateRendererBuffers();
 	void createRendererBuffers();
@@ -112,4 +107,4 @@ private:
 	friend class ParticleSystemManager;
 };
 
-typedef std::shared_ptr<ParticleSystem> ParticleSystemPtr;
+typedef std::shared_ptr<ParticleSystemV2> ParticleSystemV2Ptr;

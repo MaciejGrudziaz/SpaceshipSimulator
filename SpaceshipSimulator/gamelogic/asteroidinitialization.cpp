@@ -45,8 +45,10 @@ void loadAsteroids(GameEngine& engine)
 {
 	AsteroidsManagerPtr asteroids = std::make_shared<AsteroidsManager>();
 	asteroids->registerWorldSpeed(engine.getResources()->worldSpeed);
-	asteroids->create(1, engine.getResources()->camera, engine.getProjectionMatPtr());
+	asteroids->create(10, engine.getResources()->camera, engine.getProjectionMatPtr());
 
-	engine.addRenderer(asteroids->getRenderer());
 	engine.getResources()->asteroids = asteroids;
+	engine.addRenderer(asteroids->getRenderer());
+	engine.addRenderer(asteroids->getExplosionParticlesRenderer());
+	engine.addRenderer(asteroids->getExplosionFragmentsParticlesRenderer());
 }

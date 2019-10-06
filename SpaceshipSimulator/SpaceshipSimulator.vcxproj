@@ -149,6 +149,9 @@
     <ClCompile Include="gameobjects\multisourceparticlesystem.cpp" />
     <ClCompile Include="gameobjects\particle.cpp" />
     <ClCompile Include="gameobjects\particlesystem.cpp" />
+    <ClCompile Include="gameobjects\particlesystemmanager.cpp" />
+    <ClCompile Include="gameobjects\particlesystemv2.cpp" />
+    <ClCompile Include="gameobjects\particlev2.cpp" />
     <ClCompile Include="gameobjects\spaceship.cpp" />
     <ClCompile Include="gameobjects\spaceshipgun.cpp" />
     <ClCompile Include="gameobjects\standardgameobject.cpp" />
@@ -161,6 +164,7 @@
     <ClCompile Include="renderers\multipleasteroidsrenderer.cpp" />
     <ClCompile Include="renderers\multisourceparticlerenderer.cpp" />
     <ClCompile Include="renderers\particlerenderer.cpp" />
+    <ClCompile Include="renderers\particlerendererv2.cpp" />
     <ClCompile Include="renderers\texturebeamsrenderer.cpp" />
     <ClCompile Include="utilities\time.cpp" />
   </ItemGroup>
@@ -187,7 +191,11 @@
     <ClInclude Include="gameobjects\modelimportstruct.h" />
     <ClInclude Include="gameobjects\multisourceparticlesystem.h" />
     <ClInclude Include="gameobjects\particle.h" />
+    <ClInclude Include="gameobjects\particlestruct.h" />
     <ClInclude Include="gameobjects\particlesystem.h" />
+    <ClInclude Include="gameobjects\particlesystemmanager.h" />
+    <ClInclude Include="gameobjects\particlesystemv2.h" />
+    <ClInclude Include="gameobjects\particlev2.h" />
     <ClInclude Include="gameobjects\spaceship.h" />
     <ClInclude Include="gameobjects\spaceshipgun.h" />
     <ClInclude Include="gameobjects\standardgameobject.h" />
@@ -199,6 +207,7 @@
     <ClInclude Include="renderers\multipleasteroidsrenderer.h" />
     <ClInclude Include="renderers\multisourceparticlerenderer.h" />
     <ClInclude Include="renderers\particlerenderer.h" />
+    <ClInclude Include="renderers\particlerendererv2.h" />
     <ClInclude Include="renderers\rendererstruct.h" />
     <ClInclude Include="renderers\texturebeamsrenderer.h" />
     <ClInclude Include="utilities\time.h" />
@@ -209,6 +218,7 @@
     <None Include="shaders\laserShader.vert" />
     <None Include="shaders\particle.frag" />
     <None Include="shaders\particle.vert" />
+    <None Include="shaders\particleV2.vert" />
     <None Include="shaders\spaceshipShader.frag" />
     <None Include="shaders\spaceshipShader.vert" />
     <None Include="shaders\spaceshipShaderTex.frag" />

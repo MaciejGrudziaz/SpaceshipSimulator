@@ -41,7 +41,7 @@ void ObjectCollision::process()
 		}
 
 		StandardGameObject& standardObj = static_cast<StandardGameObject&>(object);
-		standardObj.dealDamage();
+		standardObj.dealDamage(25);
 
 		collisionData.clear();
 		colDataMutex.unlock();

@@ -1,0 +1,84 @@
+Sat Oct  5 21:15:47 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 21:15:47 2019
+ | 0(27) : error C1503: undefined variable "centerPosSize"
+
+Sat Oct  5 21:15:47 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 21:15:47 2019
+ | Vertex info
+-----------
+0(27) : error C1503: undefined variable "centerPosSize"
+(0) : error C2003: incompatible options for link
+
+Sat Oct  5 21:41:40 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 21:41:40 2019
+ | 0(29) : error C7011: implicit cast from "vec4" to "vec3"
+
+Sat Oct  5 21:41:40 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 21:41:40 2019
+ | Vertex info
+-----------
+0(29) : error C7011: implicit cast from "vec4" to "vec3"
+(0) : error C2003: incompatible options for link
+
+Sat Oct  5 23:04:50 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 23:04:50 2019
+ | 0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+
+Sat Oct  5 23:04:50 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 23:04:50 2019
+ | Vertex info
+-----------
+0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+(0) : error C2003: incompatible options for link
+
+Sat Oct  5 23:06:00 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 23:06:00 2019
+ | 0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+
+Sat Oct  5 23:06:00 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 23:06:00 2019
+ | Vertex info
+-----------
+0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+(0) : error C2003: incompatible options for link
+
+Sat Oct  5 23:06:37 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 23:06:37 2019
+ | 0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+
+Sat Oct  5 23:06:37 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 23:06:37 2019
+ | Vertex info
+-----------
+0(29) : error C7011: implicit cast from "vec4" to "vec3"
+0(30) : error C7011: implicit cast from "vec4" to "vec3"
+(0) : error C2003: incompatible options for link
+
+Sat Oct  5 23:56:19 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sat Oct  5 23:56:19 2019
+ | 0(30) : error C7011: implicit cast from "float" to "int"
+
+Sat Oct  5 23:56:19 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sat Oct  5 23:56:19 2019
+ | Vertex info
+-----------
+0(30) : error C7011: implicit cast from "float" to "int"
+(0) : error C2003: incompatible options for link
+

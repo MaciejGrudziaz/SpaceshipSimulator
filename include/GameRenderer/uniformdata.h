@@ -98,13 +98,45 @@ struct UniformDataVec4 : public UniformData
 	}
 };
 
+struct UniformDataFloat : public UniformData
+{
+	UniformDataFloat(const std::string& name)
+		: UniformData(name)
+	{}
+
+	std::shared_ptr<const float> val;
+
+	void update()override
+	{
+		glUniform1f(location, *val);
+	}
+};
+
+struct UniformDataInt : public UniformData
+{
+	UniformDataInt(const std::string& name)
+		: UniformData(name)
+	{}
+
+	std::shared_ptr<const int> val;
+
+	void update()override
+	{
+		glUniform1i(location, *val);
+	}
+};
+
 typedef std::shared_ptr<UniformData> UniformDataPtr;
 typedef std::shared_ptr<UniformDataMat4> UniformDataMat4Ptr;
 typedef std::shared_ptr<UniformDataVec2> UniformDataVec2Ptr;
 typedef std::shared_ptr<UniformDataVec3> UniformDataVec3Ptr;
 typedef std::shared_ptr<UniformDataVec4> UniformDataVec4Ptr;
+typedef std::shared_ptr<UniformDataFloat> UniformDataFloatPtr;
+typedef std::shared_ptr<UniformDataInt> UniformDataIntPtr;
 
 typedef std::shared_ptr<const glm::mat4> ConstMat4Ptr;
 typedef std::shared_ptr<const glm::vec2> ConstVec2Ptr;
 typedef std::shared_ptr<const glm::vec3> ConstVec3Ptr;
 typedef std::shared_ptr<const glm::vec4> ConstVec4Ptr;
+typedef std::shared_ptr<const float> ConstFloatPtr;
+typedef std::shared_ptr<const int> ConstIntPtr;

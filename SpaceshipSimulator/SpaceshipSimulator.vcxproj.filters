@@ -156,6 +156,18 @@
     <ClCompile Include="gameobjects\multisourceparticlesystem.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="gameobjects\particlesystemmanager.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\particlev2.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\particlesystemv2.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\particlerendererv2.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainwindow\mainwindow.h">
@@ -272,6 +284,21 @@
     <ClInclude Include="gameobjects\multisourceparticlesystem.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
+    <ClInclude Include="gameobjects\particlesystemmanager.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\particlev2.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\particlesystemv2.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\particlerendererv2.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\particlestruct.h">
+      <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\spaceshipShader.frag">
@@ -308,6 +335,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\texLaserShaders.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\particleV2.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

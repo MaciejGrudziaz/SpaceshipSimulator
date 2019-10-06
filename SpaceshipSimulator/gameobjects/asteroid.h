@@ -1,6 +1,8 @@
 #pragma once
 
+#include "particlestruct.h"
 #include "particlesystem.h"
+#include "particlesystemv2.h"
 #include "standardgameobject.h"
 #include "../utilities/time.h"
 
@@ -24,26 +26,37 @@ public:
 	void setRotSpeed(glm::vec3 rotSpeed);
 	void setLinearSpeed(glm::vec3 linSpeed);
 
-	void dealDamage()override;
+	void dealDamage(float val)override;
 
-	RenderObjectPtr getExplosionParticlesRenderer()const;
-	RenderObjectPtr getExplosionFragmentsParticlesRenderer()const;
+	void setHealth(float val);
+	float getHealth()const;
+
+	ParticleSystemDataPtr getExplosionParticleSystemData()const;
+	ParticleSystemDataPtr getExplosionFragmentsParticleSystemData()const;
+	//RenderObjectPtr getExplosionParticlesRenderer()const;
+	//RenderObjectPtr getExplosionFragmentsParticlesRenderer()const;
 	//ParticleSystemPtr getExplosionParticlesSystem()const;
 	//ParticleSystemPtr getExplosionFragmentsParticlesSystem()const;
 
 	bool isParticleSystemRunning()const;
+	bool isDestroyed()const;
+
+	void initParticleSystemsData(float explosionParticlesysMaxLifeTime, float explosionFragmentsParticlesysMaxLifeTime);
 
 private:
+	bool destroyedFlag;
 	glm::vec3 rotSpeed;
 	glm::vec3 linearSpeed;
 	std::shared_ptr<float> worldSpeed;
 	ConstMat4Ptr projection;
 	CameraPtr camera;
+	float health;
 
-	ParticleSystemPtr explosionParticles;
-	ParticleSystemPtr explosionFragmentsParticles;
+	//ParticleSystemV2Ptr explosionParticles;
+	//ParticleSystemV2Ptr explosionFragmentsParticles;
 
-	void initParticleSystems();
+	ParticleSystemDataPtr explosionParticleSystemData;
+	ParticleSystemDataPtr explosionFragmentsParticleSystemData;
 };
 
 typedef std::shared_ptr<Asteroid> AsteroidPtr;

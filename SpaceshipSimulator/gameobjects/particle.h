@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/vec3.hpp>
+#include <memory>
 
 struct Particle
 {
@@ -10,42 +11,29 @@ struct Particle
 	//glm::vec3 color;
 	float** color;
 
+	float lifeTimeFrac;
 	float lifeTime;
 	float maxLifeTime;
 	float distanceFromCamera;
 	float* size;
 
-	Particle()
-		//: pos(0.0f)
-		: speed(0.0f)
-		//, color(0.0f)
-		, lifeTime(0.0f)
-		//, size(1.0f)
-		, maxLifeTime(0.0f)
-		, distanceFromCamera(0.0f)
-	{
-		pos = new float*[3];
-		color = new float*[3];
-	}
-	~Particle()
-	{
-		delete pos;
-		delete color;
-	}
+	Particle();
+	~Particle();
 
-	void update(float dt)
-	{
-		if (lifeTime > 0.0f)
-		{
-			lifeTime -= dt;
-			//pos += speed * dt;
-			*pos[0] += speed.x * dt;
-			*pos[1] += speed.y * dt;
-			*pos[2] += speed.z * dt;
-		}
+	void linkPosWithParticlesBuffer(float* posX, float* posY, float* posZ);
 
-		if (lifeTime < 0.0f)
-			lifeTime = 0.0f;
+	void linkSizeWithParticlesBuffer(float* size);
+
+	void linkColorWithParticlesBuffer(float* colorR, float* colorG, float* colorB, float* colorA);
+
+	void update(float dt, const glm::vec3& baseColor, const glm::vec3& destColor);
+
+	void calcDistance(glm::vec3 cameraPos)
+	{
+		distanceFromCamera = 0.0f;
+		distanceFromCamera += std::abs(cameraPos.x - *pos[0]);
+		distanceFromCamera += std::abs(cameraPos.y - *pos[1]);
+		distanceFromCamera += std::abs(cameraPos.z - *pos[2]);
 	}
 
 	bool operator<(const Particle& particle)
@@ -55,3 +43,5 @@ struct Particle
 		else return false;
 	}
 };
+
+typedef std::shared_ptr<Particle> ParticlePtr;

@@ -13,9 +13,10 @@ void AsteroidsManager::create(int initialCount, CameraPtr camera, ConstMat4Ptr p
 	createPatternAsteroid();
 	createPatternAsteroidHitbox();
 	createPatternAsteroidExplosionParticleSystem();
-	initializeAsteroidsVector(initialCount);
 
+	initializeParticlesSystem();
 	loadParticlesSystemRenderer();
+	initializeAsteroidsVector(initialCount);
 	//renderer->registerRenderer(particlesSystem->getRenderer());
 }
 
@@ -129,6 +130,10 @@ void AsteroidsManager::initializeAsteroidsVector(int initialCount)
 		initializeAsteroid(asteroid);
 		//asteroid->initParticleSystems();
 
+		asteroid->initParticleSystemsData(explosionParticles->getParticlesMaxLifetime(), explosionFragmentsParticles->getParticlesMaxLifetime());
+		explosionParticlesRenderer->registerParticleSystemData(asteroid->getExplosionParticleSystemData());
+		explosionFragmentsParticlesRenderer->registerParticleSystemData(asteroid->getExplosionFragmentsParticleSystemData());
+
 		renderer->registerRenderer(asteroid->getRenderer());
 		//renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
 		//renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
@@ -169,20 +174,121 @@ void AsteroidsManager::initializeAsteroid(AsteroidPtr asteroid)
 	asteroid->getTransform().setScale(glm::vec3(spawnSize, spawnSize, spawnSize));
 	asteroid->setLinearSpeed(spawnLinSpeed);
 	asteroid->setRotSpeed(spawnRotSpeed);
+	asteroid->setHealth(100.0f * spawnSize);
 }
 
 void AsteroidsManager::loadParticlesSystemRenderer()
 {
-	ParticleSystemData data;
+	ParticleSystemFiles data;
 	data.particleTexture = "sprites/asteroid_particle.png";
-	data.vertexShaderFilename = "shaders/particle.vert";
+	data.vertexShaderFilename = "shaders/particleV2.vert";
 	data.fragmentShaderFilename = "shaders/particle.frag";
 
-	ModelExternalUniforms uniforms;
-	uniforms.view = camera->getViewPtr();
-	uniforms.projection = projectionPtr;
+	explosionParticlesRenderer = std::make_shared<MultiSourceParticleRenderer>(explosionParticles->getParticlesBuffer(), 
+		explosionParticles->getBlendFunctions());
+	explosionParticlesRenderer->setActive(false);
+	explosionParticlesRenderer->loadShader(data.vertexShaderFilename, data.fragmentShaderFilename);
+	explosionParticlesRenderer->loadTexture(data.particleTexture);
+	explosionParticlesRenderer->setActive(true);
+	explosionParticlesRenderer->registerUniformsPointers(explosionParticlesUniformData);
+	explosionParticlesRenderer->setParticlesCount(explosionParticles->getParticlesCount());
 
-	//particlesSystem->loadRenderer(data, uniforms);
+	explosionFragmentsParticlesRenderer = std::make_shared<MultiSourceParticleRenderer>(explosionFragmentsParticles->getParticlesBuffer(),
+		explosionFragmentsParticles->getBlendFunctions());
+	explosionFragmentsParticlesRenderer->setActive(false);
+	explosionFragmentsParticlesRenderer->loadShader(data.vertexShaderFilename, data.fragmentShaderFilename);
+	explosionFragmentsParticlesRenderer->loadTexture(data.particleTexture);
+	explosionFragmentsParticlesRenderer->setActive(true);
+	explosionFragmentsParticlesRenderer->registerUniformsPointers(explosionFragmentsParticlesUniformData);
+	explosionFragmentsParticlesRenderer->setParticlesCount(explosionFragmentsParticles->getParticlesCount());
+
+	initUniforms();
+}
+
+void AsteroidsManager::initUniforms()
+{
+	initExplosionParticlesUniform();
+	initExplosionFragmentParticlesUniform();
+}
+
+void AsteroidsManager::initExplosionParticlesUniform()
+{
+	explosionParticlesUniformData = std::make_shared<ParticleSystemData>();
+	explosionParticlesUniformData->init();
+	explosionParticlesRenderer->registerUniformsPointers(explosionParticlesUniformData);
+
+	UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
+	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
+	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
+	UniformDataVec3Ptr cameraUpUniform = std::make_shared<UniformDataVec3>("cameraUp");
+	UniformDataVec3Ptr cameraRightUniform = std::make_shared<UniformDataVec3>("cameraRight");
+	UniformDataFloatPtr shutDownTimeUniform = std::make_shared<UniformDataFloat>("shutDownTime");
+	UniformDataIntPtr continuousUniform = std::make_shared<UniformDataInt>("continuous");
+	UniformDataFloatPtr runTimeUniform = std::make_shared<UniformDataFloat>("runTime");
+	UniformDataVec3Ptr baseColorUniform = std::make_shared<UniformDataVec3>("baseColor");
+	UniformDataVec3Ptr destColorUniform = std::make_shared<UniformDataVec3>("destColor");
+
+	modelUniform->mat = explosionParticlesUniformData->modelTransform;
+	viewUniform->mat = camera->getViewPtr();
+	projectionUniform->mat = projectionPtr;
+	cameraUpUniform->vec = camera->getUpVecPtr();
+	cameraRightUniform->vec = camera->getRightVecPtr();
+	shutDownTimeUniform->val = explosionParticlesUniformData->shutDownTime;
+	continuousUniform->val = explosionParticlesUniformData->continuous;
+	runTimeUniform->val = explosionParticlesUniformData->runTime;
+	baseColorUniform->vec = explosionParticlesUniformData->baseColor;
+	destColorUniform->vec = explosionParticlesUniformData->destColor;
+
+	explosionParticlesRenderer->addUniform(modelUniform);
+	explosionParticlesRenderer->addUniform(viewUniform);
+	explosionParticlesRenderer->addUniform(projectionUniform);
+	explosionParticlesRenderer->addUniform(cameraUpUniform);
+	explosionParticlesRenderer->addUniform(cameraRightUniform);
+	explosionParticlesRenderer->addUniform(shutDownTimeUniform);
+	explosionParticlesRenderer->addUniform(continuousUniform);
+	explosionParticlesRenderer->addUniform(runTimeUniform);
+	explosionParticlesRenderer->addUniform(baseColorUniform);
+	explosionParticlesRenderer->addUniform(destColorUniform);
+}
+
+void AsteroidsManager::initExplosionFragmentParticlesUniform()
+{
+	explosionFragmentsParticlesUniformData = std::make_shared<ParticleSystemData>();
+	explosionFragmentsParticlesUniformData->init();
+	explosionFragmentsParticlesRenderer->registerUniformsPointers(explosionFragmentsParticlesUniformData);
+
+	UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
+	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
+	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
+	UniformDataVec3Ptr cameraUpUniform = std::make_shared<UniformDataVec3>("cameraUp");
+	UniformDataVec3Ptr cameraRightUniform = std::make_shared<UniformDataVec3>("cameraRight");
+	UniformDataFloatPtr shutDownTimeUniform = std::make_shared<UniformDataFloat>("shutDownTime");
+	UniformDataIntPtr continuousUniform = std::make_shared<UniformDataInt>("continuous");
+	UniformDataFloatPtr runTimeUniform = std::make_shared<UniformDataFloat>("runTime");
+	UniformDataVec3Ptr baseColorUniform = std::make_shared<UniformDataVec3>("baseColor");
+	UniformDataVec3Ptr destColorUniform = std::make_shared<UniformDataVec3>("destColor");
+
+	modelUniform->mat = explosionFragmentsParticlesUniformData->modelTransform;
+	viewUniform->mat = camera->getViewPtr();
+	projectionUniform->mat = projectionPtr;
+	cameraUpUniform->vec = camera->getUpVecPtr();
+	cameraRightUniform->vec = camera->getRightVecPtr();
+	shutDownTimeUniform->val = explosionFragmentsParticlesUniformData->shutDownTime;
+	continuousUniform->val = explosionFragmentsParticlesUniformData->continuous;
+	runTimeUniform->val = explosionFragmentsParticlesUniformData->runTime;
+	baseColorUniform->vec = explosionFragmentsParticlesUniformData->baseColor;
+	destColorUniform->vec = explosionFragmentsParticlesUniformData->destColor;
+
+	explosionFragmentsParticlesRenderer->addUniform(modelUniform);
+	explosionFragmentsParticlesRenderer->addUniform(viewUniform);
+	explosionFragmentsParticlesRenderer->addUniform(projectionUniform);
+	explosionFragmentsParticlesRenderer->addUniform(cameraUpUniform);
+	explosionFragmentsParticlesRenderer->addUniform(cameraRightUniform);
+	explosionFragmentsParticlesRenderer->addUniform(shutDownTimeUniform);
+	explosionFragmentsParticlesRenderer->addUniform(continuousUniform);
+	explosionFragmentsParticlesRenderer->addUniform(runTimeUniform);
+	explosionFragmentsParticlesRenderer->addUniform(baseColorUniform);
+	explosionFragmentsParticlesRenderer->addUniform(destColorUniform);
 }
 
 void AsteroidsManager::init()
@@ -192,16 +298,67 @@ void AsteroidsManager::init()
 	for (auto asteroid : asteroids)
 	{
 		asteroid->init();
-		renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
-		renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
+		//renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
+		//renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
 		//particlesSystem->registerParticleSystem(asteroid->getExplosionParticlesSystem());
 		//particlesSystem->registerParticleSystem(asteroid->getExplosionFragmentsParticlesSystem());
 	}
+	explosionParticles->init();
+	explosionFragmentsParticles->init();
+
+	explosionParticlesRenderer->init();
+	explosionParticlesRenderer->updateBuffer();
+
+	explosionFragmentsParticlesRenderer->init();
+	explosionFragmentsParticlesRenderer->updateBuffer();
+	//initializeParticlesSystem();
+	//loadParticlesSystemRenderer();
 
 	//particlesSystem->init();
 
 	//asteroidsExplosionPattern->init();
-	//asteroidsExplosionFragmentsPattern->init();
+	//asteroids	ExplosionFragmentsPattern->init();
+}
+
+void AsteroidsManager::initializeParticlesSystem()
+{
+	explosionParticles = std::make_shared<ParticleSystemV2>();
+	explosionParticles->setParticlesCount(100000);
+	explosionParticles->setParticlesMaxSpeed(4.0f);
+	explosionParticles->setParticlesMaxLifetime(1.7f);
+	explosionParticles->setParticlesSize(0.15f);
+	explosionParticles->setEvenSpread();
+	explosionParticles->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(1.0f, 0.55f, 0.1f));
+	explosionParticles->registerCamera(camera);
+	explosionParticles->getTransform().setPosition(glm::vec3(0.0f));
+	explosionParticles->setBlendingFunctions(GL_ONE, GL_ONE);
+	explosionParticles->registerCamera(camera);
+
+	//ParticleSystemFiles data;
+	//data.particleTexture = "sprites/asteroid_particle.png";
+	//data.vertexShaderFilename = "shaders/particleV2.vert";
+	//data.fragmentShaderFilename = "shaders/particle.frag";
+
+	//ModelExternalUniforms uniforms;
+	//uniforms.view = camera->getViewPtr();
+	//uniforms.projection = projectionPtr;
+
+	//explosionParticles->loadRenderer(data, uniforms);
+
+	explosionFragmentsParticles = std::make_shared<ParticleSystemV2>();
+	explosionFragmentsParticles->setParticlesCount(100000);
+	explosionFragmentsParticles->setParticlesMaxSpeed(4.5f);
+	explosionFragmentsParticles->setParticlesMaxLifetime(2.2f);
+	explosionFragmentsParticles->setParticlesSize(0.6f);
+	explosionFragmentsParticles->setEvenSpread();
+	explosionFragmentsParticles->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	explosionFragmentsParticles->registerCamera(camera);
+	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
+	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	explosionFragmentsParticles->registerCamera(camera);
+
+	//explosionFragmentsParticles->loadRenderer(data, uniforms);
+
 }
 
 void AsteroidsManager::process()
@@ -257,6 +414,16 @@ std::vector<AsteroidPtr>& AsteroidsManager::getAsteroids()
 RenderObjectPtr AsteroidsManager::getRenderer()const
 {
 	return renderer;
+}
+
+MultiSourceParticleRendererPtr AsteroidsManager::getExplosionParticlesRenderer()const
+{
+	return explosionParticlesRenderer;
+}
+
+MultiSourceParticleRendererPtr AsteroidsManager::getExplosionFragmentsParticlesRenderer()const
+{
+	return explosionFragmentsParticlesRenderer;
 }
 
 //MultiSourceParticleRendererPtr AsteroidsManager::getParticlesRenderer()const
