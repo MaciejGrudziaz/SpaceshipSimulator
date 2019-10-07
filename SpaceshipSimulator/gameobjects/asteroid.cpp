@@ -3,7 +3,10 @@
 Asteroid::Asteroid()
 	: destroyedFlag(false)
 	, health(0.0f)
+	, asteroidCollisionAttachFlag(false)
 {
+	setName("asteroid");
+
 	explosionParticleSystemData = std::make_shared<ParticleSystemData>();
 	explosionParticleSystemData->init();
 
@@ -63,8 +66,8 @@ void Asteroid::process()
 {
 	StandardGameObject::process();
 
-	if (isActive() && !destroyedFlag)
-	{
+	//if (isActive() && !destroyedFlag)
+	//{
 		glm::vec3 pos = transform.getPosition();
 		glm::vec3 rot = transform.getRotation();
 
@@ -80,7 +83,7 @@ void Asteroid::process()
 
 		transform.setPosition(pos);
 		transform.setRotation(rot);
-	}
+	//}
 	if (destroyedFlag  && !explosionFragmentsParticleSystemData->launchFlag)
 	{
 		setActive(false);
@@ -139,7 +142,23 @@ void Asteroid::setActive(bool val)
 {
 	StandardGameObject::setActive(val);
 
+	setHitboxActive(val);
+
 	destroyedFlag = false;
+}
+
+void Asteroid::restart()
+{
+	setActive(false);
+}
+
+void Asteroid::setHitboxActive(bool val)
+{
+	GameObjectPtr hitbox = getChild("hitbox_main");
+	if (hitbox->isUsable())
+	{
+		hitbox->setActive(val);
+	}
 }
 
 void Asteroid::registerWorldSpeed(std::shared_ptr<float> speed)
@@ -162,6 +181,11 @@ void Asteroid::setRotSpeed(glm::vec3 rotSpeed)
 	this->rotSpeed = rotSpeed;
 }
 
+glm::vec3 Asteroid::getLinearSpeed()const
+{
+	return linearSpeed;
+}
+
 void Asteroid::setLinearSpeed(glm::vec3 linSpeed)
 {
 	this->linearSpeed = linSpeed;
@@ -169,6 +193,7 @@ void Asteroid::setLinearSpeed(glm::vec3 linSpeed)
 
 void Asteroid::dealDamage(float val)
 {
+	StandardGameObject::dealDamage(val);
 	if (health > 0.0f)
 	{
 		health -= val;
@@ -180,10 +205,7 @@ void Asteroid::dealDamage(float val)
 			renderer->setActive(false);
 			destroyedFlag = true;
 
-			//explosionParticles->setSingleSpread();
-			//explosionParticles->launch();
-			//explosionFragmentsParticles->setSingleSpread();
-			//explosionFragmentsParticles->launch();
+			setHitboxActive(false);
 
 			*explosionParticleSystemData->continuous = 0;
 			*explosionParticleSystemData->runTime = 0.0f;
@@ -197,6 +219,11 @@ void Asteroid::dealDamage(float val)
 		}
 	}
 	//setActive(false);
+}
+
+void Asteroid::destroy()
+{
+	dealDamage(1.05*health);
 }
 
 void Asteroid::setHealth(float val)

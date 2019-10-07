@@ -16,7 +16,7 @@
 class MainWindow
 {
 public:
-	MainWindow(const std::string& title, int width = 1280, int height = 720, float fov = 90.0f);
+	MainWindow(const std::string& title, int width = 1280, int height = 720, float fov = 45.0f);
 
 	void create();
 	void destory();

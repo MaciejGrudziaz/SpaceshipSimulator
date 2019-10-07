@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef OLD_VERSION
+
 #include <GameRenderer/texturerenderobject.h>
 #include <GameResources/gameobjects/gameobject.h>
 #include <GameResources/gameobjects/camera.h>
@@ -113,3 +115,5 @@ private:
 };
 
 typedef std::shared_ptr<ParticleSystem> ParticleSystemPtr;
+
+#endif

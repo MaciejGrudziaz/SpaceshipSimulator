@@ -1,4 +1,5 @@
 #pragma once
+#ifdef OLD_VERSION
 
 #include <GameRenderer/texturerenderobject.h>
 #include "../gameobjects/particle.h"
@@ -42,3 +43,5 @@ private:
 };
 
 typedef std::shared_ptr<ParticleRenderer> ParticleRendererPtr;
+
+#endif

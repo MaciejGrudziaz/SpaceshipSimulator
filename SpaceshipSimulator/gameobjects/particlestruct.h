@@ -41,7 +41,7 @@ struct ParticleSystemData
 	void init()
 	{
 		modelTransform = std::make_shared<glm::mat4>(1.0f);
-		continuous = std::make_shared<int>(1.0f);
+		continuous = std::make_shared<int>(1);
 		runTime = std::make_shared<float>(0.0f);
 		baseColor = std::make_shared<glm::vec3>(0.0f);
 		destColor = std::make_shared<glm::vec3>(0.0f);

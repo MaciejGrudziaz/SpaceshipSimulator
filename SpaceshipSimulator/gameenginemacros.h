@@ -7,9 +7,12 @@
 								} \
 								template<> \
 								void MG::initialize<GameEngine>(GameEngine& engine) \
-
+								
 #define GAME_PROCESS(engine)	template<> \
 								void MG::process<GameEngine>(GameEngine& engine) \
+
+#define GAME_RESTART(engine)	template<> \
+								void MG::restart<GameEngine>(GameEngine& engine) \
 
 #define GAME_END(engine)		template<> \
 								void MG::end<GameEngine>(GameEngine& engine) \

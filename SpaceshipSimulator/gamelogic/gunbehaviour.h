@@ -38,8 +38,8 @@ public:
 private:
 	enum direction { stop, forward, backward };
 	float fireRate;		// 1/s
-	float maxMoveDist;
-	float currMoveDist;
+	float barrelMaxMoveDist;
+	float barrelCurrMoveDist;
 	float barrelSpeed;
 	direction dir;
 

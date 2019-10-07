@@ -5,7 +5,9 @@
 class TextureBeamsRenderer : public TextureRenderObject
 {
 public:
-	TextureBeamsRenderer(std::vector<float>& posRotBuffer, int maxBufferSize = (3+4) * 100);
+	static const int vertexAttribCount = 7;
+
+	TextureBeamsRenderer(std::vector<float>& posRotBuffer);
 
 	void init()override;
 	void process()override;

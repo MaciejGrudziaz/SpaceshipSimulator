@@ -1,5 +1,7 @@
 #include "particlerenderer.h"
 
+#ifdef OLD_VERSION
+
 ParticleRenderer::ParticleRenderer(std::vector<float>& posSizeBuffer, std::vector<float>& colorBuffer, const BlendFunctions& blend)
 	: particlesPositionSize(posSizeBuffer)
 	, particlesColor(colorBuffer)
@@ -134,3 +136,5 @@ void ParticleRenderer::updateColorBuffer()
 {
 	colorBufferUpdateFlag = true;
 }
+
+#endif

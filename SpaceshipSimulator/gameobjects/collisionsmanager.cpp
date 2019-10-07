@@ -12,9 +12,10 @@ void CollisionsManager::process()
 	{
 		++warmupCounter;
 	}
-	else if (warmupCounter == warmupLimitCount) {
+	else if (warmupCounter >= warmupLimitCount) {
+		updateMutex.lock();
 		updateFlag = true;
-		++warmupCounter;
+		updateMutex.unlock();
 	}
 }
 
@@ -39,6 +40,8 @@ void CollisionsManager::processCollisions()
 		{
 			updateMutex.lock();
 
+			updateFlag = false;
+
 			checkAllCollisions();
 
 			updateMutex.unlock();
@@ -59,64 +62,98 @@ void CollisionsManager::checkAllCollisions()
 			{
 				HitboxObject& hitbox1 = static_cast<HitboxObject&>(*colObj1.objectHitboxes[k]);
 
-				for (int l = 0; l < colObj2.objectHitboxes.size(); ++l)
+				if (hitbox1.isActive())
 				{
-					HitboxObject& hitbox2 = static_cast<HitboxObject&>(*colObj2.objectHitboxes[l]);
-					if (CollisionDetection::CheckCollision(*hitbox1.getHitbox(), *hitbox2.getHitbox()))
+					for (int l = 0; l < colObj2.objectHitboxes.size(); ++l)
 					{
-						CollisionData data;
-						data.objIdx = k;
-						colObj1.addCollisionData(data);
-						data.objIdx = l;
-						colObj2.addCollisionData(data);
+						HitboxObject& hitbox2 = static_cast<HitboxObject&>(*colObj2.objectHitboxes[l]);
+
+						if (hitbox2.isActive())
+						{
+							if (CollisionDetection::CheckCollision(*hitbox1.getHitbox(), *hitbox2.getHitbox()))
+							{
+								glm::vec3 impactVector = (hitbox2.getGlobalPosition() - hitbox1.getGlobalPosition());
+								impactVector = glm::normalize(impactVector);
+
+								CollisionData data1(hitbox1, hitbox2);
+								data1.collisionType = CollisionData::hitbox_crash;
+								data1.impactVector = impactVector;
+								colObj1.addCollisionData(data1);
+
+								CollisionData data2(hitbox2, hitbox1);
+								data2.collisionType = CollisionData::hitbox_crash;
+								data2.impactVector = -impactVector;
+								colObj2.addCollisionData(data2);
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
-	checkPointCollisions();
+	checkHitDetection();
 }
 
-void CollisionsManager::checkPointCollisions()
+void CollisionsManager::checkHitDetection()
 {
-	for (auto colPtRaw : collisionPoints)
+	for (auto laserBeamRaw : hitDetectionObjects)
 	{
 		for (auto colObjRaw : collisionObjects)
 		{
-			PointCollision& colPt = static_cast<PointCollision&>(*colPtRaw);
+			LaserBeamHitDetection& laserBeamsObj = static_cast<LaserBeamHitDetection&>(*laserBeamRaw);
 			ObjectCollision& colObj = static_cast<ObjectCollision&>(*colObjRaw);
 
-			auto colPtVec = colPt.getCollisionPtVec();
+			auto laserBeamsVec = laserBeamsObj.getLaserBeamsVec();
 
-			for (int i = 0; i < colPtVec.size(); ++i)
+			for (int i = 0; i < laserBeamsVec.size(); ++i)
 			{
-				std::shared_ptr<glm::vec3> pt = colPtVec[i];
-				for (int j = 0; j < colObj.objectHitboxes.size(); ++j)
+				if (laserBeamsVec[i]->isActive())
 				{
-					HitboxObject& hitbox = static_cast<HitboxObject&>(*colObj.objectHitboxes[j]);
-					if (CollisionDetection::CheckCollision(hitbox, *pt))
+					glm::vec3 pt = laserBeamsVec[i]->getTransform().getPosition();
+					for (int j = 0; j < colObj.objectHitboxes.size(); ++j)
 					{
-						CollisionData data;
-						data.objIdx = j;
-						colObj.addCollisionData(data);
+						HitboxObject& hitbox = static_cast<HitboxObject&>(*colObj.objectHitboxes[j]);
+						if (hitbox.isActive())
+						{
+							if (CollisionDetection::CheckCollision(hitbox, pt))
+							{
+								CollisionData data1(hitbox, *laserBeamsVec[i]);
+								data1.collisionType = CollisionData::laser_shot;
+								colObj.addCollisionData(data1);
+
+								CollisionData data2(*laserBeamsVec[i], hitbox);
+								data2.collisionType = CollisionData::hitbox_crash;
+								laserBeamsObj.addCollisionData(data2);
+							}
+						}
 					}
 				}
 			}
+
+			laserBeamsObj.releaseLaserBeamVec();
 		}
 	}
 }
 
 void CollisionsManager::registerCollisionObject(GameObjectPtr object)
 {
+	updateMutex.lock();
+
 	object->addProperty<ObjectCollision>("collision");
 
 	collisionObjects.push_back(static_cast<std::shared_ptr<Property<GameObject> > >(object->getProperty("collision")));
+
+	updateMutex.unlock();
 }
 
-void CollisionsManager::registerCollisionPoints(GameObjectPtr object)
+void CollisionsManager::registerHitDetectionObject(GameObjectPtr object)
 {
-	object->addProperty<PointCollision>("point_collision");
+	updateMutex.lock();
 
-	collisionPoints.push_back(static_cast<std::shared_ptr<Property<GameObject> >>(object->getProperty("point_collision")));
+	object->addProperty<LaserBeamHitDetection>("hit_detection");
+
+	hitDetectionObjects.push_back(static_cast<std::shared_ptr<Property<GameObject> >>(object->getProperty("hit_detection")));
+
+	updateMutex.unlock();
 }

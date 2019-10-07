@@ -9,17 +9,12 @@ ParticleSystemV2::ParticleSystemV2()
 	, maxLifetime(0.0f)
 	, baseColor(std::make_shared<glm::vec3>(1.0f))
 	, destColor(std::make_shared<glm::vec3>(1.0f))
-	//, endParticlesProcess(false)
 	, evenSpred(false)
 	, continuous(std::make_shared<int>(1))
 	, runTime(std::make_shared<float>(0.0f))
 	, shutDownTime(std::make_shared<float>(0.0f))
-	//, launched(false)
 	, launchFlag(false)
 	, shutingDownFlag(false)
-	//, particlesUpdated(0)
-	//, deadParticles(0)
-	//, particlesUpdateCountPerRefresh(3000)
 {}
 
 ParticleSystemV2::~ParticleSystemV2()
@@ -71,6 +66,19 @@ void ParticleSystemV2::initUniforms(const ModelExternalUniforms& uniforms)
 	renderer->addUniform(destColorUniform);
 }
 
+void ParticleSystemV2::init()
+{
+	GameObject::init();
+
+	createParticles();
+	createRendererBuffers();
+	if (renderer)
+	{
+		renderer->updateBuffer();
+		renderer->init();
+	}
+}
+
 void ParticleSystemV2::createParticles()
 {
 	particles.clear();
@@ -108,59 +116,11 @@ void ParticleSystemV2::setParticleRandomData(ParticleV2& particle)
 	}
 }
 
-glm::vec3 ParticleSystemV2::getNormalVec(const glm::vec3& vec)
-{
-	static glm::vec3 xVec(1.0f, 0.0f, 0.0f), yVec(0.0f, 1.0f, 0.0f), zVec(0.0f, 0.0f, 1.0f);
-
-	if (vec != xVec)
-	{
-		return glm::normalize(glm::cross(xVec, vec));
-	}
-	else if (vec != yVec)
-	{
-		return  glm::normalize(glm::cross(yVec, vec));
-	}
-	else {
-		return  glm::normalize(glm::cross(zVec, vec));
-	}
-}
-
-void ParticleSystemV2::updateRendererBuffers()
-{
-	//if (particlesBuffer.size() == 0)
-	//{
-	//	createRendererBuffers();
-	//}
-	//else {
-	//	glm::vec3 color;
-	//	float lifetimeFrac;
-	//	for(int i = 0;i<particlesCount; ++i)
-	//	{
-	//		memcpy(particlesPosSizeBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(particles[i].pos), 3 * sizeof(float));
-	//		particlesPosSizeBuffer[bufferVertexAttribSize * i + 3] = particles[i].size;
-
-	//		lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
-	//		color = baseColor;
-	//		color += (destColor - baseColor) * (1.0f - lifetimeFrac);
-	//		
-	//		memcpy(particlesColorBuffer.data() + bufferVertexAttribSize * i, glm::value_ptr(color), 3 * sizeof(float));
-	//		particlesColorBuffer[bufferVertexAttribSize * i + 3] = lifetimeFrac;
-
-	//		if (renderer)
-	//		{
-	//			renderer->updatePositionBuffer();
-	//			renderer->updateColorBuffer();
-	//		}
-	//	}
-	//}
-}
-
 void ParticleSystemV2::createRendererBuffers()
 {
 	if (particlesBuffer.size() == 0)
 	{
 		particlesBuffer = std::vector<float>(particlesCount * bufferVertexAttribSize);
-		//for (int i = 0; i < particlesCount; ++i)
 		int i = 0;
 		for (auto particle : particles)
 		{
@@ -170,39 +130,6 @@ void ParticleSystemV2::createRendererBuffers()
 			std::memcpy(particlesBuffer.data() + (i * bufferVertexAttribSize + 7), &particle->lifeTime, sizeof(float));
 			++i;
 		}
-	}
-	//if (particlesColorBuffer.size() == 0)
-	//{
-	//	particlesColorBuffer = std::vector<float>(particlesCount * 4);
-	//	glm::vec3 color;
-	//	float lifetimeFrac;
-
-	//	int i = 0;
-	//	for (auto particle : particles)
-	//	{
-	//		//lifetimeFrac = particles[i].lifeTime / particles[i].maxLifeTime;
-	//		//color = baseColor;
-	//		//color += (destColor - baseColor) * (1.0f - lifetimeFrac);
-	//		//std::memcpy(particlesColorBuffer.data() + (i * 4), glm::value_ptr(particles[i].pos), 3 * sizeof(float));
-	//		//std::memcpy(particlesColorBuffer.data() + (i * 4 + 3), &particles[i].size, sizeof(float));
-
-	//		float* buffer = particlesColorBuffer.data();
-	//		particle->linkColorWithParticlesBuffer(buffer + (4 * i), buffer + (4 * i + 1), buffer + (4 * i + 2), buffer + (4 * i + 3));
-	//		++i;
-	//	}
-	//}
-}
-
-void ParticleSystemV2::init()
-{
-	GameObject::init();
-
-	createParticles();
-	createRendererBuffers();
-	if (renderer)
-	{
-		renderer->updateBuffer();
-		renderer->init();
 	}
 }
 
@@ -229,14 +156,6 @@ void ParticleSystemV2::process()
 		}
 	}
 
-}
-
-void ParticleSystemV2::recreateParticles()
-{
-	for (auto particle : particles)
-	{
-		setParticleRandomData(*particle);
-	}
 }
 
 void ParticleSystemV2::invalidate()
@@ -266,14 +185,61 @@ void ParticleSystemV2::launch()
 		renderer->setActive(true);
 }
 
-ParticleRendererV2Ptr ParticleSystemV2::getRenderer()const
+float ParticleSystemV2::shutDown()
 {
-	return renderer;
+	if (!shutingDownFlag)
+	{
+		*continuous = 0;
+		*shutDownTime = *runTime;
+		shutingDownFlag = true;
+	}
+
+	return *shutDownTime;
 }
 
 void ParticleSystemV2::registerCamera(CameraPtr camera)
 {
 	this->camera = camera;
+}
+
+ParticleRendererV2Ptr ParticleSystemV2::getRenderer()const
+{
+	return renderer;
+}
+
+std::vector<float>& ParticleSystemV2::getParticlesBuffer()
+{
+	return particlesBuffer;
+}
+
+bool ParticleSystemV2::isRunning()const
+{
+	return (launchFlag && !shutingDownFlag);
+}
+
+glm::vec3 ParticleSystemV2::getNormalVec(const glm::vec3& vec)
+{
+	static glm::vec3 xVec(1.0f, 0.0f, 0.0f), yVec(0.0f, 1.0f, 0.0f), zVec(0.0f, 0.0f, 1.0f);
+
+	if (vec != xVec)
+	{
+		return glm::normalize(glm::cross(xVec, vec));
+	}
+	else if (vec != yVec)
+	{
+		return  glm::normalize(glm::cross(yVec, vec));
+	}
+	else {
+		return  glm::normalize(glm::cross(zVec, vec));
+	}
+}
+
+void ParticleSystemV2::recreateParticles()
+{
+	for (auto particle : particles)
+	{
+		setParticleRandomData(*particle);
+	}
 }
 
 void ParticleSystemV2::setParticlesCount(int count)
@@ -321,24 +287,7 @@ void ParticleSystemV2::setEvenSpread()
 
 void ParticleSystemV2::setSingleSpread()
 {
-	//if (!shutingDownFlag)
-	//{
-	//	*continuous = 0;
-	//	*shutDownTime = *runTime;
-	//	shutingDownFlag = true;
-	//}
 	*continuous = 0;
-}
-
-float ParticleSystemV2::shutDown()
-{
-	if (!shutingDownFlag)
-	{
-		*shutDownTime = *runTime;
-		shutingDownFlag = true;
-	}
-
-	return *shutDownTime;
 }
 
 void ParticleSystemV2::setContinuousSpred()
@@ -384,14 +333,4 @@ glm::vec3 ParticleSystemV2::getDestColor()const
 BlendFunctions ParticleSystemV2::getBlendFunctions()const
 {
 	return blendFunc;
-}
-
-bool ParticleSystemV2::isRunning()const
-{
-	return (launchFlag && !shutingDownFlag);
-}
-
-std::vector<float>& ParticleSystemV2::getParticlesBuffer()
-{
-	return particlesBuffer;
 }

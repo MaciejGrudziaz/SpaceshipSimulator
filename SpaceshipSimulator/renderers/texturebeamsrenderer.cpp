@@ -1,8 +1,8 @@
 #include "texturebeamsrenderer.h"
 
-TextureBeamsRenderer::TextureBeamsRenderer(std::vector<float>& posRotBuffer, int maxBufferSize)
+TextureBeamsRenderer::TextureBeamsRenderer(std::vector<float>& posRotBuffer)
 	: posRotBuffer(posRotBuffer)
-	, maxBufferSize(maxBufferSize)
+	, maxBufferSize(vertexAttribCount * 100)
 	, currBufferSize(0)
 	, updateBufferFlag(false)
 {}

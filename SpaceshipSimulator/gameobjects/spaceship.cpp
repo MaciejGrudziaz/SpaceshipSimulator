@@ -2,10 +2,22 @@
 
 Spaceship::Spaceship()
 	: inputRotation(0.0f)
+	, mouseInput(false)
 {
 	beamsColor = std::make_shared<glm::vec4>(0.0f, 1.0f, 0.0f, 0.8f);
 	beamsSize = std::make_shared<glm::vec2>(0.2f, 3.0f);
 	beamsRenderer = std::make_shared<TextureBeamsRenderer>(beamsBuffer);
+	setName("spaceship");
+	(*hitColor) = glm::vec3(0.4f, 0.4f, 1.0f);
+
+	//maxShieldValue = 10;
+	//currShieldValue = maxShieldValue;
+	//maxLifeValue = 10;
+	//currLifeValue = maxLifeValue;
+	pointsScore = 0;
+	guiShieldStatuBarFrac = std::make_shared<float>(1.0f);
+	guiLifeStatusBarFrac = std::make_shared<float>(1.0f);
+	guiPointsScore = std::make_shared<int>(0);
 }
 
 void Spaceship::init()
@@ -52,43 +64,84 @@ void Spaceship::process()
 {
 	StandardGameObject::process();
 
-	std::for_each(laserShots.begin(), laserShots.end(), [](auto shot) {
-		shot->process();
-	});
+	for (auto shot : laserShots)
+	{
+		if(shot->isActive())
+			shot->process();
+	}
 
 	updateBeamsBuffer();
 }
 
 void Spaceship::updateBeamsBuffer()
 {
+	//glm::vec3 pos;
+	//if (beamsBuffer.size() / TextureBeamsRenderer::vertexAttribCount < laserShots.size())
+	//{
+	//	for (int i = beamsBuffer.size() / TextureBeamsRenderer::vertexAttribCount; i < laserShots.size(); ++i)
+	//	{
+	//		pos = laserShots[i]->getTransform().getPosition();
+
+	//		for (int j = 0; j < 3; ++j)
+	//			beamsBuffer.push_back(pos[j]);
+
+	//		glm::quat q(laserShots[i]->getTransform().getRotationQuat());
+
+	//		for (int j = 0; j < 4; ++j)
+	//			beamsBuffer.push_back(q[j]);
+	//	}
+	//}
+
+	//for (int i = 0; i < laserShots.size(); ++i)
+	//{
+	//	pos = laserShots[i]->getTransform().getPosition();
+
+	//	for (int j = 0; j < 3; ++j)
+	//		beamsBuffer[7 * i + j] = pos[j];
+
+	//	glm::quat q(laserShots[i]->getTransform().getRotationQuat());
+
+	//	for (int j = 0; j < 4; ++j)
+	//		beamsBuffer[7 * i + j + 3] = q[j];
+	//}
+
+	//beamsBuffer.erase(beamsBuffer.begin() + (laserShots.size() * TextureBeamsRenderer::vertexAttribCount), beamsBuffer.end());
+
+	int beamsBufferCurrIdx = 0;
 	glm::vec3 pos;
-	if (beamsBuffer.size() / 7 < laserShots.size())
+	glm::quat rot;
+	for(auto shot : laserShots)
 	{
-		for (int i = beamsBuffer.size() / 7; i < laserShots.size(); ++i)
+		if (shot->isActive())
 		{
-			pos = laserShots[i]->getTransform().getPosition();
+			pos = shot->getTransform().getPosition();
+			rot = shot->getTransform().getRotationQuat();
 
-			for (int j = 0; j < 3; ++j)
-				beamsBuffer.push_back(pos[j]);
+			if (beamsBufferCurrIdx < beamsBuffer.size())
+			{
+				for (int i = 0; i < 3; ++i)
+					beamsBuffer[beamsBufferCurrIdx + i] = pos[i];
 
-			glm::quat q(laserShots[i]->getTransform().getRotationQuat());
+				for (int i = 0; i < 4; ++i)
+					beamsBuffer[beamsBufferCurrIdx + i + 3] = rot[i];
 
-			for (int j = 0; j < 4; ++j)
-				beamsBuffer.push_back(q[j]);
+				beamsBufferCurrIdx += 7;
+			}
+			else {
+				for (int i = 0; i < 3; ++i)
+					beamsBuffer.push_back(pos[i]);
+
+				for (int i = 0; i < 4; ++i)
+					beamsBuffer.push_back(rot[i]);
+
+				beamsBufferCurrIdx += 7;
+			}
 		}
 	}
 
-	for (int i = 0; i < laserShots.size(); ++i)
+	if (beamsBufferCurrIdx < beamsBuffer.size())
 	{
-		pos = laserShots[i]->getTransform().getPosition();
-
-		for (int j = 0; j < 3; ++j)
-			beamsBuffer[7 * i + j] = pos[j];
-
-		glm::quat q(laserShots[i]->getTransform().getRotationQuat());
-
-		for (int j = 0; j < 4; ++j)
-			beamsBuffer[7 * i + j + 3] = q[j];
+		beamsBuffer.erase(beamsBuffer.begin() + beamsBufferCurrIdx, beamsBuffer.end());
 	}
 
 	beamsRenderer->setUpdateBufferFlag();
@@ -121,14 +174,37 @@ void Spaceship::loadGuns()
 
 void Spaceship::addLaserBeam(LaserBeamPtr beam)
 {
-	laserShots.push_back(beam);
+	int idx = findNotActiveLaserShot();
+	if (idx != -1) laserShots[idx] = beam;
+	else laserShots.push_back(beam);
+	beam->setSpeed(laserBeamSpeed);
 
-	auto colPtProperty = getProperty("point_collision");
+	auto colPtProperty = getProperty("hit_detection");
 	if (colPtProperty->isUsable())
 	{
-		PointCollision& property = static_cast<PointCollision&>(*colPtProperty);
-		property.addCollisionPoint(beam->getCurrentPosPtr());
+		LaserBeamHitDetection& property = static_cast<LaserBeamHitDetection&>(*colPtProperty);
+		property.addLaserBeam(beam);
 	}
+}
+
+int Spaceship::findNotActiveLaserShot()
+{
+	int idx = -1;
+	bool found = false;
+
+	if (laserShots.size() > 0) 
+	{
+		for (int i = 0; i < laserShots.size(); ++i)
+		{
+			if (!laserShots[i]->isActive())
+			{
+				idx = i;
+				found = true;
+			}
+		}
+	}
+
+	return idx;
 }
 
 void Spaceship::registerCamera(CameraPtr camera)
@@ -246,17 +322,91 @@ void Spaceship::loadTextureBufferData()
 	renderer->loadBuffer(buffer);
 }
 
-void Spaceship::registerWorldSpeed(std::shared_ptr<float> speed)
+//void Spaceship::registerWorldSpeed(std::shared_ptr<float> speed)
+//{
+//	worldSpeed = speed;
+//}
+//
+//void Spaceship::setWorldSpeed(float val)
+//{
+//	*worldSpeed = val;
+//}
+//
+//float Spaceship::getWorldSpeed()const
+//{
+//	return *worldSpeed;
+//}
+
+void Spaceship::dealDamage(float val)
 {
-	worldSpeed = speed;
+	StandardGameObject::dealDamage(val);
+
+	if (currShieldValue > 0.0f)
+	{
+		currShieldValue -= val;
+		if (currShieldValue < 0.0f)
+		{
+			currLifeValue += currShieldValue;
+			currShieldValue = 0.0f;
+		}
+	}
+	else if(currLifeValue > 0.0f) {
+		(*hitColor) = glm::vec3(1.0f, 0.42f, 0.2f);
+		currLifeValue -= val;
+		if (currLifeValue < 0.0f)
+			currLifeValue = 0.0f;
+	}
+
+	(*guiLifeStatusBarFrac) = currLifeValue / maxLifeValue;
+	(*guiShieldStatuBarFrac) = currShieldValue / maxShieldValue;
+
+	if (currLifeValue <= 0.0f)
+		*endGameFlag = true;
 }
 
-void Spaceship::setWorldSpeed(float val)
+void Spaceship::addScore(int val)
 {
-	*worldSpeed = val;
+	pointsScore += val;
+	(*guiPointsScore) = pointsScore;
 }
 
-float Spaceship::getWorldSpeed()const
+void Spaceship::restart()
 {
-	return *worldSpeed;
+	transform.setPosition(glm::vec3(0.0f));
+	transform.setRotation(glm::vec3(0.0f));
+	
+	currShieldValue = maxShieldValue;
+	currLifeValue = maxLifeValue;
+	pointsScore = 0;
+
+	*(guiShieldStatuBarFrac) = 1.0f;
+	*(guiLifeStatusBarFrac) = 1.0f;
+	*(guiPointsScore) = 0;
+
+	(*hitColor) = glm::vec3(0.4f, 0.4f, 1.0f);
+}
+
+std::shared_ptr<float> Spaceship::getShieldFracValuePtr()const
+{
+	return guiShieldStatuBarFrac;
+}
+
+std::shared_ptr<float> Spaceship::getLifeFracValuePtr()const
+{
+	return guiLifeStatusBarFrac;
+}
+
+std::shared_ptr<int> Spaceship::getPointsScorePtr()const
+{
+	return guiPointsScore;
+}
+
+int Spaceship::getPointsScore()const
+{
+	return pointsScore;
+}
+
+void Spaceship::registerEndGameFlag(std::shared_ptr<bool> flag)
+{
+	endGameFlag = flag;
 }

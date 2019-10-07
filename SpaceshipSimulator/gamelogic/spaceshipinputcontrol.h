@@ -17,6 +17,7 @@ public:
 private:
 	float speed;
 	float rotSpeed;
+	bool mouseInput;
 
 	GameEngine::CursorPos prevPos;
 

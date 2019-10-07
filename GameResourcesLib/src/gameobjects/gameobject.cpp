@@ -5,6 +5,7 @@ GameObject::GameObject()
 	, name("")
 	, parentTransform(1.0f)
 	, parent(nullptr)
+	, processPropertiesFlag(true)
 {}
 
 GameObject::GameObject(const std::string& name)
@@ -12,6 +13,7 @@ GameObject::GameObject(const std::string& name)
 	, name(name)
 	, parentTransform(1.0f)
 	, parent(nullptr)
+	, processPropertiesFlag(true)
 {}
 
 GameObject::~GameObject()
@@ -28,6 +30,11 @@ void GameObject::setActive(bool val)
 bool GameObject::isActive() const
 {
 	return active;
+}
+
+void GameObject::setPropertiesFlag(bool val)
+{
+	processPropertiesFlag = val;
 }
 
 void GameObject::setName(const std::string& name)
@@ -212,7 +219,9 @@ void GameObject::init()
 
 void GameObject::process()
 {
-	std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->process(); });
+	if(processPropertiesFlag)
+		std::for_each(properties.begin(), properties.end(), [](auto property) { property.second->process(); });
+
 	std::for_each(children.begin(), children.end(), [this](auto child) {
 		child.second->setParentTransform(this->parentTransform * this->getTransform().getTransformMat());
 		child.second->process(); 

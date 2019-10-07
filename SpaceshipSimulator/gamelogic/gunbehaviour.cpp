@@ -19,11 +19,13 @@ bool DelayControl::set(float fireRate)
 
 void GunShoot::init()
 {
-	fireRate = 5.0f;
-	maxMoveDist = 0.5f;
-	currMoveDist = 0.0f;
+	Spaceship& spaceship = static_cast<Spaceship&>(object.getParent());
+
+	fireRate = spaceship.getFireRate();
+	barrelMaxMoveDist = 0.5f;
+	barrelCurrMoveDist = 0.0f;
 	dir = stop;
-	barrelSpeed = (2.0f * maxMoveDist) / (1.0f / fireRate);
+	barrelSpeed = (2.0f * barrelMaxMoveDist) / (1.0f / fireRate);
 }
 
 void GunShoot::process()
@@ -58,7 +60,7 @@ void GunShoot::process()
 	}
 
 	glm::vec3 pos = object.getTransform().getPosition();
-	pos.y = -currMoveDist;
+	pos.y = -barrelCurrMoveDist;
 	object.getTransform().setPosition(pos);
 }
 
@@ -84,21 +86,21 @@ void GunShoot::shootAnimation()
 {
 	if (dir == backward)
 	{
-		currMoveDist += barrelSpeed * Time::deltaTime;
+		barrelCurrMoveDist += barrelSpeed * Time::deltaTime;
 
-		if (currMoveDist > maxMoveDist)
+		if (barrelCurrMoveDist > barrelMaxMoveDist)
 		{
-			currMoveDist = maxMoveDist;
+			barrelCurrMoveDist = barrelMaxMoveDist;
 			dir = forward;
 		}
 	}
 	else if (dir == forward)
 	{
-		currMoveDist -= barrelSpeed * Time::deltaTime;
+		barrelCurrMoveDist -= barrelSpeed * Time::deltaTime;
 
-		if (currMoveDist < 0.0f)
+		if (barrelCurrMoveDist < 0.0f)
 		{
-			currMoveDist = 0.0f;
+			barrelCurrMoveDist = 0.0f;
 			dir = stop;
 		}
 	}

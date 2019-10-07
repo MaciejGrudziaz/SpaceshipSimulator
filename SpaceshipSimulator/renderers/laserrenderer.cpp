@@ -1,13 +1,13 @@
-#include "beamsrenderer.h"
+#include "laserrenderer.h"
 
-BeamsRenderer::BeamsRenderer(std::vector<float>& buffer, int bufferSize)
+LaserRenderer::LaserRenderer(std::vector<float>& buffer, int bufferSize)
 	: buffer(buffer)
 	, currBufferSize(0)
 	, updateBufferFlag(false)
 	, maxBufferSize(200 * 6)
 {}
 
-void BeamsRenderer::init()
+void LaserRenderer::init()
 {
 	RenderObject::init();
 
@@ -15,7 +15,7 @@ void BeamsRenderer::init()
 	glBufferData(GL_ARRAY_BUFFER, maxBufferSize * sizeof(float), NULL, GL_STREAM_DRAW);
 }
 
-void BeamsRenderer::process()
+void LaserRenderer::process()
 {
 	static int test = 0;
 	++test;
@@ -43,7 +43,7 @@ void BeamsRenderer::process()
 	else errorCode.push(NO_SHADER_AVAILABLE);
 }
 
-void BeamsRenderer::updateBuffer()
+void LaserRenderer::updateBuffer()
 {
 	static int test = 0;
 	++test;
@@ -60,7 +60,7 @@ void BeamsRenderer::updateBuffer()
 	}
 }
 
-void BeamsRenderer::enableVertexAttribPointers()
+void LaserRenderer::enableVertexAttribPointers()
 {
 	for (ShaderAttrList::value_type shaderAttrEntry : shaderAttributes)
 	{
@@ -69,12 +69,12 @@ void BeamsRenderer::enableVertexAttribPointers()
 	}
 }
 
-void BeamsRenderer::setUpdateBufferFlag()
+void LaserRenderer::setUpdateBufferFlag()
 {
 	updateBufferFlag = true;
 }
 
-void BeamsRenderer::loadShaders()
+void LaserRenderer::loadShaders()
 {
 	RenderObject::loadShader(vertexShader, fragmentShader);
 }

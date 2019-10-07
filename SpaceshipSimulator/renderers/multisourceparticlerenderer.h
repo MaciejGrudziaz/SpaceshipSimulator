@@ -11,7 +11,7 @@ public:
 
 	void process()override;
 
-	void registerUniformsPointers(ParticleSystemDataPtr uniformData);
+	void registerMainUniformData(ParticleSystemDataPtr uniformData);
 	void registerParticleSystemData(ParticleSystemDataPtr particleSystem);
 
 private:
@@ -19,6 +19,8 @@ private:
 	std::list<ParticleSystemDataPtr> particleSystemsData;
 
 	void setUniformsData(ParticleSystemDataPtr particleSys);
+	void setAttribArraysDivisors();
+	void disableAttribArraysPointers();
 };
 
 typedef std::shared_ptr<MultiSourceParticleRenderer> MultiSourceParticleRendererPtr;

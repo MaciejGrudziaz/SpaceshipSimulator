@@ -2,10 +2,10 @@
 
 #include <GameRenderer/renderobject.h>
 
-class BeamsRenderer : public RenderObject
+class LaserRenderer : public RenderObject
 {
 public:
-	BeamsRenderer(std::vector<float>& buffer, int bufferSize = 600);
+	LaserRenderer(std::vector<float>& buffer, int bufferSize = 600);
 
 	void init()override;
 	void process()override;
@@ -27,4 +27,4 @@ private:
 	void enableVertexAttribPointers();
 };
 
-typedef std::shared_ptr<BeamsRenderer> BeamsRendererPtr;
+typedef std::shared_ptr<LaserRenderer> LaserRendererPtr;

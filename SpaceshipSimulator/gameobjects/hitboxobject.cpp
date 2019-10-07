@@ -334,3 +334,8 @@ float HitboxObject::getCollisionRadius()const
 {
 	return actualCollisionRadius;
 }
+
+glm::vec3 HitboxObject::getGlobalPosition()const
+{
+	return ((*modelTransform) * glm::vec4(transform.getPosition(),1.0f));
+}

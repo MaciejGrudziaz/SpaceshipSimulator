@@ -28,6 +28,8 @@ public:
 
 	float getCollisionRadius()const;
 
+	glm::vec3 getGlobalPosition()const;
+
 private:
 	HitboxRendererPtr renderer;
 	HitboxPtr hitbox;

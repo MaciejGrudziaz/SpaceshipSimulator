@@ -57,8 +57,12 @@ private:
 	float mainEngineThrust;
 	float spaceshipMass;
 	float maneuverEngineThrust;
+	float maneuverEngineForceVecArmLength;
+	bool advancedFlightModelFlag;
+
 	float currSpeed;
 	float currRotSpeed;
+	bool mainEngineLaunchedFlag;
 
 	bool areEqual(const glm::vec3& vec1, const glm::vec3& vec2, float eps = 0.0000001f);
 	void processMainEngine();

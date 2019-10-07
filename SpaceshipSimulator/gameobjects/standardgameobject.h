@@ -5,6 +5,7 @@
 #include <GameRenderer/texturerenderobject.h>
 #include "modelimportstruct.h"
 #include "hitboxobject.h"
+#include "../utilities/time.h"
 
 class StandardGameObject: public GameObject
 {
@@ -22,7 +23,11 @@ public:
 	virtual void process() override;
 	virtual void setActive(bool val) override;
 
-	virtual void dealDamage(float val)
+	virtual void restart()
+	{}
+
+	virtual void dealDamage(float val);
+	virtual void destroy()
 	{}
 
 	std::shared_ptr<RenderObject> getRenderer()const;
@@ -34,6 +39,9 @@ protected:
 	std::shared_ptr<RenderObject> renderer;
 	std::shared_ptr<Hitbox> mainHitbox;
 	std::shared_ptr<glm::mat4> modelTransform;
+	std::shared_ptr<glm::vec3> hitColor;
+	std::shared_ptr<float> currHitTime;
+	std::shared_ptr<float> maxHitTime;
 	bool textureAvailable;
 
 	std::stack<error> errorCode;
@@ -61,6 +69,7 @@ protected:
 	void checkTextureFile(const std::string& texFilename);
 
 	void copyModelUniform();
+	void copyHitColorUniforms();
 };
 
 typedef std::shared_ptr<StandardGameObject> StandardGameObjectPtr;

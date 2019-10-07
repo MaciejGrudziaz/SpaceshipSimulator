@@ -82,3 +82,237 @@ Sat Oct  5 23:56:19 2019
 0(30) : error C7011: implicit cast from "float" to "int"
 (0) : error C2003: incompatible options for link
 
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:08 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:08 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:08 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::SHADER::FRAGMENT::COMPILATION_FAILED
+Sun Oct  6 12:04:35 2019
+ | 0(11) : error C7565: assignment to varying 'particleColor'
+
+Sun Oct  6 12:04:35 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 12:04:35 2019
+ | Fragment info
+-------------
+0(11) : error C7565: assignment to varying 'particleColor'
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 21:51:40 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sun Oct  6 21:51:40 2019
+ | 0(25) : error C7563: assignment to uniform hitColor
+
+Sun Oct  6 21:51:40 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 21:51:40 2019
+ | Vertex info
+-----------
+0(25) : error C7563: assignment to uniform hitColor
+(0) : error C2003: incompatible options for link
+
+Sun Oct  6 21:51:40 2019
+ | ERROR::SHADER::VERTEX::COMPILATION_FAILED
+Sun Oct  6 21:51:40 2019
+ | 0(25) : error C7563: assignment to uniform hitColor
+
+Sun Oct  6 21:51:40 2019
+ | ERROR::PROGRAM::LINKING_FAILED
+Sun Oct  6 21:51:40 2019
+ | Vertex info
+-----------
+0(25) : error C7563: assignment to uniform hitColor
+(0) : error C2003: incompatible options for link
+

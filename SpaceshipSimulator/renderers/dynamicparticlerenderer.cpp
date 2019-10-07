@@ -1,5 +1,6 @@
 #include "dynamicparticlerenderer.h"
 
+#ifdef OLD_VERSION
 
 void DynamicParticleRenderer::process()
 {
@@ -41,3 +42,5 @@ void DynamicParticleRenderer::registerParticleRenderer(ParticleRendererPtr rende
 {
 	renderers.push_back(renderer);
 }
+
+#endif

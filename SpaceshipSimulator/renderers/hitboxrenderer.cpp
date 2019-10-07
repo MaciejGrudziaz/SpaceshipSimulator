@@ -8,8 +8,8 @@ HitboxRenderer::HitboxRenderer()
 void HitboxRenderer::deepCopy(const RenderObject& object)
 {
 	RenderObject::deepCopy(object);
-	this->indicesBuffer = static_cast<const HitboxRenderer*>(&object)->indicesBuffer;
-	this->indicesCount = static_cast<const HitboxRenderer*>(&object)->indicesCount;
+	this->indicesBuffer = static_cast<const HitboxRenderer&>(object).indicesBuffer;
+	this->indicesCount = static_cast<const HitboxRenderer&>(object).indicesCount;
 }
 
 void HitboxRenderer::init()

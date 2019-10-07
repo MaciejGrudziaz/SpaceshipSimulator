@@ -2,22 +2,25 @@
 
 AsteroidsManager::AsteroidsManager()
 	: renderer(std::make_shared<MultipleAsteroidsRenderer>())
-	//, particlesSystem(std::make_shared<MultiSourceParticleSystem>())
-{}
+	, showHitboxFlag(false)
+	, timeFromLastAsteroidSpawn(0.0f)
+{
+	//asteroidDefualtFrequencySpawn = 0.5f;
+	//asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
+	//timeFromLastAsteroidSpawn = 1.0f / asteroidFrequencySpawn;
+	//asteroidSpawnRateAcceleration = 0.1f;
+}
 
 void AsteroidsManager::create(int initialCount, CameraPtr camera, ConstMat4Ptr projectionPtr)
 {
 	this->camera = camera;
-	//this->particlesSystem->registerCamera(camera);
 	this->projectionPtr = projectionPtr;
 	createPatternAsteroid();
 	createPatternAsteroidHitbox();
-	createPatternAsteroidExplosionParticleSystem();
 
 	initializeParticlesSystem();
 	loadParticlesSystemRenderer();
 	initializeAsteroidsVector(initialCount);
-	//renderer->registerRenderer(particlesSystem->getRenderer());
 }
 
 void AsteroidsManager::createPatternAsteroid()
@@ -61,120 +64,41 @@ void AsteroidsManager::createPatternAsteroidHitbox()
 	asteroidHitboxPattern = asteroidHitbox;
 }
 
-void AsteroidsManager::createPatternAsteroidExplosionParticleSystem()
+void AsteroidsManager::initializeParticlesSystem()
 {
-	//asteroidsExplosionPattern = std::make_shared<ParticleSystem>();
-	//asteroidsExplosionPattern->setParticlesCount(4000);
-	//asteroidsExplosionPattern->setParticlesMaxSpeed(6.5f);
-	//asteroidsExplosionPattern->setParticlesMaxLifetime(1.0f);
-	//asteroidsExplosionPattern->setParticlesSize(0.5f);
-	//asteroidsExplosionPattern->setEvenSpread();
-	//asteroidsExplosionPattern->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(0.7f, 0.7f, 0.7f));
-	//asteroidsExplosionPattern->registerCamera(camera);
-	//asteroidsExplosionPattern->getTransform().setPosition(glm::vec3(0.0f));
-	//asteroidsExplosionPattern->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
+	initializeExplosionParticleSystem();
 
-	//ParticleSystemData data;
-	//data.particleTexture = "sprites/asteroid_particle.png";
-	//data.vertexShaderFilename = "shaders/particle.vert";
-	//data.fragmentShaderFilename = "shaders/particle.frag";
-
-	//ModelExternalUniforms uniforms;
-	//uniforms.view = camera->getViewPtr();
-	//uniforms.projection = projectionPtr;
-
-	//asteroidsExplosionPattern->load(data, uniforms);
-
-	//renderer->registerRenderer(asteroidsExplosionPattern->getRenderer());
-
-	//asteroidsExplosionPattern->setSingleSpread();
-	//asteroidsExplosionPattern->launch();
-
-	//asteroidsExplosionFragmentsPattern = std::make_shared<ParticleSystem>();
-	//asteroidsExplosionFragmentsPattern->setParticlesCount(2000);
-	//asteroidsExplosionFragmentsPattern->setParticlesMaxSpeed(5.0f);
-	//asteroidsExplosionFragmentsPattern->setParticlesMaxLifetime(3.0f);
-	//asteroidsExplosionFragmentsPattern->setParticlesSize(0.6f);
-	//asteroidsExplosionFragmentsPattern->setEvenSpread();
-	//asteroidsExplosionFragmentsPattern->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.7f, 0.7f, 0.7f));
-	//asteroidsExplosionFragmentsPattern->registerCamera(camera);
-	//asteroidsExplosionFragmentsPattern->getTransform().setPosition(glm::vec3(0.0f));
-	//asteroidsExplosionFragmentsPattern->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE);
-
-	//asteroidsExplosionFragmentsPattern->load(data, uniforms);
-
-	//renderer->registerRenderer(asteroidsExplosionFragmentsPattern->getRenderer());
-
-	//asteroidsExplosionFragmentsPattern->setSingleSpread();
-	//asteroidsExplosionFragmentsPattern->launch();
+	initializeExplosionFragmentsParticleSystem();
 }
 
-void AsteroidsManager::initializeAsteroidsVector(int initialCount)
+void AsteroidsManager::initializeExplosionParticleSystem()
 {
-	findLimitPosY();
-	findLimitPosX();
-
-	for (int i = 0; i < initialCount; ++i)
-	{
-		AsteroidPtr asteroid = std::make_shared<Asteroid>();
-		asteroid->deepCopy(*patternAsteroid);
-
-		HitboxObjectPtr hitbox = std::make_shared<HitboxObject>();
-		hitbox->deepCopy(*asteroidHitboxPattern);
-		hitbox->setName("hitbox_main");
-
-		asteroid->addChild(hitbox);
-
-		asteroid->registerWorldSpeed(worldSpeed);
-
-		initializeAsteroid(asteroid);
-		//asteroid->initParticleSystems();
-
-		asteroid->initParticleSystemsData(explosionParticles->getParticlesMaxLifetime(), explosionFragmentsParticles->getParticlesMaxLifetime());
-		explosionParticlesRenderer->registerParticleSystemData(asteroid->getExplosionParticleSystemData());
-		explosionFragmentsParticlesRenderer->registerParticleSystemData(asteroid->getExplosionFragmentsParticleSystemData());
-
-		renderer->registerRenderer(asteroid->getRenderer());
-		//renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
-		//renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
-		renderer->registerRenderer(hitbox->getRenderer());
-
-		asteroids.push_back(asteroid);
-	}
+	explosionParticles = std::make_shared<ParticleSystemV2>();
+	explosionParticles->setParticlesCount(particlesCountFactor * 40000);
+	explosionParticles->setParticlesMaxSpeed(4.0f);
+	explosionParticles->setParticlesMaxLifetime(explosionParticlesLifetime * 0.8f);
+	explosionParticles->setParticlesSize(0.15f);
+	explosionParticles->setEvenSpread();
+	explosionParticles->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(1.0f, 0.55f, 0.1f));
+	explosionParticles->registerCamera(camera);
+	explosionParticles->getTransform().setPosition(glm::vec3(0.0f));
+	explosionParticles->setBlendingFunctions(GL_ONE, GL_ONE);
+	explosionParticles->registerCamera(camera);
 }
 
-void AsteroidsManager::initializeAsteroid(AsteroidPtr asteroid)
+void AsteroidsManager::initializeExplosionFragmentsParticleSystem()
 {
-	std::uniform_real_distribution<> linearSpeedRandX(0.0f, 3.0f);
-	std::uniform_real_distribution<> linearSpeedRandY(-10.0f, -4.0f);
-	std::uniform_real_distribution<> rotSpeedRand(-5.0f, 5.0f);
-	std::uniform_real_distribution<> xPosRand(0.8f * arenaLimits.minX, 0.8f * arenaLimits.maxX);
-	std::uniform_real_distribution<> sizeRand(0.5f, 1.2f);
-
-	float spawnPosY = 1.2f * arenaLimits.maxY;
-	glm::vec3 spawnPos(0.0f, spawnPosY, 0.0f);
-	glm::vec3 spawnRotSpeed;
-	glm::vec3 spawnLinSpeed;
-	float spawnSize;
-
-	spawnPos.x = xPosRand(rng);
-
-	if (spawnPos.x < 0.0f) spawnLinSpeed.x = (spawnPos.x / arenaLimits.minX) * linearSpeedRandX(rng);
-	else spawnLinSpeed.x = -(spawnPos.x / arenaLimits.maxX) * linearSpeedRandX(rng);
-
-	spawnLinSpeed.y = linearSpeedRandY(rng);
-
-	spawnRotSpeed.x = rotSpeedRand(rng);
-	spawnRotSpeed.y = rotSpeedRand(rng);
-	spawnRotSpeed.z = rotSpeedRand(rng);
-
-	spawnSize = sizeRand(rng);
-
-	asteroid->getTransform().setPosition(spawnPos);
-	asteroid->getTransform().setScale(glm::vec3(spawnSize, spawnSize, spawnSize));
-	asteroid->setLinearSpeed(spawnLinSpeed);
-	asteroid->setRotSpeed(spawnRotSpeed);
-	asteroid->setHealth(100.0f * spawnSize);
+	explosionFragmentsParticles = std::make_shared<ParticleSystemV2>();
+	explosionFragmentsParticles->setParticlesCount(particlesCountFactor * 10000);
+	explosionFragmentsParticles->setParticlesMaxSpeed(4.5f);
+	explosionFragmentsParticles->setParticlesMaxLifetime(explosionParticlesLifetime);
+	explosionFragmentsParticles->setParticlesSize(3.0f);
+	explosionFragmentsParticles->setEvenSpread();
+	explosionFragmentsParticles->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	explosionFragmentsParticles->registerCamera(camera);
+	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
+	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	explosionFragmentsParticles->registerCamera(camera);
 }
 
 void AsteroidsManager::loadParticlesSystemRenderer()
@@ -184,22 +108,21 @@ void AsteroidsManager::loadParticlesSystemRenderer()
 	data.vertexShaderFilename = "shaders/particleV2.vert";
 	data.fragmentShaderFilename = "shaders/particle.frag";
 
-	explosionParticlesRenderer = std::make_shared<MultiSourceParticleRenderer>(explosionParticles->getParticlesBuffer(), 
+	explosionParticlesRenderer = std::make_shared<MultiSourceParticleRenderer>(explosionParticles->getParticlesBuffer(),
 		explosionParticles->getBlendFunctions());
 	explosionParticlesRenderer->setActive(false);
 	explosionParticlesRenderer->loadShader(data.vertexShaderFilename, data.fragmentShaderFilename);
 	explosionParticlesRenderer->loadTexture(data.particleTexture);
 	explosionParticlesRenderer->setActive(true);
-	explosionParticlesRenderer->registerUniformsPointers(explosionParticlesUniformData);
 	explosionParticlesRenderer->setParticlesCount(explosionParticles->getParticlesCount());
 
+	data.particleTexture = "sprites/smoke.png";
 	explosionFragmentsParticlesRenderer = std::make_shared<MultiSourceParticleRenderer>(explosionFragmentsParticles->getParticlesBuffer(),
 		explosionFragmentsParticles->getBlendFunctions());
 	explosionFragmentsParticlesRenderer->setActive(false);
 	explosionFragmentsParticlesRenderer->loadShader(data.vertexShaderFilename, data.fragmentShaderFilename);
 	explosionFragmentsParticlesRenderer->loadTexture(data.particleTexture);
 	explosionFragmentsParticlesRenderer->setActive(true);
-	explosionFragmentsParticlesRenderer->registerUniformsPointers(explosionFragmentsParticlesUniformData);
 	explosionFragmentsParticlesRenderer->setParticlesCount(explosionFragmentsParticles->getParticlesCount());
 
 	initUniforms();
@@ -215,7 +138,7 @@ void AsteroidsManager::initExplosionParticlesUniform()
 {
 	explosionParticlesUniformData = std::make_shared<ParticleSystemData>();
 	explosionParticlesUniformData->init();
-	explosionParticlesRenderer->registerUniformsPointers(explosionParticlesUniformData);
+	explosionParticlesRenderer->registerMainUniformData(explosionParticlesUniformData);
 
 	UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
 	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
@@ -255,7 +178,7 @@ void AsteroidsManager::initExplosionFragmentParticlesUniform()
 {
 	explosionFragmentsParticlesUniformData = std::make_shared<ParticleSystemData>();
 	explosionFragmentsParticlesUniformData->init();
-	explosionFragmentsParticlesRenderer->registerUniformsPointers(explosionFragmentsParticlesUniformData);
+	explosionFragmentsParticlesRenderer->registerMainUniformData(explosionFragmentsParticlesUniformData);
 
 	UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
 	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
@@ -291,6 +214,242 @@ void AsteroidsManager::initExplosionFragmentParticlesUniform()
 	explosionFragmentsParticlesRenderer->addUniform(destColorUniform);
 }
 
+void AsteroidsManager::initializeAsteroidsVector(int initialCount)
+{
+	findLimitPosY();
+	findLimitPosX();
+
+	for (int i = 0; i < initialCount; ++i)
+		createAsteroid();
+}
+
+void AsteroidsManager::findLimitPosX()
+{
+	arenaLimits.minX = findLimitPosXMinVal();
+	arenaLimits.maxX = findLimitPosXMaxVal();
+}
+
+float AsteroidsManager::findLimitPosXMinVal(float eps)
+{
+	glm::vec4 pos(-1.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 clipPos(0.0f);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	glm::vec4 prevPos(0.0f, 0.0f, 0.0f, 1.0f);
+	clipPos = VP * prevPos;
+	clipPos /= clipPos.w;
+	bool initClipPosLowerThanValue = (clipPos.x < -1.0f) ? true : false;
+
+	float signAdjustVar = 1.0f;
+	if (initClipPosLowerThanValue) signAdjustVar = -1.0f;
+
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	float newPos = 0.0f;
+	while (std::abs(clipPos.x + 1.0f) > eps) {
+		if ((clipPos.x < -1.0f && !initClipPosLowerThanValue) || (clipPos.x > -1.0f && initClipPosLowerThanValue))
+		{
+			newPos = pos.x + ((std::abs(pos.x - prevPos.x)) / 2.0f) * signAdjustVar;
+			pos.x = newPos;
+		}
+		else {
+			newPos = pos.x - 2 * (std::abs(pos.x - prevPos.x)) * signAdjustVar;
+			prevPos = pos;
+			pos.x = newPos;
+		}
+
+		clipPos = VP * pos;
+		clipPos /= clipPos.w;
+	}
+
+	return pos.x;
+}
+
+float AsteroidsManager::findLimitPosXMaxVal(float eps)
+{
+	glm::vec4 pos = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 clipPos(0.0f);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	glm::vec4 prevPos(0.0f, 0.0f, 0.0f, 1.0f);
+	clipPos = VP * prevPos;
+	clipPos /= clipPos.w;
+	bool initClipPosHigherThanValue = (clipPos.x > 1.0f) ? true : false;
+	float signAdjustVar = 1.0f;
+	if (initClipPosHigherThanValue) signAdjustVar = -1.0f;
+
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	float newPos = 0.0f;
+	while (std::abs(clipPos.x - 1.0f) > eps)
+	{
+		if ((clipPos.x > 1.0f && !initClipPosHigherThanValue) || (clipPos.x < 1.0f && initClipPosHigherThanValue))
+		{
+			newPos = pos.x - ((std::abs(pos.x - prevPos.x)) / 2.0f) * signAdjustVar;
+			pos.x = newPos;
+		}
+		else {
+			newPos = pos.x + (2 * (std::abs(pos.x - prevPos.x))) * signAdjustVar;
+			prevPos = pos;
+			pos.x = newPos;
+		}
+
+		clipPos = VP * pos;
+		clipPos /= clipPos.w;
+	}
+
+	return pos.x;
+}
+
+void AsteroidsManager::findLimitPosY()
+{
+	arenaLimits.minY = findLimitPosYMinVal();
+	arenaLimits.maxY = findLimitPosYMaxVal();
+}
+
+float AsteroidsManager::findLimitPosYMinVal(float eps)
+{
+	glm::vec4 pos(0.0f, -1.0f, 0.0f, 1.0f);
+	glm::vec4 clipPos(0.0f);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
+
+	glm::vec4 prevPos(0.0f, 0.0f, 0.0f, 1.0f);
+	clipPos = VP * prevPos;
+	clipPos /= clipPos.w;
+	bool initClipPosLowerThanValue = ( clipPos.y < -1.0f) ? true : false;
+	float signAdjustVar = 1.0f;
+	if (initClipPosLowerThanValue) signAdjustVar = -1.0f;
+
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	float newPos = 0.0f;
+	while (std::abs(clipPos.y + 1.0f) > eps) {
+		if ((clipPos.y < -1.0f && !initClipPosLowerThanValue) || (clipPos.y > -1.0f && initClipPosLowerThanValue))
+		{
+			newPos = pos.y + ((std::abs(pos.y - prevPos.y)) / 2.0f) * signAdjustVar;
+			pos.y = newPos;
+		}
+		else {
+			newPos = pos.y - (2 * (std::abs(pos.y - prevPos.y))) * signAdjustVar;
+			prevPos = pos;
+			pos.y = newPos;
+		}
+
+		clipPos = VP * pos;
+		clipPos /= clipPos.w;
+	}
+
+	return pos.y;
+}
+
+float AsteroidsManager::findLimitPosYMaxVal(float eps)
+{
+	glm::vec4 pos = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	glm::vec4 clipPos(0.0f);
+	glm::mat4 VP = (*projectionPtr) * camera->getView();
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	glm::vec4 prevPos(0.0f, 0.0f, 0.0f, 1.0f);
+	clipPos = VP * prevPos;
+	clipPos /= clipPos.w;
+	bool initClipPosHigherThanValue = (clipPos.y > 1.0f) ? true : false;
+
+	float signAdjustVar = 1.0f;
+	if (initClipPosHigherThanValue) signAdjustVar = -1.0f;
+
+	clipPos = VP * pos;
+	clipPos /= clipPos.w;
+
+	float newPos = 0.0f;
+	while (std::abs(clipPos.y - 1.0f) > eps)
+	{
+		if ((clipPos.y > 1.0f && !initClipPosHigherThanValue) || (clipPos.y < 1.0f && initClipPosHigherThanValue))
+		{
+			newPos = pos.y - (((std::abs(pos.y - prevPos.y)) / 2.0f)) * signAdjustVar;
+			pos.y = newPos;
+		}
+		else {
+			newPos = pos.y + 2 * (std::abs(pos.y - prevPos.y)) * signAdjustVar;
+			prevPos = pos;
+			pos.y = newPos;
+		}
+
+		clipPos = VP * pos;
+		clipPos /= clipPos.w;
+	}
+
+	return pos.y;
+}
+
+void AsteroidsManager::createAsteroid()
+{
+	AsteroidPtr asteroid = std::make_shared<Asteroid>();
+	asteroid->deepCopy(*patternAsteroid);
+	asteroid->setActive(false);
+
+	HitboxObjectPtr hitbox = std::make_shared<HitboxObject>();
+	hitbox->deepCopy(*asteroidHitboxPattern);
+	hitbox->setName("hitbox_main");
+
+	asteroid->addChild(hitbox);
+	asteroid->registerWorldSpeed(worldSpeed);
+
+	asteroid->initParticleSystemsData(explosionParticles->getParticlesMaxLifetime(), explosionFragmentsParticles->getParticlesMaxLifetime());
+	explosionParticlesRenderer->registerParticleSystemData(asteroid->getExplosionParticleSystemData());
+	explosionFragmentsParticlesRenderer->registerParticleSystemData(asteroid->getExplosionFragmentsParticleSystemData());
+
+	renderer->registerRenderer(asteroid->getRenderer());
+
+	if(showHitboxFlag)
+		renderer->registerRenderer(hitbox->getRenderer());
+
+	collisionsManager->registerCollisionObject(asteroid);
+
+	asteroids.push_back(asteroid);
+}
+
+void AsteroidsManager::initializeAsteroid(AsteroidPtr asteroid)
+{
+	std::uniform_real_distribution<> linearSpeedRandX(0.0f, 3.0f);
+	std::uniform_real_distribution<> linearSpeedRandY(-15.0f, -5.0f);
+	std::uniform_real_distribution<> rotSpeedRand(glm::degrees(asteroidMinAngularRot), glm::degrees(asteroidMaxAngularRot));
+	std::uniform_real_distribution<> xPosRand(0.8f * arenaLimits.minX, 0.8f * arenaLimits.maxX);
+	std::uniform_real_distribution<> sizeRand(0.5f, 1.2f);
+
+	float spawnPosY = 1.2f * arenaLimits.maxY;
+	glm::vec3 spawnPos(0.0f, spawnPosY, 0.0f);
+	glm::vec3 spawnRotSpeed;
+	glm::vec3 spawnLinSpeed;
+	float spawnSize;
+
+	spawnPos.x = xPosRand(rng);
+
+	if (spawnPos.x < 0.0f) spawnLinSpeed.x = (spawnPos.x / arenaLimits.minX) * linearSpeedRandX(rng);
+	else spawnLinSpeed.x = -(spawnPos.x / arenaLimits.maxX) * linearSpeedRandX(rng);
+
+	spawnLinSpeed.y = linearSpeedRandY(rng);
+
+	spawnRotSpeed.x = rotSpeedRand(rng);
+	spawnRotSpeed.y = rotSpeedRand(rng);
+	spawnRotSpeed.z = rotSpeedRand(rng);
+
+	spawnSize = sizeRand(rng);
+
+	asteroid->getTransform().setPosition(spawnPos);
+	asteroid->getTransform().setScale(glm::vec3(spawnSize, spawnSize, spawnSize));
+	asteroid->setLinearSpeed(spawnLinSpeed);
+	asteroid->setRotSpeed(spawnRotSpeed);
+	asteroid->setHealth(asteroidStandardHealth * spawnSize);
+}
+
 void AsteroidsManager::init()
 {
 	GameObject::init();
@@ -298,10 +457,6 @@ void AsteroidsManager::init()
 	for (auto asteroid : asteroids)
 	{
 		asteroid->init();
-		//renderer->registerRenderer(asteroid->getExplosionParticlesRenderer());
-		//renderer->registerRenderer(asteroid->getExplosionFragmentsParticlesRenderer());
-		//particlesSystem->registerParticleSystem(asteroid->getExplosionParticlesSystem());
-		//particlesSystem->registerParticleSystem(asteroid->getExplosionFragmentsParticlesSystem());
 	}
 	explosionParticles->init();
 	explosionFragmentsParticles->init();
@@ -311,54 +466,6 @@ void AsteroidsManager::init()
 
 	explosionFragmentsParticlesRenderer->init();
 	explosionFragmentsParticlesRenderer->updateBuffer();
-	//initializeParticlesSystem();
-	//loadParticlesSystemRenderer();
-
-	//particlesSystem->init();
-
-	//asteroidsExplosionPattern->init();
-	//asteroids	ExplosionFragmentsPattern->init();
-}
-
-void AsteroidsManager::initializeParticlesSystem()
-{
-	explosionParticles = std::make_shared<ParticleSystemV2>();
-	explosionParticles->setParticlesCount(100000);
-	explosionParticles->setParticlesMaxSpeed(4.0f);
-	explosionParticles->setParticlesMaxLifetime(1.7f);
-	explosionParticles->setParticlesSize(0.15f);
-	explosionParticles->setEvenSpread();
-	explosionParticles->setColors(glm::vec3(1.0f, 0.55f, 0.1f), glm::vec3(1.0f, 0.55f, 0.1f));
-	explosionParticles->registerCamera(camera);
-	explosionParticles->getTransform().setPosition(glm::vec3(0.0f));
-	explosionParticles->setBlendingFunctions(GL_ONE, GL_ONE);
-	explosionParticles->registerCamera(camera);
-
-	//ParticleSystemFiles data;
-	//data.particleTexture = "sprites/asteroid_particle.png";
-	//data.vertexShaderFilename = "shaders/particleV2.vert";
-	//data.fragmentShaderFilename = "shaders/particle.frag";
-
-	//ModelExternalUniforms uniforms;
-	//uniforms.view = camera->getViewPtr();
-	//uniforms.projection = projectionPtr;
-
-	//explosionParticles->loadRenderer(data, uniforms);
-
-	explosionFragmentsParticles = std::make_shared<ParticleSystemV2>();
-	explosionFragmentsParticles->setParticlesCount(100000);
-	explosionFragmentsParticles->setParticlesMaxSpeed(4.5f);
-	explosionFragmentsParticles->setParticlesMaxLifetime(2.2f);
-	explosionFragmentsParticles->setParticlesSize(0.6f);
-	explosionFragmentsParticles->setEvenSpread();
-	explosionFragmentsParticles->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
-	explosionFragmentsParticles->registerCamera(camera);
-	explosionFragmentsParticles->getTransform().setPosition(glm::vec3(0.0f));
-	explosionFragmentsParticles->setBlendingFunctions(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	explosionFragmentsParticles->registerCamera(camera);
-
-	//explosionFragmentsParticles->loadRenderer(data, uniforms);
-
 }
 
 void AsteroidsManager::process()
@@ -369,21 +476,56 @@ void AsteroidsManager::process()
 	{
 		asteroid->process();
 
-		if (asteroid->getTransform().getPosition().y < 1.1 * arenaLimits.minY)
-			initializeAsteroid(asteroid);
+		if (asteroid->getTransform().getPosition().y < 1.7f * arenaLimits.minY)
+		{
+			asteroid->setActive(false);
+		}
 
-		//if (!asteroid->isActive() && !asteroid->isParticleSystemRunning())
-		if(!asteroid->isActive())
+		if (asteroid->getTransform().getPosition().x < 1.1f * arenaLimits.minX ||
+			asteroid->getTransform().getPosition().x > 1.1f * arenaLimits.maxX)
 		{
 			initializeAsteroid(asteroid);
-			asteroid->setActive(true);
+			asteroid->setActive(false);
 		}
 	}
 
-	//particlesSystem->process();
+	spawnAsteroids();
+}
 
-	//asteroidsExplosionPattern->process();
-	//asteroidsExplosionFragmentsPattern->process();
+void AsteroidsManager::spawnAsteroids()
+{
+	asteroidFrequencySpawn += asteroidSpawnRateAcceleration * Time::deltaTime;
+	timeFromLastAsteroidSpawn += Time::deltaTime;
+
+	if (timeFromLastAsteroidSpawn >= 1.0f / asteroidFrequencySpawn)
+	{
+		bool asteroidActivated = activateAsteroid();
+		if (!asteroidActivated)
+		{
+			createAsteroid();
+			activateAsteroid();
+		}
+
+		timeFromLastAsteroidSpawn = 0.0f;
+	}
+}
+
+bool AsteroidsManager::activateAsteroid()
+{
+	bool activated = false;
+	for (auto asteroid : asteroids)
+	{
+		if (!asteroid->isActive())
+		{
+			initializeAsteroid(asteroid);
+			asteroid->process();
+			asteroid->setActive(true);
+			activated = true;
+			break;
+		}
+	}
+
+	return activated;
 }
 
 void AsteroidsManager::invalidate()
@@ -395,15 +537,26 @@ void AsteroidsManager::invalidate()
 		asteroid->invalidate();
 	}
 
-	//particlesSystem->invalidate();
+	explosionParticles->invalidate();
+	explosionParticlesRenderer->invalidate();
 
-	//asteroidsExplosionPattern->invalidate();
-	//asteroidsExplosionFragmentsPattern->invalidate();
+	explosionFragmentsParticles->invalidate();
+	explosionFragmentsParticlesRenderer->invalidate();
+
+	patternAsteroid->invalidate();
+	asteroidHitboxPattern->invalidate();
+
+	renderer->invalidate();
 }
 
 void AsteroidsManager::registerWorldSpeed(std::shared_ptr<float> speed)
 {
 	worldSpeed = speed;
+}
+
+void AsteroidsManager::registerCollisionsManager(CollisionsManagerPtr collisionsManager)
+{
+	this->collisionsManager = collisionsManager;
 }
 
 std::vector<AsteroidPtr>& AsteroidsManager::getAsteroids()
@@ -426,116 +579,11 @@ MultiSourceParticleRendererPtr AsteroidsManager::getExplosionFragmentsParticlesR
 	return explosionFragmentsParticlesRenderer;
 }
 
-//MultiSourceParticleRendererPtr AsteroidsManager::getParticlesRenderer()const
-//{
-//	return particlesSystem->getRenderer();
-//}
-
-void AsteroidsManager::findLimitPosY()
+void AsteroidsManager::restart()
 {
-	glm::vec4 pos(0.0f, -1.0f, 0.0f, 1.0f);
-	glm::vec4 clipPos;
-	glm::mat4 VP = (*projectionPtr) * camera->getView();
-	clipPos = VP * pos;
-	clipPos /= clipPos.w;
+	for (auto asteroid : asteroids)
+		asteroid->restart();
 
-	float eps = 0.05f;
-
-	float prevPos = 0.0f;
-	float newPos;
-	while (std::abs(clipPos.y + 1.0f) > eps) {
-		if (clipPos.y < -1.0f)
-		{
-			newPos = pos.y - (pos.y - prevPos) / 2.0f;
-			pos.y = newPos;
-		}
-		else {
-			newPos = pos.y + 2 * (pos.y - prevPos);
-			prevPos = pos.y;
-			pos.y = newPos;
-		}
-
-		clipPos = VP * pos;
-		clipPos /= clipPos.w;
-	}
-
-	arenaLimits.minY = pos.y;
-
-	pos = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-	clipPos = glm::vec4(0.0f);
-
-	prevPos = 0.0f;
-	while (std::abs(clipPos.y - 1.0f) > eps)
-	{
-		if (clipPos.y > 1.0f)
-		{
-			newPos = pos.y - (pos.y - prevPos) / 2.0f;
-			pos.y = newPos;
-		}
-		else {
-			newPos = pos.y + 2 * (pos.y - prevPos);
-			prevPos = pos.y;
-			pos.y = newPos;
-		}
-
-		clipPos = VP * pos;
-		clipPos /= clipPos.w;
-	}
-
-	arenaLimits.maxY = pos.y;
-}
-
-void AsteroidsManager::findLimitPosX()
-{
-	std::pair<float, float> limits;
-	glm::vec4 pos(-1.0f, 0.0f, 0.0f, 1.0f);
-	glm::vec4 clipPos;
-	glm::mat4 VP = (*projectionPtr) * camera->getView();
-	clipPos = VP * pos;
-	clipPos /= clipPos.w;
-
-	float eps = 0.05f;
-
-	float prevPos = 0.0f;
-	float newPos;
-	while (std::abs(clipPos.x + 1.0f) > eps) {
-		if (clipPos.x < -1.0f)
-		{
-			newPos = pos.x - (pos.x - prevPos) / 2.0f;
-			pos.x = newPos;
-		}
-		else {
-			newPos = pos.x + 2 * (pos.x - prevPos);
-			prevPos = pos.x;
-			pos.x = newPos;
-		}
-
-		clipPos = VP * pos;
-		clipPos /= clipPos.w;
-	}
-
-	arenaLimits.minX = pos.x;
-
-	pos = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	clipPos = glm::vec4(0.0f);
-
-	prevPos = 0.0f;
-	while (std::abs(clipPos.x - 1.0f) > eps)
-	{
-		if (clipPos.x > 1.0f)
-		{
-			newPos = pos.x - (pos.x - prevPos) / 2.0f;
-			pos.x = newPos;
-		}
-		else {
-			newPos = pos.x + 2 * (pos.x - prevPos);
-			prevPos = pos.x;
-			pos.x = newPos;
-		}
-
-		clipPos = VP * pos;
-		clipPos /= clipPos.w;
-	}
-
-	arenaLimits.maxX = pos.x;
+	asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
+	timeFromLastAsteroidSpawn = 1.0f / asteroidFrequencySpawn;
 }

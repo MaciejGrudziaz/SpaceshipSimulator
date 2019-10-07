@@ -18,13 +18,15 @@
 #include "../dev/rotation.h"
 
 void setCamera(GameEngine& engine);
+void loadWorldSpeed(GameEngine& engine);
 
 void initializeGame(GameEngine& engine);
 void processGame(GameEngine& engine);
+void restartGame(GameEngine& engine);
 void invalidateGame(GameEngine& engine);
 
-void loadObjectsCollisionProperty(GameEngine& engine);
-
-void initializeParticlesTest(GameEngine& engine);
-void processParticlesTest(GameEngine& engine);
-void invalidateParticles(GameEngine& engine);
+//void loadObjectsCollisionProperty(GameEngine& engine);
+//
+//void initializeParticlesTest(GameEngine& engine);
+//void processParticlesTest(GameEngine& engine);
+//void invalidateParticles(GameEngine& engine);

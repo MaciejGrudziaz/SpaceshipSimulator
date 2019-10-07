@@ -17,26 +17,26 @@ public:
 
 	void deepCopy(const Asteroid& asteroid);
 
-	virtual void setActive(bool val)override;
+	void setActive(bool val)override;
+	void restart()override;
 
 	void registerWorldSpeed(std::shared_ptr<float> speed);
 	void registerCamera(CameraPtr camera);
 	void registerProjectionMatrixPtr(ConstMat4Ptr projection);
 	
 	void setRotSpeed(glm::vec3 rotSpeed);
+
+	glm::vec3 getLinearSpeed()const;
 	void setLinearSpeed(glm::vec3 linSpeed);
 
 	void dealDamage(float val)override;
+	void destroy()override;
 
 	void setHealth(float val);
 	float getHealth()const;
 
 	ParticleSystemDataPtr getExplosionParticleSystemData()const;
 	ParticleSystemDataPtr getExplosionFragmentsParticleSystemData()const;
-	//RenderObjectPtr getExplosionParticlesRenderer()const;
-	//RenderObjectPtr getExplosionFragmentsParticlesRenderer()const;
-	//ParticleSystemPtr getExplosionParticlesSystem()const;
-	//ParticleSystemPtr getExplosionFragmentsParticlesSystem()const;
 
 	bool isParticleSystemRunning()const;
 	bool isDestroyed()const;
@@ -52,11 +52,13 @@ private:
 	CameraPtr camera;
 	float health;
 
-	//ParticleSystemV2Ptr explosionParticles;
-	//ParticleSystemV2Ptr explosionFragmentsParticles;
+	bool asteroidCollisionAttachFlag;
+	std::shared_ptr<glm::vec3> asteroidCollisionSharedSpeed;
 
 	ParticleSystemDataPtr explosionParticleSystemData;
 	ParticleSystemDataPtr explosionFragmentsParticleSystemData;
+
+	void setHitboxActive(bool val);
 };
 
 typedef std::shared_ptr<Asteroid> AsteroidPtr;

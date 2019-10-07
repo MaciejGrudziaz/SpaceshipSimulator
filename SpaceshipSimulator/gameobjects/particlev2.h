@@ -16,15 +16,6 @@ struct ParticleV2
 		, lifeTime(0.0f)
 		, size(0.0f)
 	{}
-
-	//void update(float dt, const glm::vec3& baseColor, const glm::vec3& destColor);
-
-	//bool operator<(const Particle& particle)
-	//{
-	//	if (this->distanceFromCamera > particle.distanceFromCamera)
-	//		return true;
-	//	else return false;
-	//}
 };
 
 typedef std::shared_ptr<ParticleV2> ParticleV2Ptr;

@@ -41,7 +41,6 @@ void main(void)
 	vec4 translate = model * vec4(0.0, 0.0, 0.0, 1.0);
 	vec4 rotSpeed = model * vec4(speed, 0.0);
 	vec3 vertexPos = centerPos + (vec3(rotSpeed.xyz) * particleCurrLifeTime) + vec3(translate.xyz);
-	//vertexPos = (model * vec4(vertexPos,1.0)).xyz;
 
 	vertexPos = vertexPos
 				+ cameraRight * vertex.x * size
@@ -56,17 +55,6 @@ void main(void)
 		if(lifeTimeFrac > 1.0f)
 			lifeTimeFrac = 1.0;
 	}
-
-//	if(continuous == 1)
-//	{
-//		lifeTimeFrac = particleCurrLifeTime / lifeTime;
-//	}
-//	else
-//	{
-//		lifeTimeFrac = (runTime - shutDownTime) / lifeTime;
-//		if(lifeTimeFrac > 1.0)
-//			lifeTimeFrac = 1.0f;
-//	}
 
 	particleColor = vec4(baseColor + (1.0 - lifeTimeFrac) * (destColor - baseColor), 1.0 - lifeTimeFrac);
 

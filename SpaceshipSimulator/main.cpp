@@ -2,10 +2,9 @@
 #include "mainwindow/mainwindow.h"
 #include "gameobjects/spaceship.h"
 #include "gameengine.h"
+#include <Windows.h>
 
-#include <conio.h>
-
-#define DEBUG
+#define RELEASE
 
 #ifdef DEBUG
 int main(void)
@@ -24,6 +23,5 @@ int WinMain(
 	engine.process();
 	engine.end();
 
-	_getch();
 	return 0;
 }

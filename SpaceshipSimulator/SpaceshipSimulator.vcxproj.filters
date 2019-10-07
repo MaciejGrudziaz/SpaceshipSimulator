@@ -52,6 +52,12 @@
     <Filter Include="Source Files\dev">
       <UniqueIdentifier>{6ef4c3c7-2d49-4755-8d4d-2293067fef03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gui">
+      <UniqueIdentifier>{ad57df7b-184e-4866-8652-20ac66659486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui">
+      <UniqueIdentifier>{f57d1b56-26ea-42e4-8cf2-3ddc1ddc9719}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -135,9 +141,6 @@
     <ClCompile Include="renderers\dynamicparticlerenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\beamsrenderer.cpp">
-      <Filter>Source Files\renderers</Filter>
-    </ClCompile>
     <ClCompile Include="renderers\texturebeamsrenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
@@ -153,20 +156,26 @@
     <ClCompile Include="renderers\multisourceparticlerenderer.cpp">
       <Filter>Source Files\renderers</Filter>
     </ClCompile>
-    <ClCompile Include="gameobjects\multisourceparticlesystem.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="gameobjects\particlesystemmanager.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="gameobjects\particlev2.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
     <ClCompile Include="gameobjects\particlesystemv2.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
     <ClCompile Include="renderers\particlerendererv2.cpp">
       <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\laserrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="gamelogic\laserbeamhitdetection.cpp">
+      <Filter>Source Files\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\gui.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\statusbarrenderer.cpp">
+      <Filter>Source Files\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="gamemanager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +269,6 @@
     <ClInclude Include="renderers\dynamicparticlerenderer.h">
       <Filter>Header Files\renderers</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\beamsrenderer.h">
-      <Filter>Header Files\renderers</Filter>
-    </ClInclude>
     <ClInclude Include="renderers\texturebeamsrenderer.h">
       <Filter>Header Files\renderers</Filter>
     </ClInclude>
@@ -281,12 +287,6 @@
     <ClInclude Include="renderers\rendererstruct.h">
       <Filter>Header Files\renderers</Filter>
     </ClInclude>
-    <ClInclude Include="gameobjects\multisourceparticlesystem.h">
-      <Filter>Header Files\gameobjects</Filter>
-    </ClInclude>
-    <ClInclude Include="gameobjects\particlesystemmanager.h">
-      <Filter>Header Files\gameobjects</Filter>
-    </ClInclude>
     <ClInclude Include="gameobjects\particlev2.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
@@ -298,6 +298,27 @@
     </ClInclude>
     <ClInclude Include="gameobjects\particlestruct.h">
       <Filter>Header Files\gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\laserrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\laserbeamhitdetection.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelogic\collisiondata.h">
+      <Filter>Header Files\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>Header Files\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\statusbarrenderer.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\gltext.h">
+      <Filter>Header Files\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="gamemanager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,6 +359,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\particleV2.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\statusBar.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\statusBar.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -1,5 +1,7 @@
 #include "particle.h"
 
+#ifdef OLD_VERSION
+
 Particle::Particle()
 //: pos(0.0f)
 	: speed(0.0f)
@@ -59,3 +61,5 @@ void Particle::update(float dt, const glm::vec3& baseColor, const glm::vec3& des
 	*color[2] = baseColor.z + (destColor.z - baseColor.z) * (1.0f - lifeTimeFrac);
 	*color[3] = lifeTimeFrac;
 }
+
+#endif

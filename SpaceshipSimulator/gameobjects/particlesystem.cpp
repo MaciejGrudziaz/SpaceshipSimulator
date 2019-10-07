@@ -1,5 +1,7 @@
 #include "particlesystem.h"
 
+#ifdef OLD_VERSION
+
 ParticleSystem::ParticleSystem()
 	: modelTransform(1.0f)
 	, particlesCount(0)
@@ -481,3 +483,5 @@ std::vector<float>& ParticleSystem::getParticlesColorBuffer()
 {
 	return particlesColorBuffer;
 }
+
+#endif

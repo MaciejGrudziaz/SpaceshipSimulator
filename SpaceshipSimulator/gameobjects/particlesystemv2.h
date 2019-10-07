@@ -28,13 +28,13 @@ public:
 	virtual void invalidate()override;
 	virtual void setActive(bool val)override;
 
-	//void pause();
-	//void run();
 	void launch();
-
-	ParticleRendererV2Ptr getRenderer()const;
+	float shutDown();
 
 	void registerCamera(CameraPtr camera);
+	ParticleRendererV2Ptr getRenderer()const;
+	std::vector<float>& getParticlesBuffer();
+	bool isRunning()const;
 
 	void setParticlesCount(int count);
 	void setParticlesMaxSpeed(float val);
@@ -43,9 +43,9 @@ public:
 	void setParticlesSpreadCone(float minAngle, float maxAngle);
 	void setColors(const glm::vec3& base, const glm::vec3& dest);
 	void setBlendingFunctions(GLenum sfactor, GLenum dfactor);
+
 	void setEvenSpread();
 	void setSingleSpread();
-	float shutDown();
 	void setContinuousSpred();
 
 	int getParticlesCount()const;
@@ -57,10 +57,6 @@ public:
 	glm::vec3 getDestColor()const;
 	BlendFunctions getBlendFunctions()const;
 
-	bool isRunning()const;
-
-	std::vector<float>& getParticlesBuffer();
-
 private:
 	std::mt19937 rng;			//RNG seed
 	bool evenSpred;				//flag for spherical spread
@@ -69,42 +65,30 @@ private:
 	int particlesCount;
 	float maxLifetime;
 	float particleSize;
-	//glm::vec3 baseColor;
-	//glm::vec3 destColor;
 	BlendFunctions blendFunc;	//OpenGL blend functions
-	//bool continuous;			//flag for continuous creation of particles
 	bool launchFlag;
 	bool shutingDownFlag;
 
 	std::shared_ptr<glm::mat4> modelTransform;
-	std::shared_ptr<int> continuous;
-	std::shared_ptr<float> runTime;
-	std::shared_ptr<glm::vec3> baseColor;
+	std::shared_ptr<int> continuous;			//flag for continuous mode [1 - continusous spread, 0 - single spread]
+	std::shared_ptr<float> runTime;				//current runtime of particle system
+	std::shared_ptr<glm::vec3> baseColor;		
 	std::shared_ptr<glm::vec3> destColor;
-	std::shared_ptr<float> shutDownTime;
-	//std::shared_ptr<glm::vec3> translate;
+	std::shared_ptr<float> shutDownTime;		//time point when the shutdown comman dwas issued to system
 
 	std::list<ParticleV2Ptr> particles;
-	std::vector<float> particlesBuffer;		//buffer for renderer
-	const int bufferVertexAttribSize = 8;	//shader attribute size for both above buffers
+	std::vector<float> particlesBuffer;			//buffer for renderer
+	const int bufferVertexAttribSize = 8;		//shader attribute size for both above buffers
 
 	CameraPtr camera;
 	ParticleRendererV2Ptr renderer;
-	//void pause();
-	//void run();
 
-	//void processParticles();
-
-	//void startThread();
 	void createParticles();
 	void recreateParticles();
 	void initUniforms(const ModelExternalUniforms& uniforms);
 	void setParticleRandomData(ParticleV2& particle);
 	glm::vec3 getNormalVec(const glm::vec3& vec);
-	void updateRendererBuffers();
 	void createRendererBuffers();
-
-	friend class ParticleSystemManager;
 };
 
 typedef std::shared_ptr<ParticleSystemV2> ParticleSystemV2Ptr;

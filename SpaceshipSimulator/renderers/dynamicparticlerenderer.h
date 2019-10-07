@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef OLD_VERSION
+
 #include "particlerenderer.h"
 
 class DynamicParticleRenderer : public RenderObject
@@ -23,3 +25,5 @@ private:
 };
 
 typedef std::shared_ptr<DynamicParticleRenderer> DynamicParticleRendererPtr;
+
+#endif

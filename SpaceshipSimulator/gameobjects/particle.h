@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef OLD_VERSION
+
 #include <glm/vec3.hpp>
 #include <memory>
 
@@ -45,3 +47,5 @@ struct Particle
 };
 
 typedef std::shared_ptr<Particle> ParticlePtr;
+
+#endif

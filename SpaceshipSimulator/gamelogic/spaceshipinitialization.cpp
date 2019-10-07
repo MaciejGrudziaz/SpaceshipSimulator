@@ -16,7 +16,7 @@ void loadSpaceship(GameEngine& engine)
 	spaceship->load(filesData, uniforms);
 	spaceship->registerCamera(engine.getResources()->camera);
 	spaceship->registerProjectionMat(engine.getProjectionMatPtr());
-	spaceship->registerWorldSpeed(engine.getResources()->worldSpeed);
+	spaceship->registerEndGameFlag(engine.getEndGameFlag());
 
 	spaceship->getTransform().setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	spaceship->getTransform().setDefaultOrientation(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -32,6 +32,8 @@ void loadSpaceship(GameEngine& engine)
 
 	loadParticlesSytem(engine);
 	loadGuns(engine);
+	linkSpaceshipDataToGui(engine);
+	loadSapceshipDataFromConfigFile(engine);
 }
 
 void writeToStdOutBonesNames(SpaceshipPtr spaceship)
@@ -43,8 +45,8 @@ void writeToStdOutBonesNames(SpaceshipPtr spaceship)
 
 void addBodyHitboxToSpaceship(GameEngine& engine)
 {
-	HitboxObjectPtr testHitbox = std::make_shared<HitboxObject>();
-	testHitbox->setName("hitbox_body");
+	HitboxObjectPtr bodyHitbox = std::make_shared<HitboxObject>();
+	bodyHitbox->setName("hitbox_body_spaceship");
 
 	HitboxObjectData data;
 	data.vertexShaderFilename = "shaders/standardHitbox.vert";
@@ -55,11 +57,12 @@ void addBodyHitboxToSpaceship(GameEngine& engine)
 	uniforms.projection = engine.getProjectionMatPtr();
 	uniforms.view = engine.getCamera()->getViewPtr();
 
-	testHitbox->load(data, uniforms);
+	bodyHitbox->load(data, uniforms);
 
-	engine.addRenderer(testHitbox->getRenderer());
+	if(engine.getShowHitboxesFlag())
+		engine.addRenderer(bodyHitbox->getRenderer());
 
-	engine.getResources()->spaceship->addChild(testHitbox);
+	engine.getResources()->spaceship->addChild(bodyHitbox);
 }
 
 void addWingHitboxToSpaceship(GameEngine& engine)
@@ -67,7 +70,7 @@ void addWingHitboxToSpaceship(GameEngine& engine)
 	glm::vec3 wingPos(1.95f, -0.15f, 0.0f);
 
 	HitboxObjectPtr rightWing = std::make_shared<HitboxObject>();
-	rightWing->setName("hitbox_wing_r");
+	rightWing->setName("hitbox_wing_r_spaceship");
 
 	HitboxObjectData data;
 	data.vertexShaderFilename = "shaders/standardHitbox.vert";
@@ -81,19 +84,21 @@ void addWingHitboxToSpaceship(GameEngine& engine)
 	rightWing->load(data, uniforms);
 	rightWing->getTransform().setPosition(wingPos);
 
-	engine.addRenderer(rightWing->getRenderer());
+	if (engine.getShowHitboxesFlag())
+		engine.addRenderer(rightWing->getRenderer());
+
 	engine.getResources()->spaceship->addChild(rightWing);
 
 	HitboxObjectPtr leftWing = std::make_shared<HitboxObject>();
-	leftWing->setName("hitbox_wing_l");
+	leftWing->setName("hitbox_wing_l_spaceship");
 	leftWing->deepCopy(*rightWing);
-
-	//leftWing->load(rightWing->getHitbox(), data, uniforms);
 
 	wingPos.x = -wingPos.x;
 	leftWing->getTransform().setPosition(wingPos);
 
-	engine.addRenderer(leftWing->getRenderer());
+	if(engine.getShowHitboxesFlag())
+		engine.addRenderer(leftWing->getRenderer());
+
 	engine.getResources()->spaceship->addChild(leftWing);
 }
 
@@ -102,7 +107,7 @@ void addCocpitHitboxToSpaceship(GameEngine& engine)
 	glm::vec3 cocpitPos(0.0f, 0.0f, 0.7f);
 
 	HitboxObjectPtr cocpit = std::make_shared<HitboxObject>();
-	cocpit->setName("hitbox_cocpit");
+	cocpit->setName("hitbox_cocpit_spaceship");
 
 	HitboxObjectData data;
 	data.vertexShaderFilename = "shaders/standardHitbox.vert";
@@ -116,7 +121,9 @@ void addCocpitHitboxToSpaceship(GameEngine& engine)
 	cocpit->load(data, uniforms);
 	cocpit->getTransform().setPosition(cocpitPos);
 
-	engine.addRenderer(cocpit->getRenderer());
+	if (engine.getShowHitboxesFlag())
+		engine.addRenderer(cocpit->getRenderer());
+
 	engine.getResources()->spaceship->addChild(cocpit);
 }
 
@@ -125,7 +132,7 @@ void addMainEngineHitboxToSpaceship(GameEngine& engine)
 	glm::vec3 mainEnginePos(0.0f, -2.2f, 0.0f);
 
 	HitboxObjectPtr mainEngine = std::make_shared<HitboxObject>();
-	mainEngine->setName("hitbox_mainEngine");
+	mainEngine->setName("hitbox_mainEngine_spaceship");
 
 	HitboxObjectData data;
 	data.vertexShaderFilename = "shaders/standardHitbox.vert";
@@ -139,7 +146,9 @@ void addMainEngineHitboxToSpaceship(GameEngine& engine)
 	mainEngine->load(data, uniforms);
 	mainEngine->getTransform().setPosition(mainEnginePos);
 
-	engine.addRenderer(mainEngine->getRenderer());
+	if (engine.getShowHitboxesFlag())
+		engine.addRenderer(mainEngine->getRenderer());
+
 	engine.getResources()->spaceship->addChild(mainEngine);
 }
 
@@ -216,7 +225,7 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerRightEngine->setParticlesMaxSpeed(5.0f);
 	lowerRightEngine->setParticlesMaxLifetime(0.4f);
 	lowerRightEngine->setParticlesSize(0.6f);
-	lowerRightEngine->setParticlesSpreadCone(-25.0f, 25.0f);
+	lowerRightEngine->setParticlesSpreadCone(-20.0f, 20.0f);
 	lowerRightEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	lowerRightEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, 30.0f));
 	lowerRightEngine->getTransform().setPosition(glm::vec3(1.6f, -1.78f, 0.0f));
@@ -233,7 +242,7 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerLeftEngine->setParticlesMaxSpeed(5.0f);
 	lowerLeftEngine->setParticlesMaxLifetime(0.4f);
 	lowerLeftEngine->setParticlesSize(0.6f);
-	lowerLeftEngine->setParticlesSpreadCone(-25.0f, 25.0f);
+	lowerLeftEngine->setParticlesSpreadCone(-20.0f, 20.0f);
 	lowerLeftEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	lowerLeftEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, -30.0f));
 	lowerLeftEngine->getTransform().setPosition(glm::vec3(-1.6f, -1.78f, 0.0f));
@@ -250,7 +259,7 @@ void loadParticlesSytem(GameEngine& engine)
 	upperLeftEngine->setParticlesMaxSpeed(5.0f);
 	upperLeftEngine->setParticlesMaxLifetime(0.4f);
 	upperLeftEngine->setParticlesSize(0.6f);
-	upperLeftEngine->setParticlesSpreadCone(-25.0f, 25.0f);
+	upperLeftEngine->setParticlesSpreadCone(-20.0f, 20.0f);
 	upperLeftEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	upperLeftEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, -82.5f));
 	upperLeftEngine->getTransform().setPosition(glm::vec3(-1.15f, 2.9f, 0.0f));
@@ -263,11 +272,11 @@ void loadParticlesSytem(GameEngine& engine)
 
 	ParticleSystemV2Ptr upperRightEngine = std::make_shared<ParticleSystemV2>();
 	upperRightEngine->setName("particles_upperRightEngine");
-	upperRightEngine->setParticlesCount(10000);
+	upperRightEngine->setParticlesCount(5000);
 	upperRightEngine->setParticlesMaxSpeed(5.0f);
-	upperRightEngine->setParticlesMaxLifetime(0.4f);
-	upperRightEngine->setParticlesSize(0.6f);
-	upperRightEngine->setParticlesSpreadCone(-25.0f, 25.0f);
+	upperRightEngine->setParticlesMaxLifetime(0.3f);
+	upperRightEngine->setParticlesSize(0.4f);
+	upperRightEngine->setParticlesSpreadCone(-15.0f, 15.0f);
 	upperRightEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	upperRightEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, 82.5f));
 	upperRightEngine->getTransform().setPosition(glm::vec3(1.15f, 2.9f, 0.0f));
@@ -277,4 +286,36 @@ void loadParticlesSytem(GameEngine& engine)
 
 	spaceship->addChild(upperRightEngine);
 	engine.addRenderer(upperRightEngine->getRenderer());
+}
+
+void registerSpaceshipCollisionSystem(GameEngine& engine)
+{
+	engine.getResources()->collisionsManager->registerCollisionObject(engine.getResources()->spaceship);
+	engine.getResources()->collisionsManager->registerHitDetectionObject(engine.getResources()->spaceship);
+}
+
+void linkSpaceshipDataToGui(GameEngine& engine)
+{
+	engine.getGui()->registerSpaceship(engine.getResources()->spaceship);
+	engine.getGui()->registerLifeFracValue(engine.getResources()->spaceship->getLifeFracValuePtr());
+	engine.getGui()->registerShieldFracValue(engine.getResources()->spaceship->getShieldFracValuePtr());
+	engine.getGui()->registerPointsCounter(engine.getResources()->spaceship->getPointsScorePtr());
+}
+
+void loadSapceshipDataFromConfigFile(GameEngine& engine)
+{
+	GameConfigData config = engine.getConfigData();
+	SpaceshipPtr spaceship = engine.getResources()->spaceship;
+
+	spaceship->setMainEngineThrust(config.mainEngineThrust);
+	spaceship->setManeuverEngineThrust(config.maneuverEngineThrust);
+	spaceship->setMass(config.spaceshipMass);
+	spaceship->setManeuverEngineForceVecLength(config.maneuverEngineForceArmLength);
+	spaceship->setAdvancedFlightMode(config.advancedFlightMode);
+	spaceship->setMaxLifeValue(config.spaceshipHealth);
+	spaceship->setMaxShieldValue(config.spaceshipShieldsHealth);
+	spaceship->setShotDamage(config.spaceshipShotDamage);
+	spaceship->setFireRate(config.spaceshipFireRate);
+	spaceship->setLaserBeamSpeed(config.spaceshipLaserShotSpeed);
+	spaceship->setMouseInput(config.mouseInput);
 }

@@ -18,11 +18,7 @@ void MultiSourceParticleRenderer::process()
 
 		bindTexture();
 
-		glVertexAttribDivisor(0, 0);
-		glVertexAttribDivisor(1, 1);
-		glVertexAttribDivisor(2, 1);
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
+		setAttribArraysDivisors();
 
 		for (auto particleSys : particleSystemsData)
 		{
@@ -36,16 +32,29 @@ void MultiSourceParticleRenderer::process()
 			}
 		}
 
-		glDisableVertexAttribArray(attribVertex);
-		glDisableVertexAttribArray(attribPos);
-		glDisableVertexAttribArray(attribSpeed);
-		glDisableVertexAttribArray(attribSize);
-		glDisableVertexAttribArray(attribLifeTime);
+		disableAttribArraysPointers();
 
 		glDisable(GL_BLEND);
-
 	}
 	else errorCode.push(NO_SHADER_AVAILABLE);
+}
+
+void MultiSourceParticleRenderer::setAttribArraysDivisors()
+{
+	glVertexAttribDivisor(0, 0);
+	glVertexAttribDivisor(1, 1);
+	glVertexAttribDivisor(2, 1);
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+}
+
+void MultiSourceParticleRenderer::disableAttribArraysPointers()
+{
+	glDisableVertexAttribArray(attribVertex);
+	glDisableVertexAttribArray(attribPos);
+	glDisableVertexAttribArray(attribSpeed);
+	glDisableVertexAttribArray(attribSize);
+	glDisableVertexAttribArray(attribLifeTime);
 }
 
 void MultiSourceParticleRenderer::setUniformsData(ParticleSystemDataPtr particleSys)
@@ -58,7 +67,7 @@ void MultiSourceParticleRenderer::setUniformsData(ParticleSystemDataPtr particle
 	*(uniformData->shutDownTime) = *(particleSys->shutDownTime);
 }
 
-void MultiSourceParticleRenderer::registerUniformsPointers(ParticleSystemDataPtr uniformData)
+void MultiSourceParticleRenderer::registerMainUniformData(ParticleSystemDataPtr uniformData)
 {
 	this->uniformData = uniformData;
 }

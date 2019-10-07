@@ -1,5 +1,7 @@
 #include "particlesystemtest.h"
 
+#ifdef OLD_VERSION
+
 void initializeParticleSystem(GameEngine& engine)
 {
 	ParticleSystemPtr particles = std::make_shared<ParticleSystem>();
@@ -54,3 +56,5 @@ void processParticleSystem(GameEngine& engine)
 	engine.getResources()->particles->process();
 	engine.getResources()->particles2->process();
 }
+
+#endif

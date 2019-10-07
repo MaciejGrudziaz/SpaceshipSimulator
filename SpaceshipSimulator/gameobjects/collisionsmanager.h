@@ -3,6 +3,7 @@
 #include <GameResources/gameobjects/gameobject.h>
 #include "../gamelogic/collisiondetectionalgorithm.h"
 #include "../gamelogic/collisions.h"
+#include "../gamelogic/laserbeamhitdetection.h"
 #include <thread>
 #include <mutex>
 
@@ -17,13 +18,14 @@ public:
 	void run();
 
 	void registerCollisionObject(GameObjectPtr object);
-	void registerCollisionPoints(GameObjectPtr object);
+	//void registerCollisionPoints(GameObjectPtr object);
+	void registerHitDetectionObject(GameObjectPtr object);
 
 private:
 	int warmupCounter;
 	const int warmupLimitCount = 10;
 	std::vector<std::shared_ptr<Property<GameObject> > > collisionObjects;
-	std::vector<std::shared_ptr<Property<GameObject> > > collisionPoints;
+	std::vector<std::shared_ptr<Property<GameObject> > > hitDetectionObjects;
 
 	std::thread collisionDetectionThread;
 	std::mutex updateMutex;
@@ -32,7 +34,7 @@ private:
 
 	void processCollisions();
 	void checkAllCollisions();
-	void checkPointCollisions();
+	void checkHitDetection();
 };
 
 typedef std::shared_ptr<CollisionsManager> CollisionsManagerPtr;

@@ -4,13 +4,17 @@ StandardGameObject::StandardGameObject()
 	: mainHitbox(std::make_shared<Hitbox>())
 	, modelTransform(std::make_shared<glm::mat4>(1.0f))
 	, textureAvailable(false)
-{}
+{
+	hitColor = std::make_shared<glm::vec3>(1.0f, 0.4f, 0.4f);
+	maxHitTime = std::make_shared<float>(0.5f);
+	currHitTime = std::make_shared<float>(*maxHitTime);
+}
 
 void StandardGameObject::deepCopy(const StandardGameObject& object)
 {
 	GameObject::deepCopy(object);
 
-	this->models = object.models;
+	//this->models = object.models;
 	this->textureAvailable = object.textureAvailable;
 
 	if (this->textureAvailable)
@@ -23,6 +27,9 @@ void StandardGameObject::deepCopy(const StandardGameObject& object)
 	this->mainHitbox->deepCopy(*object.mainHitbox);
 
 	this->modelTransform = std::make_shared<glm::mat4>(1.0f);
+	this->hitColor = std::make_shared<glm::vec3>((*object.hitColor));
+	this->currHitTime = std::make_shared<float>((*object.currHitTime));
+	this->maxHitTime = std::make_shared<float>((*object.maxHitTime));
 
 	//UniformDataPtr sourceModelUniform = this->renderer->getUniform("model");
 	//int location = sourceModelUniform->location;
@@ -32,6 +39,7 @@ void StandardGameObject::deepCopy(const StandardGameObject& object)
 	//modelUniform->location = location;
 	//this->renderer->addUniform(modelUniform);
 	copyModelUniform();
+	copyHitColorUniforms();
 }
 
 void StandardGameObject::copyModelUniform()
@@ -43,6 +51,33 @@ void StandardGameObject::copyModelUniform()
 	modelUniform->mat = this->modelTransform;
 	modelUniform->location = location;
 	this->renderer->addUniform(modelUniform);
+}
+
+void StandardGameObject::copyHitColorUniforms()
+{
+	UniformDataPtr sourceHitColorUniform = this->renderer->getUniform("hitColor");
+	int location = sourceHitColorUniform->location;
+	this->renderer->deleteUniform("hitColor");
+	UniformDataVec3Ptr hitColorUniform = std::make_shared<UniformDataVec3>("hitColor");
+	hitColorUniform->vec = this->hitColor;
+	hitColorUniform->location = location;
+	this->renderer->addUniform(hitColorUniform);
+
+	UniformDataPtr sourceCurrHitColorUniform = this->renderer->getUniform("hitColorRunTime");
+	location = sourceCurrHitColorUniform->location;
+	this->renderer->deleteUniform("hitColorRunTime");
+	UniformDataFloatPtr currHitColorUniform = std::make_shared<UniformDataFloat>("hitColorRunTime");
+	currHitColorUniform->val = this->currHitTime;
+	currHitColorUniform->location = location;
+	this->renderer->addUniform(currHitColorUniform);
+
+	UniformDataPtr sourceMaxHitColorUniform = this->renderer->getUniform("hitColorMaxTime");
+	location = sourceMaxHitColorUniform->location;
+	this->renderer->deleteUniform("hitColorMaxTime");
+	UniformDataFloatPtr maxHitColorUniform = std::make_shared<UniformDataFloat>("hitColorMaxTime");
+	maxHitColorUniform->val = this->maxHitTime;
+	maxHitColorUniform->location = location;
+	this->renderer->addUniform(maxHitColorUniform);
 }
 
 void StandardGameObject::load(const ModelData& data, const ModelExternalUniforms& uniforms)
@@ -123,14 +158,23 @@ void StandardGameObject::initUniforms(const ModelExternalUniforms& uniforms)
 	UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
 	UniformDataMat4Ptr viewUniform = std::make_shared<UniformDataMat4>("view");
 	UniformDataMat4Ptr projectionUniform = std::make_shared<UniformDataMat4>("projection");
+	UniformDataVec3Ptr hitColorUniform = std::make_shared<UniformDataVec3>("hitColor");
+	UniformDataFloatPtr currHitColorTimeUniform = std::make_shared<UniformDataFloat>("hitColorRunTime");
+	UniformDataFloatPtr maxHitColorTimeUniform = std::make_shared<UniformDataFloat>("hitColorMaxTime");
 
 	modelUniform->mat = modelTransform;
 	viewUniform->mat = uniforms.view;
 	projectionUniform->mat = uniforms.projection;
+	hitColorUniform->vec = hitColor;
+	currHitColorTimeUniform->val = currHitTime;
+	maxHitColorTimeUniform->val = maxHitTime;
 
 	renderer->addUniform(modelUniform);
 	renderer->addUniform(viewUniform);
 	renderer->addUniform(projectionUniform);
+	renderer->addUniform(hitColorUniform);
+	renderer->addUniform(currHitColorTimeUniform);
+	renderer->addUniform(maxHitColorTimeUniform);
 }
 
 void StandardGameObject::initAttribPointers()
@@ -229,6 +273,9 @@ void StandardGameObject::process()
 	GameObject::process();
 
 	*modelTransform = parentTransform * getTransform().getTransformMat();
+
+	if ((*currHitTime) < (*maxHitTime))
+		(*currHitTime) += Time::deltaTime;
 }
 
 void StandardGameObject::setActive(bool val)
@@ -236,6 +283,11 @@ void StandardGameObject::setActive(bool val)
 	GameObject::setActive(val);
 
 	renderer->setActive(val);
+}
+
+void StandardGameObject::dealDamage(float val)
+{
+	*currHitTime = 0.0f;
 }
 
 std::shared_ptr<RenderObject> StandardGameObject::getRenderer()const

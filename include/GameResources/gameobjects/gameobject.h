@@ -20,6 +20,8 @@ public:
 
 	virtual void setActive(bool val);
 	bool isActive() const;
+	virtual void setPropertiesFlag(bool val);
+
 	void setName(const std::string& name);
 	std::string getName()const;
 	Transform& getTransform();
@@ -60,6 +62,7 @@ protected:
 	glm::mat4 parentTransform;
 	bool active;
 	std::string name;
+	bool processPropertiesFlag;
 
 	PropertyMap properties;
 

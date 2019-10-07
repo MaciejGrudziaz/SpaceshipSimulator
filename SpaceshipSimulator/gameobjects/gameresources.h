@@ -19,18 +19,16 @@ public:
 	StandardGameObjectPtr asteroidPattern;
 	HitboxObjectPtr asteroidHitboxPattern;
 	
-	//std::vector<StandardGameObjectPtr> asteroids;
 	AsteroidsManagerPtr asteroids;
-
-	std::shared_ptr<float> worldSpeed;
 
 	CollisionsManagerPtr collisionsManager;
 
-	ParticleSystemPtr particles;
-	ParticleSystemPtr particles2;
+	std::shared_ptr<float> worldSpeed;
 
 	GameResources()
 		: camera(std::make_shared<Camera>())
 		, spaceship(std::make_shared<Spaceship>())
 	{}
+
+	void restart() {}
 };
