@@ -590,6 +590,6 @@ void AsteroidsManager::restart()
 		}
 	}
 
-	asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
+ 	asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
 	timeFromLastAsteroidSpawn = 1.0f / asteroidFrequencySpawn;
 }

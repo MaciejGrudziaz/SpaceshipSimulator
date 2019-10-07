@@ -9,8 +9,7 @@ LaserBeamHitDetection::LaserBeamHitDetection(const std::string& name, GameObject
 
 void LaserBeamHitDetection::initCleanLaserBeamsBuffer()
 {
-	laserBeams.clear();
-	laserBeams = std::vector<LaserBeamPtr>(1000);
+	if(laserBeams.size() == 0) laserBeams = std::vector<LaserBeamPtr>(1000);
 	for (int i = 0; i < laserBeams.size(); ++i)
 	{
 		laserBeams[i] = std::make_shared<LaserBeam>();
@@ -20,8 +19,7 @@ void LaserBeamHitDetection::initCleanLaserBeamsBuffer()
 
 void LaserBeamHitDetection::initCleanCollisionDataBuffer()
 {
-	collisionData.clear();
-	collisionData = std::vector<CollisionDataPtr>(1000);
+	if(collisionData.size() == 0) collisionData = std::vector<CollisionDataPtr>(1000);
 	for (int i = 0; i < collisionData.size(); ++i)
 	{
 		collisionData[i] = std::make_shared<CollisionData>(object,object);

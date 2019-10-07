@@ -14,10 +14,15 @@ public:
 
 	void invalidate();
 
-	void run();
+	void process();
 
 	void registerCollisionObject(GameObjectPtr object);
 	void registerHitDetectionObject(GameObjectPtr object);
+
+	void pause();
+	void run();
+
+	bool isThreadPaused();
 
 private:
 	int warmupCounter;
@@ -27,6 +32,8 @@ private:
 
 	std::thread collisionDetectionThread;
 	bool runFlag;
+	bool pauseFlag;
+	bool isPaused;
 
 	void processCollisions();
 

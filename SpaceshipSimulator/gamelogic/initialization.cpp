@@ -18,7 +18,7 @@ void initializeGame(GameEngine& engine)
 
 	engine.getResources()->asteroids->init();
 
-	engine.getResources()->collisionsManager->run();
+	engine.getResources()->collisionsManager->process();
 }
 
 void loadWorldSpeed(GameEngine& engine)
@@ -49,6 +49,10 @@ void processGame(GameEngine& engine)
 
 void restartGame(GameEngine& engine)
 {
+	engine.getResources()->collisionsManager->pause();
+	while (!engine.getResources()->collisionsManager->isThreadPaused())
+	{}
+
 	engine.registerPointScore(engine.getResources()->spaceship->getPointsScore());
 
 	engine.getResources()->asteroids->restart();
@@ -56,6 +60,8 @@ void restartGame(GameEngine& engine)
 	processGame(engine);
 
 	engine.getResources()->spaceship->restart();
+
+	engine.getResources()->collisionsManager->run();
 }
 
 void invalidateGame(GameEngine& engine)

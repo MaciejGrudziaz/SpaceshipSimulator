@@ -2,6 +2,8 @@
 
 CollisionsManager::CollisionsManager()
 	: runFlag(false)
+	, pauseFlag(false)
+	, isPaused(false)
 	, warmupCounter(0)
 {}
 
@@ -11,7 +13,7 @@ void CollisionsManager::invalidate()
 	collisionDetectionThread.join();
 }
 
-void CollisionsManager::run()
+void CollisionsManager::process()
 {
 	runFlag = true;
 	collisionDetectionThread = std::thread(&CollisionsManager::processCollisions, this);
@@ -21,8 +23,13 @@ void CollisionsManager::processCollisions()
 {
 	while (runFlag)
 	{
-		checkHitboxCollisions();
-		checkHitDetection();
+		if (!pauseFlag)
+		{
+			isPaused = false;
+			checkHitboxCollisions();
+			checkHitDetection();
+		}
+		else isPaused = true;
 	}
 }
 
@@ -124,4 +131,19 @@ void CollisionsManager::registerHitDetectionObject(GameObjectPtr object)
 	object->addProperty<LaserBeamHitDetection>("hit_detection");
 
 	hitDetectionObjects.push_back(static_cast<std::shared_ptr<Property<GameObject> >>(object->getProperty("hit_detection")));
+}
+
+void CollisionsManager::pause()
+{
+	pauseFlag = true;
+}
+
+void CollisionsManager::run()
+{
+	pauseFlag = false;
+}
+
+bool CollisionsManager::isThreadPaused()
+{
+	return isPaused;
 }

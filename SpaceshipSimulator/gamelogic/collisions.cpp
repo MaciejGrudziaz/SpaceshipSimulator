@@ -112,7 +112,7 @@ void ObjectCollision::process()
 		if (collisionWithSpaceship)
 		{
 			StandardGameObject& standardObj = static_cast<StandardGameObject&>(object);
-			standardObj.dealDamage(25.0f);
+			standardObj.dealDamage(50.0f);
 		}
 }
 
@@ -140,8 +140,7 @@ void ObjectCollision::addCollisionData(CollisionDataPtr data)
 
 void ObjectCollision::initCollisionDataCleanBuffer()
 {
-	collisionData.clear();
-	collisionData = std::vector<CollisionDataPtr>(1000);
+	if(collisionData.size() == 0) collisionData = std::vector<CollisionDataPtr>(1000);
 	for (int i = 0; i < collisionData.size(); ++i)
 	{
 		collisionData[i] = std::make_shared<CollisionData>(object, object);

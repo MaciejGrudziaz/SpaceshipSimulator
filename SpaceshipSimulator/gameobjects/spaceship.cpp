@@ -20,8 +20,7 @@ Spaceship::Spaceship()
 
 void Spaceship::initClearLaserShotsBuffer()
 {
-	laserShots.clear();
-	laserShots = std::vector<LaserBeamPtr>(1000);
+	if(laserShots.size() == 0) laserShots = std::vector<LaserBeamPtr>(1000);
 	for (int i = 0; i < laserShots.size(); ++i)
 	{
 		laserShots[i] = std::make_shared<LaserBeam>();
