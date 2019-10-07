@@ -110,6 +110,8 @@ private:
 	void loadBeamsUniforms();
 
 	int findNotActiveLaserShot();
+
+	void initClearLaserShotsBuffer();
 };
 
 typedef std::shared_ptr<Spaceship> SpaceshipPtr;

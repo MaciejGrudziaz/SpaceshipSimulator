@@ -15,8 +15,13 @@ struct CollisionData
 
 	ColType collisionType;
 
+	bool isActive;
+
 	CollisionData(GameObject& internalObject, GameObject& externalObject)
 		: internalCollisionObj(internalObject)
 		, externalCollisionObj(externalObject)
+		, isActive(true)
 	{}
 };
+
+typedef std::shared_ptr<CollisionData> CollisionDataPtr;

@@ -13,12 +13,12 @@ public:
 	CollisionsManager();
 
 	void process();
+
 	void invalidate();
 
 	void run();
 
 	void registerCollisionObject(GameObjectPtr object);
-	//void registerCollisionPoints(GameObjectPtr object);
 	void registerHitDetectionObject(GameObjectPtr object);
 
 private:
@@ -28,12 +28,19 @@ private:
 	std::vector<std::shared_ptr<Property<GameObject> > > hitDetectionObjects;
 
 	std::thread collisionDetectionThread;
-	std::mutex updateMutex;
-	bool updateFlag;
+	//std::mutex updateMutex;
+	//std::mutex registerHitDetectionObj;
+	//std::mutex registerColObject;
+
+	//std::mutex beginMutex;
+	//int counter;
+
+	//bool updateFlag;
 	bool runFlag;
 
 	void processCollisions();
-	void checkAllCollisions();
+
+	void checkHitboxCollisions();
 	void checkHitDetection();
 };
 

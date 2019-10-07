@@ -16,18 +16,17 @@ public:
 
 	void addLaserBeam(LaserBeamPtr laserBeam);
 	std::vector<LaserBeamPtr>& getLaserBeamsVec();
-	void releaseLaserBeamVec();
 
-	void addCollisionData(const CollisionData& data);
+	void addCollisionData(CollisionDataPtr data);
+
+	void initCleanLaserBeamsBuffer();
+	void initCleanCollisionDataBuffer();
 
 private:
 	std::vector<LaserBeamPtr> laserBeams;
-	std::list<CollisionData> collisionData;
-
-	std::mutex colDataMutex;
-	std::mutex laserBeamMutex;
-	bool colPtVecAvailableFlag;
+	std::vector<CollisionDataPtr> collisionData;
 
 	int findNotActiveLaserIdx();
+	int findNotActiveCollisionDataIdx();
 };
 

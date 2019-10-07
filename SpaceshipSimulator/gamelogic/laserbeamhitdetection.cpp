@@ -2,8 +2,32 @@
 
 LaserBeamHitDetection::LaserBeamHitDetection(const std::string& name, GameObject& object)
 	: Property<GameObject>(name, object)
-	, colPtVecAvailableFlag(true)
-{}
+{
+	initCleanLaserBeamsBuffer();
+	initCleanCollisionDataBuffer();
+}
+
+void LaserBeamHitDetection::initCleanLaserBeamsBuffer()
+{
+	laserBeams.clear();
+	laserBeams = std::vector<LaserBeamPtr>(1000);
+	for (int i = 0; i < laserBeams.size(); ++i)
+	{
+		laserBeams[i] = std::make_shared<LaserBeam>();
+		laserBeams[i]->setActive(false);
+	}
+}
+
+void LaserBeamHitDetection::initCleanCollisionDataBuffer()
+{
+	collisionData.clear();
+	collisionData = std::vector<CollisionDataPtr>(1000);
+	for (int i = 0; i < collisionData.size(); ++i)
+	{
+		collisionData[i] = std::make_shared<CollisionData>(object,object);
+		collisionData[i]->isActive = false;
+	}
+}
 
 void LaserBeamHitDetection::init()
 {
@@ -12,29 +36,24 @@ void LaserBeamHitDetection::init()
 
 void LaserBeamHitDetection::process()
 {
-	if (colPtVecAvailableFlag)
-	{
-		colDataMutex.lock();
-
 		for (auto colData : collisionData)
 		{
-				std::string colliderName = colData.externalCollisionObj.getName();
+			if (colData->isActive)
+			{
+				std::string colliderName = colData->externalCollisionObj.getName();
 				size_t pos = colliderName.find_last_of('_');
 				colliderName = colliderName.substr(pos + 1);
 
 				if (colliderName != "spaceship")
 				{
-					colData.internalCollisionObj.setActive(false);
+					colData->internalCollisionObj.setActive(false);
 					Spaceship& spaceship = static_cast<Spaceship&>(object);
 					spaceship.addScore(10);
 				}
+
+				colData->isActive = false;
+			}
 		}
-
-		
-
-		collisionData.clear();
-		colDataMutex.unlock();
-	}
 }
 
 void LaserBeamHitDetection::invalidate()
@@ -42,55 +61,83 @@ void LaserBeamHitDetection::invalidate()
 
 void LaserBeamHitDetection::addLaserBeam(LaserBeamPtr laserBeam)
 {
-	colDataMutex.lock();
-
 	int idx = findNotActiveLaserIdx();
-	if (idx != -1) laserBeams[idx] = laserBeam;
-	else laserBeams.push_back(laserBeam);
-
-	colDataMutex.unlock();
+	if(idx!=-1) laserBeams[idx] = laserBeam;
 }
 
 int LaserBeamHitDetection::findNotActiveLaserIdx()
 {
-	int idx = -1;
+	static int idx = 0;
 	bool found = false;
 
-	if (laserBeams.size() > 0)
+	for (int i = idx; i < laserBeams.size(); ++i)
 	{
-		for (int i = 0; i < laserBeams.size(); ++i)
+		if (!laserBeams[i]->isActive())
+		{
+			idx = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		for (int i = 0; i < idx; ++i)
 		{
 			if (!laserBeams[i]->isActive())
 			{
 				idx = i;
 				found = true;
+				break;
 			}
 		}
 	}
+
+	if (!found) return -1;
+
+	return idx;
+}
+
+int LaserBeamHitDetection::findNotActiveCollisionDataIdx()
+{
+	static int idx = 0;
+	bool found = false;
+
+	for (int i = idx; i < collisionData.size(); ++i)
+	{
+		if (!(collisionData[i]->isActive))
+		{
+			idx = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		for (int i = 0; i < idx; ++i)
+		{
+			if (!(collisionData[i]->isActive))
+			{
+				idx = i;
+				found = true;
+				break;
+			}
+		}
+	}
+
+	if (!found) return -1;
 
 	return idx;
 }
 
 std::vector<LaserBeamPtr>& LaserBeamHitDetection::getLaserBeamsVec()
 {
-	colDataMutex.lock();
-	colPtVecAvailableFlag = false;
-	colDataMutex.unlock();
-
 	return laserBeams;
 }
 
-void LaserBeamHitDetection::releaseLaserBeamVec()
+void LaserBeamHitDetection::addCollisionData(CollisionDataPtr data)
 {
-	colDataMutex.lock();
-	colPtVecAvailableFlag = true;
-	colDataMutex.unlock();
+	int idx = findNotActiveCollisionDataIdx();
+	if (idx != -1) collisionData[idx] = data;
 }
-
-void LaserBeamHitDetection::addCollisionData(const CollisionData& data)
-{
-	colDataMutex.lock();
-	collisionData.push_back(data);
-	colDataMutex.unlock();
-}
-

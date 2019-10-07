@@ -16,7 +16,8 @@ public:
 
 private:
 	ParticleSystemDataPtr uniformData;
-	std::list<ParticleSystemDataPtr> particleSystemsData;
+	std::vector<ParticleSystemDataPtr> particleSystemsData;
+	int particleSysUpdated;
 
 	void setUniformsData(ParticleSystemDataPtr particleSys);
 	void setAttribArraysDivisors();

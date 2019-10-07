@@ -236,7 +236,7 @@ void Gui::renderInGameScreen()
 	gltBeginDraw();
 
 	gltColor(scoreColor.x, scoreColor.y, scoreColor.z, 1.0f);
-	gltDrawText2D(scoreText, 0.015f * static_cast<float>(wndWidth), 0.935f * static_cast<float>(wndHeight), 1.5f);
+	gltDrawText2D(scoreText, 0.015f * static_cast<float>(wndWidth), 0.935f * static_cast<float>(wndHeight), 2.0f);
 
 	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
 	gltDrawText2D(highScoreText, 0.765f * static_cast<float>(wndWidth), 0.935f * static_cast<float>(wndHeight), 1.5f);

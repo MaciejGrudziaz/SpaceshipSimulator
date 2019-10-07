@@ -18,6 +18,19 @@ Spaceship::Spaceship()
 	guiShieldStatuBarFrac = std::make_shared<float>(1.0f);
 	guiLifeStatusBarFrac = std::make_shared<float>(1.0f);
 	guiPointsScore = std::make_shared<int>(0);
+
+	initClearLaserShotsBuffer();
+}
+
+void Spaceship::initClearLaserShotsBuffer()
+{
+	laserShots.clear();
+	laserShots = std::vector<LaserBeamPtr>(1000);
+	for (int i = 0; i < laserShots.size(); ++i)
+	{
+		laserShots[i] = std::make_shared<LaserBeam>();
+		laserShots[i]->setActive(false);
+	}
 }
 
 void Spaceship::init()
@@ -63,11 +76,23 @@ void Spaceship::loadBeamsUniforms()
 void Spaceship::process()
 {
 	StandardGameObject::process();
+	
+	std::shared_ptr<Property<GameObject> > prop = getProperty("hit_detection");
 
 	for (auto shot : laserShots)
 	{
-		if(shot->isActive())
+		if (shot->isActive())
+		{
 			shot->process();
+
+			glm::vec4 clipPos = (*projectionMat) * camera->getView() * glm::vec4(shot->getTransform().getPosition(),1.0f);
+			clipPos /= clipPos.w;
+			for (int i = 0; i < 3; ++i)
+			{
+				if (clipPos[i] < -1.0f || clipPos[i] > 1.0f)
+					shot->setActive(false);
+			}
+		}
 	}
 
 	updateBeamsBuffer();
@@ -107,6 +132,13 @@ void Spaceship::updateBeamsBuffer()
 
 	//beamsBuffer.erase(beamsBuffer.begin() + (laserShots.size() * TextureBeamsRenderer::vertexAttribCount), beamsBuffer.end());
 
+	//std::shared_ptr<Property<GameObject> > prop = getProperty("hit_detection");
+	//if (prop->isUsable())
+	//{
+	//	LaserBeamHitDetection& hitDetectObj = static_cast<LaserBeamHitDetection&>(*prop);
+	//	hitDetectObj.getLaserBeamsVec();
+	//}
+
 	int beamsBufferCurrIdx = 0;
 	glm::vec3 pos;
 	glm::quat rot;
@@ -138,6 +170,12 @@ void Spaceship::updateBeamsBuffer()
 			}
 		}
 	}
+
+	//if (prop->isUsable())
+	//{
+	//	LaserBeamHitDetection& hitDetectObj = static_cast<LaserBeamHitDetection&>(*prop);
+	//	hitDetectObj.releaseLaserBeamVec();
+	//}
 
 	if (beamsBufferCurrIdx < beamsBuffer.size())
 	{
@@ -175,8 +213,8 @@ void Spaceship::loadGuns()
 void Spaceship::addLaserBeam(LaserBeamPtr beam)
 {
 	int idx = findNotActiveLaserShot();
-	if (idx != -1) laserShots[idx] = beam;
-	else laserShots.push_back(beam);
+	if(idx!=-1) laserShots[idx] = beam;
+
 	beam->setSpeed(laserBeamSpeed);
 
 	auto colPtProperty = getProperty("hit_detection");
@@ -189,20 +227,33 @@ void Spaceship::addLaserBeam(LaserBeamPtr beam)
 
 int Spaceship::findNotActiveLaserShot()
 {
-	int idx = -1;
+	static int idx = 0;
 	bool found = false;
 
-	if (laserShots.size() > 0) 
+	for (int i = idx; i < laserShots.size(); ++i)
 	{
-		for (int i = 0; i < laserShots.size(); ++i)
+		if (!laserShots[i]->isActive())
+		{
+			idx = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		for (int i = 0; i < idx; ++i)
 		{
 			if (!laserShots[i]->isActive())
 			{
 				idx = i;
 				found = true;
+				break;
 			}
 		}
 	}
+
+	if (!found) return -1;
 
 	return idx;
 }
@@ -384,6 +435,18 @@ void Spaceship::restart()
 	*(guiPointsScore) = 0;
 
 	(*hitColor) = glm::vec3(0.4f, 0.4f, 1.0f);
+
+	initClearLaserShotsBuffer();
+
+	beamsBuffer.clear();
+
+	std::shared_ptr<Property<GameObject> > prop = getProperty("hit_detection");
+	if (prop->isUsable())
+	{
+		LaserBeamHitDetection& hitDetect = static_cast<LaserBeamHitDetection&>(*prop);
+		hitDetect.initCleanLaserBeamsBuffer();
+		hitDetect.initCleanCollisionDataBuffer();
+	}
 }
 
 std::shared_ptr<float> Spaceship::getShieldFracValuePtr()const

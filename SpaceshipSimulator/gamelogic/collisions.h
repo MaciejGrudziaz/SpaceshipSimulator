@@ -6,7 +6,6 @@
 #include "../gameobjects/hitboxobject.h"
 #include "../gameobjects/asteroid.h"
 #include "collisiondata.h"
-#include <mutex>
 
 class ObjectCollision : public Property<GameObject>
 {
@@ -17,17 +16,21 @@ public:
 	void process()override;
 	void invalidate()override;
 
-	std::vector<GameObjectPtr> objectHitboxes;
-	std::list<CollisionData> collisionData;
+	void addCollisionData(CollisionDataPtr data);
+	void initCollisionDataCleanBuffer();
 
-	void addCollisionData(const CollisionData& data);
+	std::vector<GameObjectPtr>& getObjectHitboxes();
 
 private:
+	std::vector<GameObjectPtr> objectHitboxes;
+	std::vector<CollisionDataPtr> collisionData;
+
 	static float laserShotDamage;
-	std::mutex colDataMutex;
 	bool initializedFlag;
 
 	void loadHitboxObjects();
 	HitboxObject& getHitboxObject(GameObject& obj);
 	void resetHitboxes();
+
+	int findFreeIndexInCollisionDataBuffer();
 };

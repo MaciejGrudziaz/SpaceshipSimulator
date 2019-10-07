@@ -221,6 +221,8 @@ void AsteroidsManager::initializeAsteroidsVector(int initialCount)
 
 	for (int i = 0; i < initialCount; ++i)
 		createAsteroid();
+
+	process();
 }
 
 void AsteroidsManager::findLimitPosX()
@@ -582,7 +584,16 @@ MultiSourceParticleRendererPtr AsteroidsManager::getExplosionFragmentsParticlesR
 void AsteroidsManager::restart()
 {
 	for (auto asteroid : asteroids)
+	{
 		asteroid->restart();
+
+		std::shared_ptr<Property<GameObject> > prop = asteroid->getProperty("collision");
+		if (prop->isUsable())
+		{
+			ObjectCollision& colObj = static_cast<ObjectCollision&>(*prop);
+			colObj.initCollisionDataCleanBuffer();
+		}
+	}
 
 	asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
 	timeFromLastAsteroidSpawn = 1.0f / asteroidFrequencySpawn;

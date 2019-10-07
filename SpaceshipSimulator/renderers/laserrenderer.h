@@ -5,7 +5,7 @@
 class LaserRenderer : public RenderObject
 {
 public:
-	LaserRenderer(std::vector<float>& buffer, int bufferSize = 600);
+	LaserRenderer(std::vector<float>& buffer);
 
 	void init()override;
 	void process()override;

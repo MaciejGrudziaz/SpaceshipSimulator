@@ -8,7 +8,7 @@ void loadAsteroids(GameEngine& engine)
 
 	asteroids->registerWorldSpeed(engine.getResources()->worldSpeed);
 	asteroids->registerCollisionsManager(engine.getResources()->collisionsManager);
-	asteroids->create(0, engine.getResources()->camera, engine.getProjectionMatPtr());
+	asteroids->create(50, engine.getResources()->camera, engine.getProjectionMatPtr());
 	
 	engine.addRenderer(asteroids->getRenderer());
 	engine.addRenderer(asteroids->getExplosionParticlesRenderer());
@@ -28,4 +28,5 @@ void loadAsteroidsConfigFileData(GameEngine& engine)
 	asteroids->setAsteroidMaxAngularRot(config.asteroidMaxAngularVelocity);
 	asteroids->setExplosionParticlesLifetime(config.explosionDuration);
 	asteroids->setParticlesCountFactor(config.particlesCountFactor);
+	asteroids->setShowHitboxFlag(config.showHitboxes);
 }

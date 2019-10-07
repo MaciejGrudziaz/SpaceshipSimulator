@@ -5,7 +5,9 @@ float ObjectCollision::laserShotDamage = 0.0f;
 ObjectCollision::ObjectCollision(const std::string& name, GameObject& object)
 	: Property<GameObject>(name, object)
 	, initializedFlag(false)
-{}
+{
+	initCollisionDataCleanBuffer();
+}
 
 void ObjectCollision::init()
 {
@@ -47,32 +49,34 @@ void ObjectCollision::process()
 
 	resetHitboxes();
 
-	if (!collisionData.empty())
-	{
-		colDataMutex.lock();
-
 		bool collisionWithSpaceship = false;
 		bool laserShotHit = false;
 		glm::vec3 impactVector;
 		int hitboxColTotalCount = 0;
 		for (auto data : collisionData)
 		{
-			getHitboxObject(data.internalCollisionObj).setHitboxColor(glm::vec3(0.0f, 1.0f, 0.0f));
-
-			if (data.collisionType == CollisionData::laser_shot)
+			if (data->isActive)
 			{
-				laserShotHit = true;
-			}
-			else {
-				++hitboxColTotalCount;
+				getHitboxObject(data->internalCollisionObj).setHitboxColor(glm::vec3(0.0f, 1.0f, 0.0f));
 
-				impactVector += data.impactVector;
+				std::string externalColHitboxNameSuffix = data->externalCollisionObj.getName();
+				size_t pos = externalColHitboxNameSuffix.find_last_of('_');
+				externalColHitboxNameSuffix = externalColHitboxNameSuffix.substr(pos + 1);
 
-				std::string colHitboxNameSuffix = data.externalCollisionObj.getName();
-				size_t pos = colHitboxNameSuffix.find_last_of('_');
-				colHitboxNameSuffix = colHitboxNameSuffix.substr(pos + 1);
-				if (colHitboxNameSuffix == "spaceship")
-					collisionWithSpaceship = true;
+				if (data->collisionType == CollisionData::laser_shot)
+				{
+					laserShotHit = true;
+				}
+				else {
+					++hitboxColTotalCount;
+
+					impactVector += data->impactVector;
+
+					if (externalColHitboxNameSuffix == "spaceship")
+						collisionWithSpaceship = true;
+				}
+
+				data->isActive = false;
 			}
 		}
 
@@ -92,7 +96,7 @@ void ObjectCollision::process()
 			}
 			else {
 				StandardGameObject& standardObj = static_cast<StandardGameObject&>(object);
-				standardObj.dealDamage(10.0f);
+				standardObj.dealDamage(5.0f);
 			}
 		}
 
@@ -108,12 +112,8 @@ void ObjectCollision::process()
 		if (collisionWithSpaceship)
 		{
 			StandardGameObject& standardObj = static_cast<StandardGameObject&>(object);
-			standardObj.dealDamage(25);
+			standardObj.dealDamage(25.0f);
 		}
-
-		collisionData.clear();
-		colDataMutex.unlock();
-	}
 }
 
 void ObjectCollision::resetHitboxes()
@@ -132,9 +132,59 @@ HitboxObject& ObjectCollision::getHitboxObject(GameObject& obj)
 void ObjectCollision::invalidate()
 {}
 
-void ObjectCollision::addCollisionData(const CollisionData& data)
+void ObjectCollision::addCollisionData(CollisionDataPtr data)
 {
-	colDataMutex.lock();
-	collisionData.push_back(data);
-	colDataMutex.unlock();
+	int idx = findFreeIndexInCollisionDataBuffer();
+	if (idx != -1) collisionData[idx] = data;
+}
+
+void ObjectCollision::initCollisionDataCleanBuffer()
+{
+	collisionData.clear();
+	collisionData = std::vector<CollisionDataPtr>(1000);
+	for (int i = 0; i < collisionData.size(); ++i)
+	{
+		collisionData[i] = std::make_shared<CollisionData>(object, object);
+		collisionData[i]->isActive = false;
+	}
+	
+}
+
+std::vector<GameObjectPtr>& ObjectCollision::getObjectHitboxes()
+{
+	return objectHitboxes;
+}
+
+int ObjectCollision::findFreeIndexInCollisionDataBuffer()
+{
+	static int idx = 0;
+	bool found = false;
+
+	for (int i = idx; i < collisionData.size(); ++i)
+	{
+		if (!collisionData[i]->isActive)
+		{
+			idx = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		for (int i = 0; i < idx; ++i)
+		{
+			if (!collisionData[i]->isActive)
+			{
+				idx = i;
+				found = true;
+				break;
+			}
+		}
+	}
+
+	if (!found) return -1;
+
+	return idx;
+
 }

@@ -1,10 +1,10 @@
 #include "laserrenderer.h"
 
-LaserRenderer::LaserRenderer(std::vector<float>& buffer, int bufferSize)
+LaserRenderer::LaserRenderer(std::vector<float>& buffer)
 	: buffer(buffer)
 	, currBufferSize(0)
 	, updateBufferFlag(false)
-	, maxBufferSize(200 * 6)
+	, maxBufferSize(500 * 6)
 {}
 
 void LaserRenderer::init()

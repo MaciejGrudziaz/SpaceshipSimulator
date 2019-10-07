@@ -59,7 +59,7 @@ void GameEngine::process()
 	{
 		Time::refreshTimers();
 
-		processGraphics();
+		//processGraphics();
 
 		checkEvents();
 	}
@@ -104,6 +104,8 @@ void GameEngine::processLogic(int refreshCount)
 		processFun(*this);
 	}
 	gui->process();
+
+	processGraphics();
 }
 
 void GameEngine::processGraphics()
