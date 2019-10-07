@@ -173,6 +173,25 @@ void loadParticlesSytem(GameEngine& engine)
 {
 	SpaceshipPtr spaceship = engine.getResources()->spaceship;
 
+	ParticleSystemFiles data;
+	data.particleTexture = "sprites/smoke.png";
+	data.vertexShaderFilename = "shaders/particleV2.vert";
+	data.fragmentShaderFilename = "shaders/particle.frag";
+
+	ModelExternalUniforms uniforms;
+	uniforms.view = engine.getResources()->camera->getViewPtr();
+	uniforms.projection = engine.getProjectionMatPtr();
+
+	loadMainEngineMainFlameParticleSystems(engine, data, uniforms);
+	loadMainEngineExhaustParticleSystem(engine, data, uniforms);
+	loadLowerLeftEngineParticleSystem(engine, data, uniforms);
+	loadLowerRightEngineParticleSystem(engine, data, uniforms);
+	loadUpperRightEngineParticleSystem(engine, data, uniforms);
+	loadUpperLeftEngineParticleSystem(engine, data, uniforms);
+}
+
+void loadMainEngineMainFlameParticleSystems(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr mainEngine = std::make_shared<ParticleSystemV2>();
 	mainEngine->setName("particles_mainEngine");
 	mainEngine->setParticlesCount(10000);
@@ -184,24 +203,16 @@ void loadParticlesSytem(GameEngine& engine)
 	mainEngine->setBlendingFunctions(GL_ONE, GL_ONE);
 	mainEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, 0.0f));
 	mainEngine->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
-
 	mainEngine->registerCamera(engine.getResources()->camera);
-	
-	ParticleSystemFiles data;
-	data.particleTexture = "sprites/smoke.png";
-	data.vertexShaderFilename = "shaders/particleV2.vert";
-	data.fragmentShaderFilename = "shaders/particle.frag";
-
-	ModelExternalUniforms uniforms;
-	uniforms.view = engine.getResources()->camera->getViewPtr();
-	uniforms.projection = engine.getProjectionMatPtr();
 
 	mainEngine->loadRenderer(data, uniforms);
 
-	spaceship->addChild(mainEngine);
+	engine.getResources()->spaceship->addChild(mainEngine);
 	engine.addRenderer(mainEngine->getRenderer());
+}
 
-	//data.vertexShaderFilename = "shaders/particle.vert";
+void loadMainEngineExhaustParticleSystem(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr mainEngineSmoke = std::make_shared<ParticleSystemV2>();
 	mainEngineSmoke->setName("particles_mainEngineSmoke");
 	mainEngineSmoke->setParticlesCount(10000);
@@ -212,13 +223,16 @@ void loadParticlesSytem(GameEngine& engine)
 	mainEngineSmoke->setColors(glm::vec3(1.0f, 0.92f, 0.01f), glm::vec3(1.0f, 1.0f, 1.0f));
 	mainEngineSmoke->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, 0.0f));
 	mainEngineSmoke->getTransform().setPosition(glm::vec3(0.0f, -2.7f, 0.0f));
-
 	mainEngineSmoke->registerCamera(engine.getResources()->camera);
+
 	mainEngineSmoke->loadRenderer(data, uniforms);
 
-	spaceship->addChild(mainEngineSmoke);
+	engine.getResources()->spaceship->addChild(mainEngineSmoke);
 	engine.addRenderer(mainEngineSmoke->getRenderer());
+}
 
+void loadLowerRightEngineParticleSystem(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr lowerRightEngine = std::make_shared<ParticleSystemV2>();
 	lowerRightEngine->setName("particles_lowerRightEngine");
 	lowerRightEngine->setParticlesCount(5000);
@@ -229,13 +243,16 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerRightEngine->setColors(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	lowerRightEngine->getTransform().setRotation(glm::vec3(-45.0f, 0.0f, 30.0f));
 	lowerRightEngine->getTransform().setPosition(glm::vec3(1.6f, -1.78f, 0.0f));
-
 	lowerRightEngine->registerCamera(engine.getResources()->camera);
+
 	lowerRightEngine->loadRenderer(data, uniforms);
 
-	spaceship->addChild(lowerRightEngine);
+	engine.getResources()->spaceship->addChild(lowerRightEngine);
 	engine.addRenderer(lowerRightEngine->getRenderer());
+}
 
+void loadLowerLeftEngineParticleSystem(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr lowerLeftEngine = std::make_shared<ParticleSystemV2>();
 	lowerLeftEngine->setName("particles_lowerLeftEngine");
 	lowerLeftEngine->setParticlesCount(5000);
@@ -250,9 +267,12 @@ void loadParticlesSytem(GameEngine& engine)
 	lowerLeftEngine->registerCamera(engine.getResources()->camera);
 	lowerLeftEngine->loadRenderer(data, uniforms);
 
-	spaceship->addChild(lowerLeftEngine);
+	engine.getResources()->spaceship->addChild(lowerLeftEngine);
 	engine.addRenderer(lowerLeftEngine->getRenderer());
+}
 
+void loadUpperLeftEngineParticleSystem(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr upperLeftEngine = std::make_shared<ParticleSystemV2>();
 	upperLeftEngine->setName("particles_upperLeftEngine");
 	upperLeftEngine->setParticlesCount(5000);
@@ -267,9 +287,12 @@ void loadParticlesSytem(GameEngine& engine)
 	upperLeftEngine->registerCamera(engine.getResources()->camera);
 	upperLeftEngine->loadRenderer(data, uniforms);
 
-	spaceship->addChild(upperLeftEngine);
+	engine.getResources()->spaceship->addChild(upperLeftEngine);
 	engine.addRenderer(upperLeftEngine->getRenderer());
+}
 
+void loadUpperRightEngineParticleSystem(GameEngine& engine, ParticleSystemFiles data, ModelExternalUniforms uniforms)
+{
 	ParticleSystemV2Ptr upperRightEngine = std::make_shared<ParticleSystemV2>();
 	upperRightEngine->setName("particles_upperRightEngine");
 	upperRightEngine->setParticlesCount(5000);
@@ -284,7 +307,7 @@ void loadParticlesSytem(GameEngine& engine)
 	upperRightEngine->registerCamera(engine.getResources()->camera);
 	upperRightEngine->loadRenderer(data, uniforms);
 
-	spaceship->addChild(upperRightEngine);
+	engine.getResources()->spaceship->addChild(upperRightEngine);
 	engine.addRenderer(upperRightEngine->getRenderer());
 }
 

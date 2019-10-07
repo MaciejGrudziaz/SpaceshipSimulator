@@ -106,7 +106,6 @@ private:
 	void loadTextureBufferData()override;
 
 	void updateBeamsBuffer();
-	//void clearBeamsBuffer();
 	void loadBeamsUniforms();
 
 	int findNotActiveLaserShot();

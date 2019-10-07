@@ -1,6 +1,6 @@
 #include "gameengine.h"
 
-std::unique_ptr<MainWindow> GameEngine::mainWnd = std::make_unique<MainWindow>("Spaceship Simulator ver0.1");
+std::unique_ptr<MainWindow> GameEngine::mainWnd = std::make_unique<MainWindow>("Asteroids2k19");
 
 GameEngine::GameEngine()
 	: gameResourcesInitFun(MG::gameResourcesInit<GameEngine>)
@@ -58,8 +58,6 @@ void GameEngine::process()
 	while (!finish)
 	{
 		Time::refreshTimers();
-
-		//processGraphics();
 
 		checkEvents();
 	}

@@ -10,10 +10,6 @@ Spaceship::Spaceship()
 	setName("spaceship");
 	(*hitColor) = glm::vec3(0.4f, 0.4f, 1.0f);
 
-	//maxShieldValue = 10;
-	//currShieldValue = maxShieldValue;
-	//maxLifeValue = 10;
-	//currLifeValue = maxLifeValue;
 	pointsScore = 0;
 	guiShieldStatuBarFrac = std::make_shared<float>(1.0f);
 	guiLifeStatusBarFrac = std::make_shared<float>(1.0f);
@@ -100,45 +96,6 @@ void Spaceship::process()
 
 void Spaceship::updateBeamsBuffer()
 {
-	//glm::vec3 pos;
-	//if (beamsBuffer.size() / TextureBeamsRenderer::vertexAttribCount < laserShots.size())
-	//{
-	//	for (int i = beamsBuffer.size() / TextureBeamsRenderer::vertexAttribCount; i < laserShots.size(); ++i)
-	//	{
-	//		pos = laserShots[i]->getTransform().getPosition();
-
-	//		for (int j = 0; j < 3; ++j)
-	//			beamsBuffer.push_back(pos[j]);
-
-	//		glm::quat q(laserShots[i]->getTransform().getRotationQuat());
-
-	//		for (int j = 0; j < 4; ++j)
-	//			beamsBuffer.push_back(q[j]);
-	//	}
-	//}
-
-	//for (int i = 0; i < laserShots.size(); ++i)
-	//{
-	//	pos = laserShots[i]->getTransform().getPosition();
-
-	//	for (int j = 0; j < 3; ++j)
-	//		beamsBuffer[7 * i + j] = pos[j];
-
-	//	glm::quat q(laserShots[i]->getTransform().getRotationQuat());
-
-	//	for (int j = 0; j < 4; ++j)
-	//		beamsBuffer[7 * i + j + 3] = q[j];
-	//}
-
-	//beamsBuffer.erase(beamsBuffer.begin() + (laserShots.size() * TextureBeamsRenderer::vertexAttribCount), beamsBuffer.end());
-
-	//std::shared_ptr<Property<GameObject> > prop = getProperty("hit_detection");
-	//if (prop->isUsable())
-	//{
-	//	LaserBeamHitDetection& hitDetectObj = static_cast<LaserBeamHitDetection&>(*prop);
-	//	hitDetectObj.getLaserBeamsVec();
-	//}
-
 	int beamsBufferCurrIdx = 0;
 	glm::vec3 pos;
 	glm::quat rot;
@@ -170,12 +127,6 @@ void Spaceship::updateBeamsBuffer()
 			}
 		}
 	}
-
-	//if (prop->isUsable())
-	//{
-	//	LaserBeamHitDetection& hitDetectObj = static_cast<LaserBeamHitDetection&>(*prop);
-	//	hitDetectObj.releaseLaserBeamVec();
-	//}
 
 	if (beamsBufferCurrIdx < beamsBuffer.size())
 	{
@@ -372,21 +323,6 @@ void Spaceship::loadTextureBufferData()
 
 	renderer->loadBuffer(buffer);
 }
-
-//void Spaceship::registerWorldSpeed(std::shared_ptr<float> speed)
-//{
-//	worldSpeed = speed;
-//}
-//
-//void Spaceship::setWorldSpeed(float val)
-//{
-//	*worldSpeed = val;
-//}
-//
-//float Spaceship::getWorldSpeed()const
-//{
-//	return *worldSpeed;
-//}
 
 void Spaceship::dealDamage(float val)
 {

@@ -30,9 +30,7 @@ void LaserBeamHitDetection::initCleanCollisionDataBuffer()
 }
 
 void LaserBeamHitDetection::init()
-{
-
-}
+{}
 
 void LaserBeamHitDetection::process()
 {
@@ -44,10 +42,10 @@ void LaserBeamHitDetection::process()
 				size_t pos = colliderName.find_last_of('_');
 				colliderName = colliderName.substr(pos + 1);
 
-				if (colliderName != "spaceship")
+				if (colliderName != "spaceship")			
 				{
-					colData->internalCollisionObj.setActive(false);
-					Spaceship& spaceship = static_cast<Spaceship&>(object);
+					colData->internalCollisionObj.setActive(false);				//turning off laser beam
+					Spaceship& spaceship = static_cast<Spaceship&>(object);		
 					spaceship.addScore(10);
 				}
 

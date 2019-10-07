@@ -10,8 +10,8 @@ struct CollisionData
 
 	float collisionEnergy;
 
-	GameObject& internalCollisionObj;
-	GameObject& externalCollisionObj;
+	GameObject& internalCollisionObj;				//game object who belongs to current collision property
+	GameObject& externalCollisionObj;				//game object with which collision occured (doesn't belong to the same ObjectCollision property)
 
 	ColType collisionType;
 

@@ -23,5 +23,3 @@ struct HitboxObjectData
 	std::string vertexShaderFilename;
 	std::string fragmentShaderFilename;
 };
-
-

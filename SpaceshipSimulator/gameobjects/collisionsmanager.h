@@ -12,8 +12,6 @@ class CollisionsManager
 public:
 	CollisionsManager();
 
-	void process();
-
 	void invalidate();
 
 	void run();
@@ -28,14 +26,6 @@ private:
 	std::vector<std::shared_ptr<Property<GameObject> > > hitDetectionObjects;
 
 	std::thread collisionDetectionThread;
-	//std::mutex updateMutex;
-	//std::mutex registerHitDetectionObj;
-	//std::mutex registerColObject;
-
-	//std::mutex beginMutex;
-	//int counter;
-
-	//bool updateFlag;
 	bool runFlag;
 
 	void processCollisions();

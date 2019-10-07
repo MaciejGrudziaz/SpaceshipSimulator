@@ -31,6 +31,7 @@ void MainWindow::create()
 		glfwWindowHint(GLFW_GREEN_BITS, 8);
 		glfwWindowHint(GLFW_BLUE_BITS, 8);
 		glfwWindowHint(GLFW_ALPHA_BITS, 8);
+
 		const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		width = mode->width * 0.75f;
 		height = mode->height * 0.75f;
@@ -43,7 +44,6 @@ void MainWindow::create()
 		if (!Resize::currMainWindow)
 		{
 			Resize::currMainWindow = this;
-			//glfwSetWindowSizeCallback(window, &Resize::call);
 			glfwSetFramebufferSizeCallback(window, &Resize::call);
 		}
 

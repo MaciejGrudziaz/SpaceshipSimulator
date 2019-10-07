@@ -5,7 +5,6 @@
 #include "../renderers/multisourceparticlerenderer.h"
 #include "asteroid.h"
 #include "hitboxobject.h"
-#include "particlesystem.h"
 #include "collisionsmanager.h"
 
 struct SpawnLimits
@@ -110,6 +109,7 @@ private:
 	void spawnAsteroids();
 	bool activateAsteroid();
 
+	//finding limit x and y position in global coordinates when the point is still visible on screen (clip space)
 	void findLimitPosX();
 	float findLimitPosXMinVal(float eps = 0.05f);
 	float findLimitPosXMaxVal(float eps = 0.05f);

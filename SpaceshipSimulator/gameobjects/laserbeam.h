@@ -23,8 +23,6 @@ public:
 	float getSpeed()const;
 	float getLength()const;
 
-	//std::shared_ptr<glm::vec3> getCurrentPosPtr()const;
-
 	bool operator<(const LaserBeam& beam)
 	{
 		if (this->isActive() && !beam.isActive())
@@ -38,7 +36,6 @@ public:
 private:
 	ConstMat4Ptr viewPtr;
 	ConstMat4Ptr projectionPtr;
-	//std::shared_ptr<glm::vec3> currPos;
 
 	float speed;
 	float length;

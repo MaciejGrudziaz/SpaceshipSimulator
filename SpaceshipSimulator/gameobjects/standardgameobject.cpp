@@ -14,7 +14,6 @@ void StandardGameObject::deepCopy(const StandardGameObject& object)
 {
 	GameObject::deepCopy(object);
 
-	//this->models = object.models;
 	this->textureAvailable = object.textureAvailable;
 
 	if (this->textureAvailable)
@@ -31,13 +30,6 @@ void StandardGameObject::deepCopy(const StandardGameObject& object)
 	this->currHitTime = std::make_shared<float>((*object.currHitTime));
 	this->maxHitTime = std::make_shared<float>((*object.maxHitTime));
 
-	//UniformDataPtr sourceModelUniform = this->renderer->getUniform("model");
-	//int location = sourceModelUniform->location;
-	//this->renderer->deleteUniform("model");
-	//UniformDataMat4Ptr modelUniform = std::make_shared<UniformDataMat4>("model");
-	//modelUniform->mat = this->modelTransform;
-	//modelUniform->location = location;
-	//this->renderer->addUniform(modelUniform);
 	copyModelUniform();
 	copyHitColorUniforms();
 }

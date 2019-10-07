@@ -4,12 +4,7 @@ AsteroidsManager::AsteroidsManager()
 	: renderer(std::make_shared<MultipleAsteroidsRenderer>())
 	, showHitboxFlag(false)
 	, timeFromLastAsteroidSpawn(0.0f)
-{
-	//asteroidDefualtFrequencySpawn = 0.5f;
-	//asteroidFrequencySpawn = asteroidDefualtFrequencySpawn;
-	//timeFromLastAsteroidSpawn = 1.0f / asteroidFrequencySpawn;
-	//asteroidSpawnRateAcceleration = 0.1f;
-}
+{}
 
 void AsteroidsManager::create(int initialCount, CameraPtr camera, ConstMat4Ptr projectionPtr)
 {
@@ -74,7 +69,7 @@ void AsteroidsManager::initializeParticlesSystem()
 void AsteroidsManager::initializeExplosionParticleSystem()
 {
 	explosionParticles = std::make_shared<ParticleSystemV2>();
-	explosionParticles->setParticlesCount(particlesCountFactor * 40000);
+	explosionParticles->setParticlesCount(particlesCountFactor * 100000);
 	explosionParticles->setParticlesMaxSpeed(4.0f);
 	explosionParticles->setParticlesMaxLifetime(explosionParticlesLifetime * 0.8f);
 	explosionParticles->setParticlesSize(0.15f);
@@ -89,7 +84,7 @@ void AsteroidsManager::initializeExplosionParticleSystem()
 void AsteroidsManager::initializeExplosionFragmentsParticleSystem()
 {
 	explosionFragmentsParticles = std::make_shared<ParticleSystemV2>();
-	explosionFragmentsParticles->setParticlesCount(particlesCountFactor * 10000);
+	explosionFragmentsParticles->setParticlesCount(particlesCountFactor * 50000);
 	explosionFragmentsParticles->setParticlesMaxSpeed(4.5f);
 	explosionFragmentsParticles->setParticlesMaxLifetime(explosionParticlesLifetime);
 	explosionFragmentsParticles->setParticlesSize(3.0f);

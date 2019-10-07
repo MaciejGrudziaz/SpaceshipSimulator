@@ -5,10 +5,6 @@ CollisionsManager::CollisionsManager()
 	, warmupCounter(0)
 {}
 
-void CollisionsManager::process()
-{
-}
-
 void CollisionsManager::invalidate()
 {
 	runFlag = false;

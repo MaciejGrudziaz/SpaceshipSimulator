@@ -1,7 +1,5 @@
 #include "particlerendererv2.h"
 
-#include "particlerenderer.h"
-
 ParticleRendererV2::ParticleRendererV2(std::vector<float>& buffer, const BlendFunctions& blend)
 	: particlesBuffer(buffer)
 	, bufferUpdateFlag(false)

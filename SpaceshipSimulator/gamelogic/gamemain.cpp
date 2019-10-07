@@ -2,7 +2,6 @@
 
 GAME_INIT(engine)
 {
-	//srand(time(0));
 	initializeGame(engine);
 }
 

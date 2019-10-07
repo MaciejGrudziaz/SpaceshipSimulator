@@ -33,27 +33,6 @@ void MultiSourceParticleRenderer::process()
 			}
 		}
 
-		//int sysUpdateCount = particleSystemsData.size() / 5;
-		//int particleSystemUpdateEndIdx = particleSysUpdated + sysUpdateCount;
-		//if (particleSystemUpdateEndIdx > particleSystemsData.size())
-		//	particleSystemUpdateEndIdx = particleSystemsData.size();
-
-		//for (int i = particleSysUpdated; i < particleSystemUpdateEndIdx; ++i)
-		//{
-		//	if (particleSystemsData[i]->launchFlag)
-		//	{
-		//		setUniformsData(particleSystemsData[i]);
-
-		//		updateUniforms();
-
-		//		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, particlesCount);
-		//	}
-		//}
-
-		//particleSysUpdated += sysUpdateCount;
-		//if (particleSysUpdated >= particleSystemsData.size())
-		//	particleSysUpdated = 0;
-
 		disableAttribArraysPointers();
 
 		glDisable(GL_BLEND);

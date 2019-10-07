@@ -46,12 +46,6 @@
     <Filter Include="Source Files\renderers">
       <UniqueIdentifier>{e84fed9e-1c16-4b99-8c10-4b139af96e95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\dev">
-      <UniqueIdentifier>{016f9886-e9ee-43d9-a66c-2d3ff14f3924}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\dev">
-      <UniqueIdentifier>{6ef4c3c7-2d49-4755-8d4d-2293067fef03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\gui">
       <UniqueIdentifier>{ad57df7b-184e-4866-8652-20ac66659486}</UniqueIdentifier>
     </Filter>
@@ -90,9 +84,6 @@
     <ClCompile Include="gameobjects\standardgameobject.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
-    <ClCompile Include="gamelogic\asteroidbehaviour.cpp">
-      <Filter>Source Files\gamelogic</Filter>
-    </ClCompile>
     <ClCompile Include="gamelogic\collisions.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
@@ -101,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="renderers\hitboxrenderer.cpp">
       <Filter>Source Files\renderers</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\rotation.cpp">
-      <Filter>Source Files\dev</Filter>
     </ClCompile>
     <ClCompile Include="gamelogic\spaceshipinitialization.cpp">
       <Filter>Source Files\gamelogic</Filter>
@@ -120,26 +108,11 @@
     <ClCompile Include="gamelogic\gunbehaviour.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
-    <ClCompile Include="renderers\particlerenderer.cpp">
-      <Filter>Source Files\renderers</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\particlesystemtest.cpp">
-      <Filter>Source Files\dev</Filter>
-    </ClCompile>
-    <ClCompile Include="gameobjects\particle.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="gameobjects\particlesystem.cpp">
-      <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
     <ClCompile Include="gamelogic\spaceshipenginescontrol.cpp">
       <Filter>Source Files\gamelogic</Filter>
     </ClCompile>
     <ClCompile Include="gameobjects\laserbeam.cpp">
       <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="renderers\dynamicparticlerenderer.cpp">
-      <Filter>Source Files\renderers</Filter>
     </ClCompile>
     <ClCompile Include="renderers\texturebeamsrenderer.cpp">
       <Filter>Source Files\renderers</Filter>
@@ -218,9 +191,6 @@
     <ClInclude Include="gameobjects\standardgameobject.h">
       <Filter>Header Files\gameobjects</Filter>
     </ClInclude>
-    <ClInclude Include="gamelogic\asteroidbehaviour.h">
-      <Filter>Header Files\gamelogic</Filter>
-    </ClInclude>
     <ClInclude Include="gamelogic\collisions.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
@@ -229,9 +199,6 @@
     </ClInclude>
     <ClInclude Include="renderers\hitboxrenderer.h">
       <Filter>Header Files\renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\rotation.h">
-      <Filter>Header Files\dev</Filter>
     </ClInclude>
     <ClInclude Include="gamelogic\spaceshipinitialization.h">
       <Filter>Header Files\gamelogic</Filter>
@@ -248,26 +215,11 @@
     <ClInclude Include="gamelogic\gunbehaviour.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="renderers\particlerenderer.h">
-      <Filter>Header Files\renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\particlesystemtest.h">
-      <Filter>Header Files\dev</Filter>
-    </ClInclude>
-    <ClInclude Include="gameobjects\particle.h">
-      <Filter>Header Files\gameobjects</Filter>
-    </ClInclude>
-    <ClInclude Include="gameobjects\particlesystem.h">
-      <Filter>Header Files\gameobjects</Filter>
-    </ClInclude>
     <ClInclude Include="gamelogic\spaceshipenginescontrol.h">
       <Filter>Header Files\gamelogic</Filter>
     </ClInclude>
     <ClInclude Include="gameobjects\laserbeam.h">
       <Filter>Header Files\gameobjects</Filter>
-    </ClInclude>
-    <ClInclude Include="renderers\dynamicparticlerenderer.h">
-      <Filter>Header Files\renderers</Filter>
     </ClInclude>
     <ClInclude Include="renderers\texturebeamsrenderer.h">
       <Filter>Header Files\renderers</Filter>

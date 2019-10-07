@@ -1,6 +1,5 @@
 #pragma once
 
-#include "particlesystem.h"
 #include "particlesystemv2.h"
 #include "spaceship.h"
 #include "../gameengine.h"
@@ -15,9 +14,6 @@ public:
 	CameraPtr camera;
 
 	SpaceshipPtr spaceship;
-
-	StandardGameObjectPtr asteroidPattern;
-	HitboxObjectPtr asteroidHitboxPattern;
 	
 	AsteroidsManagerPtr asteroids;
 

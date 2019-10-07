@@ -1,7 +1,6 @@
 #pragma once
 
 #include "particlestruct.h"
-#include "particlesystem.h"
 #include "particlesystemv2.h"
 #include "standardgameobject.h"
 #include "../utilities/time.h"
